@@ -29,6 +29,12 @@ Scope rule: finish the minimum impressive version first. Extras only when a gate
 
 **Gate 1.5:** demo-worthy offline app. Record a short clip.
 
+## F1.8 — Design system + offline redesign
+- Fixed "Songket" app shell (navy + gold, Sora / Plus Jakarta Sans / DM Mono), tokens + `langkah-design` skill
+- Selectable board themes (Songket default, Walnut, Graphite) and piece sets, used by every board
+- Redesign Home, New game, Game, Game-over, History, Replay, Review; new Settings screen; app icon + splash
+- (Decision 2026-10-12: design before online so F2 screens reuse the system.)
+
 ## F2 — Online
 - Supabase project (region Singapore), Auth: email + Google (SHA-1 debug + release)
 - Schema + RLS: profiles, games, moves, rating_history, matchmaking queue
@@ -43,7 +49,7 @@ Scope rule: finish the minimum impressive version first. Extras only when a gate
 **Gate 2:** two emulators; kill network mid-game; background app 60 s; retry moves → no lost or duplicated move, clocks correct.
 
 ## F3 — Polish
-- Full redesign with design system, flutter_animate motion, sound + haptics, board/piece themes
+- Apply the design system to online screens, sound + haptics, final motion pass
 - Empty/error/loading states, reconnecting banner, opponent-left flow
 - Sentry (free) for crashes; one Maestro smoke flow
 

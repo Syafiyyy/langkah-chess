@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-F1.5 — Game Review: done in code (2026-10-12); Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab).
+F1.8 — Design system + offline redesign: done (2026-10-13). F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
@@ -42,6 +42,36 @@ F1.5 — Game Review: done in code (2026-10-12); Gate 1.5 (demo clip) pending Ad
   - `ReviewNotifier` (autoDispose family by game id): cache hit = instant; else analyses at full strength, fills progressively, saves the cache; leaving the screen stops the engine; navigation by ply and between the player's own errors.
   - Review screen (layout A, Lichess-style): summary strip (accuracy + ?! ? ?? per side), vertical eval bar + board with the engine's best move as an arrow, current-move verdict line with score / progress, fl_chart win% graph (progressive fill, tap/drag to jump, mistakes/blunders dotted), move list with marks, flip / move / your-mistake navigation, re-analyse. Entry points: "Review game" on the game-over sheet, "Review" on the history replay.
   - Tests: 188 host tests green (review math incl. boundaries and a full Fool's mate review; analysis stream; cache + migration; notifier with fake engine; review screen at 360 dp; abandon flow). On-device: `integration_test/review_analysis_test.dart`.
+
+- 2026-10-13: F1.8 Design system + offline redesign (prompt `docs/prompts/F1_8_design.md`, plan `docs/superpowers/plans/2026-10-12-f1-8-design-system.md`).
+  - "Songket" tokens in `lib/app/theme/` (colours, type scale, radii, spacing, motion); theme rebuilt from them. Fonts bundled as static TTFs (Sora 600/700, Plus Jakarta Sans 400/500/700, DM Mono 500; OFL licences in `assets/fonts`).
+  - Board themes (songket default with woven lattice frame, walnut, graphite) and piece sets (Classic/cburnett default, Merida, California, Staunty), saved in the kv store, used by every board (game, review, replay, settings preview).
+  - Shared widgets in `lib/shared/widgets/`: Wordmark, TileButton, PlayerBar, ClockChip, ThinkingDots, SectionCard, showAppSheet, showConfirmDialog, BoardFrame, ThemedBoard, MoveList.
+  - Restyled: home, new game sheet (level names + descriptions), game screen (wordmark top bar + menu, avatar player bars, framed board, gold active clock, DM Mono move strip with pill, four 60 px tiles incl. Moves sheet), game-over sheet, abandon/resign dialogs, history, replay, review. New Settings screen (preview, theme cards, piece cards, default bot speed), reachable from Home and the game menu.
+  - Launcher icon (adaptive + Android 13 monochrome) and native splash (navy + gold rhombus, no delay).
+  - `.claude/skills/langkah-design/SKILL.md`; CLAUDE.md loads it for UI work.
+  - Tests: 237 host tests green, incl. contrast test, board theme/prefs, settings screen, abandon/home, history empty states, custom time dialog validation, game menu clock pause, goldens (Home/Game/Review 390x844).
+  - Fixed along the way: rematch kept the old bot speed default; resumed games opened with the move strip scrolled away from the latest move; theme swatches rendered 0 px; clock kept running while Settings was open from a game.
+  - Screenshots (release build, emulator, real fonts) in `docs/screenshots/`.
+
+## Contrast ratios (WCAG, checked in `test/app/theme/contrast_test.dart`)
+| Text | on ground #101826 | on surface #18233A | on raised #1F2C48 |
+|---|---|---|---|
+| text #F3EEE3 | 15.37 | 13.54 | 12.00 |
+| textMuted #AFB8C9 | 8.91 | 7.85 | 6.96 |
+| accent #D9A93F | 8.21 | 7.23 | 6.41 |
+| danger #FF7B6E | 7.04 | 6.20 | 5.50 |
+| success #5ED39A | 9.54 | 8.40 | 7.45 |
+| labelBest #8FD98A | 10.55 | 9.30 | 8.24 |
+| labelInaccuracy #F2D46B | 12.20 | 10.75 | 9.53 |
+| labelMistake #F39A4E | 8.08 | 7.12 | 6.31 |
+| labelBlunder #FF6B6B | 6.41 | 5.65 | 5.00 |
+| textFaint #7D879B (disabled/decor only) | 4.92 | 4.34 | 3.84 |
+- onAccent #101826 on gold #D9A93F: 8.21 (pressed #EBC56B: 10.78).
+- Label lightness (L*): inaccuracy 85.5, best 80.3, mistake 71.4, blunder 64.0 (>= 5 steps apart).
+
+## Measurements (F1.8)
+- Release APK: arm64-v8a 37.1 MB, armeabi-v7a 33.4 MB, x86_64 38.7 MB (+0.7 MB vs F1.5: bundled fonts ~0.46 MB + brand assets).
 
 ## Measurements (F1.5, emulator x86_64)
 | What | Value |
@@ -88,7 +118,7 @@ Bot vs bot through the app's own `BotMover`, one engine, in-game search settings
 | Release APK armeabi-v7a / x86_64 | 31.1 MB / 36.5 MB |
 
 ## Package versions (latest on pub.dev, 2026-10-12)
-chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light flavor), flutter_riverpod 3.4.3, go_router 18.0.2, flutter_animate 4.5.2, sqflite 2.4.4+1, share_plus 13.3.1, fl_chart 1.2.0; dev: flutter_lints 6.0.0, mocktail 1.0.5, sqflite_common_ffi 2.4.3, integration_test (SDK).
+chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light flavor), flutter_riverpod 3.4.3, go_router 18.0.2, flutter_animate 4.5.2, sqflite 2.4.4+1, share_plus 13.3.1, fl_chart 1.2.0; dev: flutter_lints 6.0.0, mocktail 1.0.5, sqflite_common_ffi 2.4.3, integration_test (SDK), flutter_launcher_icons 0.14.4, flutter_native_splash 2.4.8.
 
 ## Decisions (F0)
 - Engine access goes through a small `UciEngine` interface (real: `StockfishUciEngine`; tests: `FakeUciEngine`). Keeps EngineService testable without native code.
@@ -126,6 +156,21 @@ chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light 
 - Layout A (Lichess-style) over a horizontal eval bar (unusual) and tabs (hide the graph or summary).
 - Abandoned games are deleted, not saved as losses (Adaam, 2026-10-12).
 
+## Decisions (F1.8)
+- Direction approved by Adaam (mockups in claude.ai); tokens exactly as specified. Danger #FF7B6E and success #5ED39A chosen for >= 4.5:1 on all surfaces.
+- `textFaint` (given #7D879B) fails 4.5:1 on surface/raised, so it is restricted to disabled controls and decoration.
+- Deviations from the vectorlab skills (Adaam's spec wins): weights include 700 (Sora wordmark, PJS stat numbers only; body text 400/500); type scale 12/13/15/17/20/24/32 (body 15, not 16); motion 120/200/320 ms with one easing (not 100/150/200/300).
+- chessground has one last-move highlight colour: each theme uses a translucent overlay solved offline to land near both target colours (walnut within ~1 step, graphite ~4, songket ~8).
+- Every board goes through `GameBoard` / `ThemedBoard` / `BoardFrame`, so theme, pieces and frame apply everywhere. Eval bar/graph use shell colours.
+- Icons: Material rounded set only.
+- Goldens render text in Flutter's test font (boxes): real fonts rasterise 7–11% differently on Windows vs Linux CI. Goldens check layout, colours, boards and icons; `docs/screenshots` show real type. Comparator tolerance 3%.
+- Opening Settings from a game pauses the clock (it resumes on return).
+- Brand PNGs drawn by a small Pillow script (not committed; mark = gold rhombus #D9A93F on #101826).
+
+## UX audit (vectorlab ux-audit, 2026-10-13)
+- Fixed: custom time dialog (no disabled submit; blur validation; clear on edit), verb-first labels, actionable empty states in History, motion limited to transform/opacity (clock chip, eval bar) and reduced-motion for board animations, 48 dp move pills.
+- Unproven (no device a11y tooling run): TalkBack reading order, focus order with a hardware keyboard, reduced-motion on a device with "Remove animations" on.
+
 ## Gate 1 checklist
 Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Status: **passed on the emulator after the bot fix; real-phone timing pending (F4, Firebase Test Lab).**
 - [x] Full games vs the engine at a low and a high level: no duplicate engine moves, no stuck thinking (emulator, automated)
@@ -148,13 +193,17 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Review accuracy is the plain mean, so it can differ a few points from Lichess for the same game.
 - Optional F1.5 item "Review a PGN" (paste/import) not built; ask Adaam first.
 - The clock widget repaints every frame while a side's clock runs. Cheap, but could be throttled to ~10 fps if battery matters.
-- Game screen visuals are minimal (F3 redesign): no move sounds, no captured pieces, no coordinates toggle.
+- Still missing from the game screen (F3 polish): move sounds, captured pieces, coordinates toggle, haptics.
+- Graphite's frame (#1E242E) is close to the navy ground, so the board looks frameless in that theme. Fine for now; revisit with a lighter frame if Adaam wants.
+- Home has a lot of empty space below the cards on tall phones (intentionally calm; could hold "Continue last review" or stats later).
+- During scripted emulator taps the piece set once switched to Merida without an intended tap; a clean re-run behaved correctly and it did not reproduce. Watch for it in the hand check.
+- Material sheet/dialog/page transitions do not follow reduced motion automatically (only our own animations do).
 - The scaffold commit already contains the dependency lines in pubspec (they were added before `git init`).
 - App name "Langkah" is a working title (change `kAppName` + Android label).
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
-- Adaam: hand check of the bot fix and of game review (lists in the hand-off messages); record the Gate 1.5 demo clip.
+- Adaam: hand check of the redesign (list in the hand-off message); record the Gate 1.5 demo clip with the new look.
 - Then F2 — Online (Supabase).
 
 ## Environment
