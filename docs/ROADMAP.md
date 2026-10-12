@@ -3,7 +3,7 @@
 Scope rule: finish the minimum impressive version first. Extras only when a gate passes with time left.
 
 ## F0 — Foundation
-- New repo `Syafiyyy/langkah-chess` (public, GPL-3.0)
+- New repo `Syafiyyy/skak-chess` (public, GPL-3.0)
 - Flutter >= 3.29 (latest stable), Android only
 - Dart & Flutter MCP server + Context7 configured for Claude Code
 - Skills: karpathy-rules, frontend-design, chess-domain
@@ -30,7 +30,7 @@ Scope rule: finish the minimum impressive version first. Extras only when a gate
 **Gate 1.5:** demo-worthy offline app. Record a short clip.
 
 ## F1.8 — Design system + offline redesign
-- Fixed "Songket" app shell (navy + gold, Sora / Plus Jakarta Sans / DM Mono), tokens + `langkah-design` skill
+- Fixed "Songket" app shell (navy + gold, Sora / Plus Jakarta Sans / DM Mono), tokens + `skak-design` skill
 - Selectable board themes (Songket default, Walnut, Graphite) and piece sets, used by every board
 - Redesign Home, New game, Game, Game-over, History, Replay, Review; new Settings screen; app icon + splash
 - (Decision 2026-10-12: design before online so F2 screens reuse the system.)

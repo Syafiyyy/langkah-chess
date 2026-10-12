@@ -3,13 +3,14 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
+App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
 - 2026-10-12: F0 Foundation.
   - Tooling verified: dart-flutter plugin (Dart MCP), Context7 MCP, superpowers, gh (Syafiyyy). Skills karpathy-rules + frontend-design copied unchanged from DriveCover.
-  - Flutter project created (`com.syafiyyy.langkah`, Android only, Kotlin DSL, one gradle setup). App name constant: `lib/app/app_info.dart` (+ Android manifest label).
+  - Flutter project created (`com.syafiyyy.skak`, Android only, Kotlin DSL, one gradle setup). App name constant: `lib/app/app_info.dart` (+ Android manifest label).
   - Structure per ADR-0006: `app/` (app, router, theme tokens), `core/engine/`, `features/play_ai/presentation/`.
   - EngineService (`lib/core/engine/`): one lazy engine via a keep-alive Riverpod Provider, stdout listened once, output routed to the current request, `stop` before each new search, commands serialised, FEN validated with dartchess before it reaches the engine, dispose on app detach and on debug hot reload (engine restarts lazily).
   - Board smoke screen: chessground board from a dartchess `Position`, both sides move (legality from dartchess), "Engine move" and "New game" buttons.
@@ -49,7 +50,7 @@ F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish 
   - Shared widgets in `lib/shared/widgets/`: Wordmark, TileButton, PlayerBar, ClockChip, ThinkingDots, SectionCard, showAppSheet, showConfirmDialog, BoardFrame, ThemedBoard, MoveList.
   - Restyled: home, new game sheet (level names + descriptions), game screen (wordmark top bar + menu, avatar player bars, framed board, gold active clock, DM Mono move strip with pill, four 60 px tiles incl. Moves sheet), game-over sheet, abandon/resign dialogs, history, replay, review. New Settings screen (preview, theme cards, piece cards, default bot speed), reachable from Home and the game menu.
   - Launcher icon (adaptive + Android 13 monochrome) and native splash (navy + gold rhombus, no delay).
-  - `.claude/skills/langkah-design/SKILL.md`; CLAUDE.md loads it for UI work.
+  - `.claude/skills/skak-design/SKILL.md`; CLAUDE.md loads it for UI work.
   - Tests: 237 host tests green, incl. contrast test, board theme/prefs, settings screen, abandon/home, history empty states, custom time dialog validation, game menu clock pause, goldens (Home/Game/Review 390x844).
   - Fixed along the way: rematch kept the old bot speed default; resumed games opened with the move strip scrolled away from the latest move; theme swatches rendered 0 px; clock kept running while Settings was open from a game.
   - Screenshots (release build, emulator, real fonts) in `docs/screenshots/`.
@@ -214,7 +215,8 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - During scripted emulator taps the piece set once switched to Merida without an intended tap; a clean re-run behaved correctly and it did not reproduce. Watch for it in the hand check.
 - Material sheet/dialog/page transitions do not follow reduced motion automatically (only our own animations do).
 - The scaffold commit already contains the dependency lines in pubspec (they were added before `git init`).
-- App name "Langkah" is a working title (change `kAppName` + Android label).
+- The local folder is still `D:\Projects\langkah-chess` on purpose (Claude Code local-scope plugins and MCP config are tied to that path). Everything else uses Skak.
+- Old dev installs of `com.syafiyyy.langkah` are a separate app; uninstall them by hand (`adb uninstall com.syafiyyy.langkah`).
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
@@ -224,5 +226,5 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 ## Environment
 - Flutter 3.47.7 stable (D:\dev\flutter), Dart 3.13.5, JDK 21 (Android Studio jbr), Android SDK 36, licenses accepted (2026-10-12)
 - Emulator: Pixel_8a_API_35 (system image android-35 google_apis_playstore x86_64 installed 2026-10-12). Other AVDs use the same image.
-- GitHub: Syafiyyy/langkah-chess (public)
+- GitHub: Syafiyyy/skak-chess (public; renamed from langkah-chess, GitHub redirects old links)
 - Supabase project: not created yet (F2)

@@ -1,9 +1,9 @@
 ---
 name: chess-domain
-description: Rules and conventions for Langkah's chess logic, engine and online game code. Use for ANY work touching dartchess, chessground, multistockfish/EngineService, clocks, game results, PGN, game review, or online moves (make_move/apply_move).
+description: Rules and conventions for Skak's chess logic, engine and online game code. Use for ANY work touching dartchess, chessground, multistockfish/EngineService, clocks, game results, PGN, game review, or online moves (make_move/apply_move).
 ---
 
-# Chess domain rules (Langkah)
+# Chess domain rules (Skak)
 
 ## Libraries and their jobs
 - `dartchess`: the ONLY source of chess rules on the client (legal moves, FEN, SAN, PGN, outcome). Never hand-roll move legality.

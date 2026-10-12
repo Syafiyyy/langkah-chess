@@ -1,6 +1,6 @@
-# Langkah — Claude Code instructions
+# Skak — Claude Code instructions
 
-Langkah is a Flutter chess app (Android first) by Adaam (GitHub: Syafiyyy). It is a full rebuild of the old app `uptm-chess-game` (v1), which is reference only.
+Skak is a Flutter chess app (Android first) by Adaam (GitHub: Syafiyyy). It is a full rebuild of the old app `uptm-chess-game` (v1), which is reference only. (Formerly "Langkah"; renamed 2026-10-13. The local folder `D:\Projects\langkah-chess` keeps its old name on purpose: Claude Code's local plugins and MCP config are tied to that path.)
 
 ## Read first, every session
 1. `docs/STATE.md` (current phase, what's done, what's next). This is the single source of state.
@@ -9,8 +9,8 @@ Langkah is a Flutter chess app (Android first) by Adaam (GitHub: Syafiyyy). It i
 4. Skills in `.claude/skills/`:
    - `karpathy-rules`: always
    - `chess-domain`: any chess, engine, game or online code
-   - `langkah-design`: any UI work (tokens, components, board themes; never hard-code colours)
-   - `frontend-design`: any UI work (after `langkah-design`, which wins on conflicts)
+   - `skak-design`: any UI work (tokens, components, board themes; never hard-code colours)
+   - `frontend-design`: any UI work (after `skak-design`, which wins on conflicts)
 
 ## Hard rules
 - Stack is fixed by ADRs: chessground + dartchess + multistockfish (light flavor) + Riverpod + go_router + Supabase. No Firebase. No `squares`, `bishop` or `stockfish` packages.

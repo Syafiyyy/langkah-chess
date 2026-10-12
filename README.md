@@ -1,4 +1,6 @@
-# Langkah
+# Skak
+
+**Skak — chess with on-device Stockfish.** (*Skak* is the Malay/Indonesian word for "check".)
 
 A chess app for Android: play the engine at your level, review your games move by move, and play friends online.
 
@@ -20,7 +22,7 @@ flutter build apk --split-per-abi --release
 ```
 
 ## History
-Langkah is a full rebuild of [v1, uptm-chess-game](https://github.com/Syafiyyy/uptm-chess-game).
+Skak is a full rebuild of [v1, uptm-chess-game](https://github.com/Syafiyyy/uptm-chess-game).
 
 ## License
 GPL-3.0. See [LICENSE](LICENSE).

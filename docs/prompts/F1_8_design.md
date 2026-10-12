@@ -18,7 +18,7 @@ Tokens (put them in `lib/app/theme/`, replace the F0/F1 placeholders, no hard-co
 - Spacing 4/8 scale; radii 8 / 10 / 14 / 999; elevation = borders + raised surface, no heavy shadows.
 - Motion tokens (fast 120 ms, base 200 ms, slow 320 ms, one standard easing) via flutter_animate; respect reduced motion (`MediaQuery.disableAnimations`) with instant/opacity-only fallbacks.
 - Icons: one consistent stroke icon set (pick one package or keep Material Symbols Rounded; no mixing).
-- Wordmark: "Langkah" in Sora 700 with a small gold diamond mark (rhombus) before it.
+- Wordmark: "Skak" in Sora 700 with a small gold diamond mark (rhombus) before it.
 
 ## 2. Board themes + piece sets (user-selectable)
 - `BoardTheme` model: id, name, light, dark, last-move light/dark, selected/premove/check highlight colours, frame style. Map to chessground's colour scheme API (check Context7).
@@ -43,10 +43,10 @@ Tokens (put them in `lib/app/theme/`, replace the F0/F1 placeholders, no hard-co
 ## 4. Brand assets
 - App launcher icon: gold rhombus mark on navy (adaptive icon for Android). Use `flutter_launcher_icons`.
 - Native splash: navy background + mark, no fake delay (`flutter_native_splash`).
-- App label stays "Langkah" (from `kAppName`).
+- App label stays "Skak" (from `kAppName`).
 
 ## 5. Make it stick for later phases
-- Create `.claude/skills/langkah-design/SKILL.md`: tokens, type scale, spacing, components (player bar, clock, tile button, card, sheet, dialog), board theme rules, motion + reduced-motion rules, accessibility rules, "never hard-code colours". Update `CLAUDE.md` to load it for any UI work.
+- Create `.claude/skills/skak-design/SKILL.md`: tokens, type scale, spacing, components (player bar, clock, tile button, card, sheet, dialog), board theme rules, motion + reduced-motion rules, accessibility rules, "never hard-code colours". Update `CLAUDE.md` to load it for any UI work.
 - Shared widgets in `lib/shared/widgets/` (TileButton, PlayerBar, ClockChip, SectionCard, AppSheet, ConfirmDialog, BoardFrame).
 
 ## 6. Tests + finish

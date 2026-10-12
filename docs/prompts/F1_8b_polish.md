@@ -1,6 +1,6 @@
 # Prompt F1.8b — Design polish from screenshot review (NEW Claude Code session)
 
-Read `CLAUDE.md`, `docs/STATE.md`, `.claude/skills/langkah-design/SKILL.md`. Use the frontend-design skill and vectorlab ux skills (spacing, typography, empty-states, anti-slop). Small, focused pass; keep all tests green and update goldens + `docs/screenshots/` after.
+Read `CLAUDE.md`, `docs/STATE.md`, `.claude/skills/skak-design/SKILL.md`. Use the frontend-design skill and vectorlab ux skills (spacing, typography, empty-states, anti-slop). Small, focused pass; keep all tests green and update goldens + `docs/screenshots/` after.
 
 Review of `docs/screenshots/` (by Adaam's planner):
 

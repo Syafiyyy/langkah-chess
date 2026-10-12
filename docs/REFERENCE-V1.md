@@ -3,7 +3,7 @@
 Location on Adaam's PC: `C:\Users\AdamSyafi\Desktop\Adam\sem 6\uptm_chess` (GitHub: Syafiyyy/uptm-chess-game, last commit 2025-04-16). Read only. Don't copy code; copy ideas and content.
 
 ## Features in v1 (to carry over or replace)
-| v1 feature | Langkah plan |
+| v1 feature | Skak plan |
 |---|---|
 | Email/password, Google, guest login | Supabase Auth email + Google (F2); offline play needs no account |
 | Play vs Stockfish (Easy/Medium/Hard) + choose time + colour | Elo levels (F1) |

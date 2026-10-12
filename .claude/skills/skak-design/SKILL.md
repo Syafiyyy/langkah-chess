@@ -1,9 +1,9 @@
 ---
-name: langkah-design
-description: Langkah's "Songket" design system. Use for ANY UI work (new screens, restyles, widgets, online F2 screens): tokens, type scale, spacing, components, board themes, motion, accessibility. Never hard-code colours or text styles.
+name: skak-design
+description: Skak's "Songket" design system. Use for ANY UI work (new screens, restyles, widgets, online F2 screens): tokens, type scale, spacing, components, board themes, motion, accessibility. Never hard-code colours or text styles.
 ---
 
-# Langkah design system ("Songket")
+# Skak design system ("Songket")
 
 One fixed app look (navy + cream + gold) and user-selectable board themes. Tokens live in `lib/app/theme/`; shared components in `lib/shared/widgets/`. Reuse them; add a token or component instead of a one-off.
 
@@ -17,7 +17,7 @@ One fixed app look (navy + cream + gold) and user-selectable board themes. Token
 - **Icons**: Material rounded set only (`Icons.*_rounded`). Do not mix icon families.
 
 ## Components (`lib/shared/widgets/`)
-- `Wordmark` / `DiamondMark`: gold rhombus + "Langkah" (Sora 700). App bars of top-level screens.
+- `Wordmark` / `DiamondMark`: gold rhombus + "Skak" (Sora 700). App bars of top-level screens.
 - `TileButton`: 60 px surface tile, icon over meta label; `destructive` uses `danger`. Game controls row of four.
 - `PlayerBar`: avatar tile (bot/person glyph; gold side-to-move dot via `toMove`), name, subtitle or `ThinkingDots`, optional clock. Height 48. Bot bar: persona name, "Level n · Bot" subtitle.
 - `ClockChip`: gold when running (`onAccent` digits), raised surface when idle, danger when low.

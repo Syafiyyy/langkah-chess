@@ -1,6 +1,8 @@
 # ADR-0001: Rebuild from scratch, v1 as reference only
 Status: Accepted (2026-10-12)
 
+Note: Renamed Langkah → Skak on 2026-10-13 (repo `skak-chess`, app id `com.syafiyyy.skak`).
+
 ## Context
 v1 (`uptm-chess-game`, Flutter + Firebase, Apr 2025) works partly but has structural problems: 1.3k-line god files mixing UI/Firebase/logic, Stockfish stdout listeners stacking every move, fragile online sync, Firestore rules not matching collection names, history saved twice, rating never persisted, duplicate Android gradle files, outdated packages.
 
