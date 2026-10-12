@@ -15,6 +15,15 @@ void main() {
       expect(eval.pv, ['e2e4', 'e7e5', 'g1f3']);
     });
 
+    test('reads the multipv index, defaulting to 1', () {
+      final line = parseInfoLine(
+        'info depth 8 seldepth 10 multipv 3 score cp -42 nodes 900 pv g1f3 d7d5',
+      );
+      expect(line!.multipv, 3);
+      expect(line.pv.first, 'g1f3');
+      expect(parseInfoLine('info depth 8 score cp 5 pv e2e4')!.multipv, 1);
+    });
+
     test('reads negative mate score', () {
       final eval = parseInfoLine('info depth 20 score mate -3 pv h7h8');
       expect(eval!.mate, -3);

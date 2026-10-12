@@ -156,6 +156,81 @@ void main() {
     expect(engine.commands.last, 'stop');
   });
 
+  group('candidates', () {
+    /// Replies to `go` like Stockfish with MultiPV 3: two depths, three lines.
+    void multiPv(FakeUciEngine engine, String command) {
+      if (command == 'isready') engine.emit('readyok');
+      if (command.startsWith('go')) {
+        engine
+          ..emit('info depth 1 multipv 1 score cp 50 pv e2e4')
+          ..emit('info depth 1 multipv 2 score cp 40 pv d2d4')
+          ..emit('info depth 2 multipv 1 score cp 35 pv d2d4 d7d5')
+          ..emit('info depth 2 multipv 2 score cp 30 pv e2e4 e7e5')
+          ..emit('info depth 2 multipv 3 score mate -4 pv f2f3')
+          ..emit('bestmove d2d4 ponder d7d5');
+      }
+    }
+
+    test('sets MultiPV and returns the latest line per index', () async {
+      final engine = FakeUciEngine(onCommand: multiPv);
+      final service = EngineService(() async => engine);
+
+      final lines = await service.candidates(
+        _startFen,
+        count: 3,
+        moveTime: const Duration(milliseconds: 200),
+        depth: 2,
+      );
+
+      expect(lines.map((l) => l.pv.first), ['d2d4', 'e2e4', 'f2f3']);
+      expect(lines.map((l) => l.cp), [35, 30, null]);
+      expect(lines.last.mate, -4);
+      expect(engine.commands, [
+        'setoption name MultiPV value 3',
+        'isready',
+        'position fen $_startFen',
+        'go depth 2 movetime 200',
+      ]);
+    });
+
+    test('a later bestMove resets MultiPV to 1 first', () async {
+      final engine = FakeUciEngine(onCommand: multiPv);
+      final service = EngineService(() async => engine);
+
+      await service.candidates(_startFen, count: 3);
+      engine.commands.clear();
+      await service.bestMove(_startFen);
+      await service.bestMove(_startFen);
+
+      expect(engine.commands, [
+        'setoption name MultiPV value 1',
+        'isready',
+        'position fen $_startFen',
+        'go movetime 500',
+        'position fen $_startFen',
+        'go movetime 500',
+      ]);
+    });
+
+    test('a restarted engine starts again from MultiPV 1', () async {
+      final engines = <FakeUciEngine>[];
+      final service = EngineService(() async {
+        final engine = FakeUciEngine(onCommand: multiPv);
+        engines.add(engine);
+        return engine;
+      });
+
+      await service.candidates(_startFen, count: 3);
+      await service.dispose();
+      await service.bestMove(_startFen);
+
+      expect(engines.last.commands, [
+        'position fen $_startFen',
+        'go movetime 500',
+      ]);
+    });
+  });
+
   test('maps bestmove (none) to a null move', () async {
     final engine = FakeUciEngine(
       onCommand: (engine, command) {

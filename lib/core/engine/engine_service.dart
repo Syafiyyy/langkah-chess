@@ -9,13 +9,20 @@ export 'uci_parser.dart' show EngineEval;
 
 /// Result of one search.
 class EngineResult {
-  const EngineResult({required this.bestMove, this.eval});
+  const EngineResult({
+    required this.bestMove,
+    this.eval,
+    this.lines = const [],
+  });
 
   /// Best move in UCI, or null when the position has no legal moves.
   final String? bestMove;
 
   /// Last scored `info` line seen during the search, if any.
   final EngineEval? eval;
+
+  /// Latest line per MultiPV index, best first (lines without a pv dropped).
+  final List<EngineEval> lines;
 }
 
 /// The single gateway to the chess engine (see the chess-domain skill).
@@ -37,6 +44,9 @@ class EngineService {
   _Search? _current;
   Completer<void>? _ready;
   Future<void> _queue = Future.value();
+
+  /// MultiPV the running engine is set to (Stockfish's default is 1).
+  int _multiPv = 1;
 
   /// Prepares the engine for a new game (`ucinewgame` then `isready`).
   Future<void> newGame() => _serial(() async {
@@ -66,11 +76,41 @@ class EngineService {
     String fen, {
     Duration moveTime = const Duration(milliseconds: 500),
     int? depth,
+  }) => _search(fen, multiPv: 1, moveTime: moveTime, depth: depth);
+
+  /// Searches [fen] with MultiPV [count] and returns the best [count] lines
+  /// (best first). Used for human-like bot moves. MultiPV goes back to 1 on
+  /// the next [bestMove].
+  Future<List<EngineEval>> candidates(
+    String fen, {
+    required int count,
+    Duration moveTime = const Duration(milliseconds: 500),
+    int? depth,
+  }) async {
+    final result = await _search(
+      fen,
+      multiPv: count,
+      moveTime: moveTime,
+      depth: depth,
+    );
+    return result.lines;
+  }
+
+  Future<EngineResult> _search(
+    String fen, {
+    required int multiPv,
+    required Duration moveTime,
+    required int? depth,
   }) async {
     Chess.fromSetup(Setup.parseFen(fen));
     final search = await _serial(() async {
       final engine = await _ensureEngine();
       await _stopCurrent(engine);
+      if (_multiPv != multiPv) {
+        engine.send('setoption name MultiPV value $multiPv');
+        await _isReady(engine);
+        _multiPv = multiPv;
+      }
       final search = _Search();
       _current = search;
       engine.send('position fen $fen');
@@ -123,6 +163,7 @@ class EngineService {
       final engine = await _startEngine();
       _stdoutSub = engine.stdout.listen(_onLine, onDone: _onEngineExit);
       _engine = engine;
+      _multiPv = 1;
       return engine;
     } finally {
       _starting = null;
@@ -157,13 +198,21 @@ class EngineService {
     final eval = parseInfoLine(line);
     if (eval != null) {
       search.lastEval = eval;
+      if (eval.pv.isNotEmpty) search.lines[eval.multipv] = eval;
       return;
     }
     final best = parseBestMoveLine(line);
     if (best != null) {
       _current = null;
       search.completer.complete(
-        EngineResult(bestMove: best.uci, eval: search.lastEval),
+        EngineResult(
+          bestMove: best.uci,
+          eval: search.lastEval,
+          lines: [
+            for (final k in search.lines.keys.toList()..sort())
+              search.lines[k]!,
+          ],
+        ),
       );
     }
   }
@@ -189,4 +238,5 @@ class EngineService {
 class _Search {
   final Completer<EngineResult> completer = Completer<EngineResult>();
   EngineEval? lastEval;
+  final Map<int, EngineEval> lines = {};
 }

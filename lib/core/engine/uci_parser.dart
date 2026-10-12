@@ -9,12 +9,16 @@ final RegExp _spaces = RegExp(r'\s+');
 class EngineEval {
   const EngineEval({
     required this.depth,
+    this.multipv = 1,
     this.cp,
     this.mate,
     this.pv = const [],
   });
 
   final int depth;
+
+  /// Line index in a MultiPV search (1 = best). 1 when not given.
+  final int multipv;
 
   /// Centipawns. Null when the score is a mate score.
   final int? cp;
@@ -35,6 +39,7 @@ EngineEval? parseInfoLine(String line) {
   if (tokens.first != 'info') return null;
 
   int? depth;
+  var multipv = 1;
   int? cp;
   int? mate;
   var pv = const <String>[];
@@ -44,6 +49,8 @@ EngineEval? parseInfoLine(String line) {
         return null;
       case 'depth' when i + 1 < tokens.length:
         depth = int.tryParse(tokens[++i]);
+      case 'multipv' when i + 1 < tokens.length:
+        multipv = int.tryParse(tokens[++i]) ?? 1;
       case 'score' when i + 2 < tokens.length:
         final kind = tokens[i + 1];
         final value = int.tryParse(tokens[i + 2]);
@@ -56,7 +63,13 @@ EngineEval? parseInfoLine(String line) {
     }
   }
   if (cp == null && mate == null) return null;
-  return EngineEval(depth: depth ?? 0, cp: cp, mate: mate, pv: pv);
+  return EngineEval(
+    depth: depth ?? 0,
+    multipv: multipv,
+    cp: cp,
+    mate: mate,
+    pv: pv,
+  );
 }
 
 /// Parses a `bestmove <uci> [ponder <uci>]` line.
