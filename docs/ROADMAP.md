@@ -19,7 +19,7 @@ Scope rule: finish the minimum impressive version first. Extras only when a gate
 - Minimal design tokens + theme (dark-first)
 - Unit tests: game controller, clock, result rules
 
-**Gate 1:** a full game vs AI is smooth on a real phone, no engine leaks, tests green.
+**Gate 1:** a full game vs AI is smooth, no engine leaks, tests green. (No Android phone available: Gate 1 is checked on the emulator; real-phone timing moves to F4 via Firebase Test Lab.)
 
 ## F1.5 — Game Review (main "wow" feature)
 - Analyse a finished game with the engine (background, cancellable)
@@ -50,6 +50,7 @@ Scope rule: finish the minimum impressive version first. Extras only when a gate
 ## F4 — Ship
 - README: architecture diagram, ADR links, measured move latency, screenshots
 - 90-second demo video
+- Real arm64 phone check: run the on-device integration tests (bot games, review) on Firebase Test Lab physical devices (free daily quota); record timings in README
 - Signed release APK on GitHub Releases
 - GitHub Actions cron to keep the Supabase free project from pausing
 - Add to portfolio site + resume + GitHub profile README
