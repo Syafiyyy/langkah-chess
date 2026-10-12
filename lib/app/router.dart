@@ -1,10 +1,25 @@
 import 'package:go_router/go_router.dart';
 
-import '../features/play_ai/presentation/board_smoke_screen.dart';
+import '../features/history/presentation/history_screen.dart';
+import '../features/history/presentation/replay_screen.dart';
+import '../features/home/presentation/home_screen.dart';
+import '../features/play_ai/presentation/game_screen.dart';
 
-/// App routes. F0 has a single smoke-test screen.
+/// App routes.
 final GoRouter appRouter = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const BoardSmokeScreen()),
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+    GoRoute(path: '/play', builder: (context, state) => const GameScreen()),
+    GoRoute(
+      path: '/history',
+      builder: (context, state) => const HistoryScreen(),
+      routes: [
+        GoRoute(
+          path: ':id',
+          builder: (context, state) =>
+              ReplayScreen(gameId: state.pathParameters['id']!),
+        ),
+      ],
+    ),
   ],
 );

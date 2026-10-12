@@ -121,7 +121,7 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
   /// App went to background: freeze the clock and save.
   void appPaused() {
     final controller = _controller;
-    if (controller == null || controller.state.isOver) return;
+    if (!ref.mounted || controller == null || controller.state.isOver) return;
     controller.pause();
     _publish();
     _autosave();
@@ -129,7 +129,7 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
 
   void appResumed() {
     final controller = _controller;
-    if (controller == null || controller.state.isOver) return;
+    if (!ref.mounted || controller == null || controller.state.isOver) return;
     controller.resume();
     _publish();
   }
@@ -137,7 +137,7 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
   /// The game screen closed: stop the bot, freeze the clock, save.
   void suspend() {
     final controller = _controller;
-    if (controller == null || controller.state.isOver) return;
+    if (!ref.mounted || controller == null || controller.state.isOver) return;
     unawaited(_cancelSearch());
     controller.pause();
     _publish(botThinking: false);
