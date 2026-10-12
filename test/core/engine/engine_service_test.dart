@@ -89,6 +89,73 @@ void main() {
     expect(engine.commands, ['ucinewgame', 'isready']);
   });
 
+  test('setOptions sends each setoption, then waits for readyok', () async {
+    final engine = FakeUciEngine(onCommand: _replyToGo);
+    final service = EngineService(() async => engine);
+
+    await service.setOptions({'UCI_LimitStrength': 'true', 'UCI_Elo': '1400'});
+
+    expect(engine.commands, [
+      'setoption name UCI_LimitStrength value true',
+      'setoption name UCI_Elo value 1400',
+      'isready',
+    ]);
+  });
+
+  test('setOptions stops a running search first', () async {
+    final engine = FakeUciEngine(
+      onCommand: (engine, command) {
+        if (command == 'stop') engine.emit('bestmove e2e4');
+        if (command == 'isready') engine.emit('readyok');
+      },
+    );
+    final service = EngineService(() async => engine);
+
+    final search = service.bestMove(_startFen);
+    await service.setOptions({'Skill Level': '3'});
+
+    expect((await search).bestMove, 'e2e4');
+    expect(engine.commands, [
+      'position fen $_startFen',
+      'go movetime 500',
+      'stop',
+      'setoption name Skill Level value 3',
+      'isready',
+    ]);
+  });
+
+  test('bestMove can cap the depth as well as the time', () async {
+    final engine = FakeUciEngine(onCommand: _replyToGo);
+    final service = EngineService(() async => engine);
+
+    await service.bestMove(
+      _startFen,
+      moveTime: const Duration(milliseconds: 150),
+      depth: 2,
+    );
+
+    expect(engine.commands.last, 'go depth 2 movetime 150');
+  });
+
+  test('stop halts the running search; idle stop sends nothing', () async {
+    final engine = FakeUciEngine(
+      onCommand: (engine, command) {
+        if (command == 'stop') engine.emit('bestmove g1f3');
+      },
+    );
+    final service = EngineService(() async => engine);
+
+    await service.stop();
+    expect(engine.commands, isEmpty);
+
+    final search = service.bestMove(_startFen);
+    await Future<void>.delayed(Duration.zero);
+    await service.stop();
+
+    expect((await search).bestMove, 'g1f3');
+    expect(engine.commands.last, 'stop');
+  });
+
   test('maps bestmove (none) to a null move', () async {
     final engine = FakeUciEngine(
       onCommand: (engine, command) {

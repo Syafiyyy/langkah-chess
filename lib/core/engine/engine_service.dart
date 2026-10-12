@@ -46,13 +46,26 @@ class EngineService {
     await _isReady(engine);
   });
 
-  /// Searches [fen] for [moveTime] and returns the best move.
+  /// Sets UCI options (`setoption name <key> value <value>`) and waits for
+  /// `readyok`. A running search is stopped first.
+  Future<void> setOptions(Map<String, String> options) => _serial(() async {
+    final engine = await _ensureEngine();
+    await _stopCurrent(engine);
+    options.forEach((name, value) {
+      engine.send('setoption name $name value $value');
+    });
+    await _isReady(engine);
+  });
+
+  /// Searches [fen] for [moveTime] (and at most [depth] plies, if given) and
+  /// returns the best move.
   ///
   /// Throws if [fen] is not a legal standard-chess position. It is validated
   /// with dartchess before anything reaches the engine.
   Future<EngineResult> bestMove(
     String fen, {
     Duration moveTime = const Duration(milliseconds: 500),
+    int? depth,
   }) async {
     Chess.fromSetup(Setup.parseFen(fen));
     final search = await _serial(() async {
@@ -61,11 +74,19 @@ class EngineService {
       final search = _Search();
       _current = search;
       engine.send('position fen $fen');
-      engine.send('go movetime ${moveTime.inMilliseconds}');
+      final depthPart = depth == null ? '' : 'depth $depth ';
+      engine.send('go ${depthPart}movetime ${moveTime.inMilliseconds}');
       return search;
     });
     return search.completer.future;
   }
+
+  /// Stops the running search, if any. Its caller still gets a result (the
+  /// move found so far) and must decide whether it is still wanted.
+  Future<void> stop() => _serial(() async {
+    final engine = _engine;
+    if (engine != null) await _stopCurrent(engine);
+  });
 
   /// Quits the engine. Safe to call repeatedly; the next request restarts it.
   Future<void> dispose() async {
