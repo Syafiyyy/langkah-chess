@@ -92,6 +92,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     }
   }
 
+  /// Settings from the game: the clock is paused while it is open.
+  Future<void> _openSettings() async {
+    _notifier.appPaused();
+    await context.push('/settings');
+    if (mounted) _notifier.appResumed();
+  }
+
   Future<void> _showMoves(GameState game, int ply) async {
     final picked = await showMovesSheet(
       context,
@@ -141,7 +148,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             tooltip: 'Game menu',
             icon: const Icon(Icons.more_vert_rounded),
             onSelected: (value) => switch (value) {
-              'settings' => context.push('/settings'),
+              'settings' => _openSettings(),
               _ => null,
             },
             itemBuilder: (context) => const [
