@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
 import '../../../shared/widgets/section_card.dart';
@@ -39,11 +38,19 @@ class ReviewSummary extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: _Side(name: whiteName, summary: white),
+              child: _Side(
+                key: const ValueKey('summary-white'),
+                name: whiteName,
+                summary: white,
+              ),
             ),
             const SizedBox(width: AppSpacing.lg),
             Expanded(
-              child: _Side(name: blackName, summary: black),
+              child: _Side(
+                key: const ValueKey('summary-black'),
+                name: blackName,
+                summary: black,
+              ),
             ),
           ],
         ),
@@ -53,7 +60,7 @@ class ReviewSummary extends StatelessWidget {
 }
 
 class _Side extends StatelessWidget {
-  const _Side({required this.name, required this.summary});
+  const _Side({super.key, required this.name, required this.summary});
 
   final String name;
   final SideSummary summary;
@@ -61,10 +68,16 @@ class _Side extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accuracy = summary.accuracy;
-    TextSpan count(int n, MoveLabel label) => TextSpan(
-      text: '$n${label.symbol}  ',
-      style: TextStyle(color: n == 0 ? AppColors.textMuted : labelColor(label)),
-    );
+    final counts = [
+      (
+        summary.inaccuracies,
+        MoveLabel.inaccuracy,
+        'Inaccuracy',
+        'Inaccuracies',
+      ),
+      (summary.mistakes, MoveLabel.mistake, 'Mistake', 'Mistakes'),
+      (summary.blunders, MoveLabel.blunder, 'Blunder', 'Blunders'),
+    ].where((c) => c.$1 > 0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -73,16 +86,46 @@ class _Side extends StatelessWidget {
           accuracy == null ? '–' : '${accuracy.toStringAsFixed(1)}%',
           style: AppType.stat,
         ),
-        Text.rich(
-          TextSpan(
+        const SizedBox(height: AppSpacing.xs),
+        if (accuracy != null && counts.isEmpty)
+          const Text('No errors', style: AppType.secondary)
+        else
+          Wrap(
+            spacing: AppSpacing.md,
+            runSpacing: AppSpacing.xs,
             children: [
-              count(summary.inaccuracies, MoveLabel.inaccuracy),
-              count(summary.mistakes, MoveLabel.mistake),
-              count(summary.blunders, MoveLabel.blunder),
+              for (final (n, label, one, many) in counts)
+                _Count(text: '$n ${n == 1 ? one : many}', label: label),
             ],
           ),
-          style: AppType.secondary,
+      ],
+    );
+  }
+}
+
+/// A colour dot and a labelled count, e.g. "1 Blunder". Plain text, no
+/// pill: it is static information.
+class _Count extends StatelessWidget {
+  const _Count({required this.text, required this.label});
+
+  final String text;
+  final MoveLabel label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: labelColor(label),
+            shape: BoxShape.circle,
+          ),
         ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(text, style: AppType.secondary),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:langkah/app/theme/app_theme.dart';
+import 'package:langkah/core/board/board_theme.dart';
 import 'package:langkah/features/history/domain/finished_game.dart';
 import 'package:langkah/features/play_ai/domain/bot_level.dart';
 import 'package:langkah/features/play_ai/domain/game_controller.dart';
@@ -11,6 +12,7 @@ import 'package:langkah/features/play_ai/domain/game_state.dart';
 import 'package:langkah/features/play_ai/domain/time_control.dart';
 import 'package:langkah/features/review/domain/position_eval.dart';
 import 'package:langkah/features/review/presentation/eval_graph.dart';
+import 'package:langkah/features/review/presentation/review_info_line.dart';
 import 'package:langkah/features/review/presentation/review_screen.dart';
 
 import '../play_ai/application/bot_engine_fake.dart';
@@ -51,12 +53,15 @@ Future<GameTestHarness> _pump(
   WidgetTester tester, {
   bool cached = true,
   bool holdEngine = false,
+  Size size = const Size(360, 640),
+  String? boardTheme,
 }) async {
-  tester.view.physicalSize = const Size(360, 640);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final h = GameTestHarness(botEngine(holdUntilStop: holdEngine));
   if (cached) h.analysis.saved['g'] = _evals;
+  if (boardTheme != null) h.kv.values['board.theme'] = boardTheme;
   await h.history.save(_game());
   await tester.pumpWidget(
     ProviderScope(
@@ -93,7 +98,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('3... Nf6'), findsOneWidget);
-    expect(find.textContaining('Blunder'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(ReviewInfoLine),
+        matching: find.textContaining('Blunder'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('best Qe7'), findsOneWidget);
     expect(find.text('#1'), findsOneWidget);
   });
@@ -132,5 +143,35 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pumpAndSettle();
     expect(h.engine.commands, contains('stop'));
+  });
+
+  testWidgets('error counts are labelled; zero counts are hidden', (
+    tester,
+  ) async {
+    await _pump(tester);
+    final black = find.byKey(const ValueKey('summary-black'));
+    expect(
+      find.descendant(of: black, matching: find.text('1 Blunder')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('0 '), findsNothing);
+    expect(find.textContaining('0?'), findsNothing);
+  });
+
+  testWidgets('the eval graph is 120-140 px tall on a normal phone', (
+    tester,
+  ) async {
+    await _pump(tester, size: const Size(390, 844));
+    final h = tester.getSize(find.byType(EvalGraph)).height;
+    expect(h, inInclusiveRange(120, 140));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the review board uses the chosen board theme', (tester) async {
+    await _pump(tester, boardTheme: 'walnut');
+    final board = tester.widget<StaticChessboard>(
+      find.byType(StaticChessboard),
+    );
+    expect(board.settings.colorScheme, BoardTheme.walnut.colorScheme);
   });
 }

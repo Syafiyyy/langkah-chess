@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,27 @@ class ReviewScreen extends ConsumerStatefulWidget {
 
 class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   bool _flipped = false;
+
+  static const double _gap = AppSpacing.sm;
+
+  /// Boards smaller than this get the compact graph instead.
+  static const double _minBoard = 240;
+
+  static double _graphHeight(BoxConstraints c) {
+    final rest = c.maxHeight - ReviewInfoLine.height - 2 * _gap;
+    return rest - EvalGraph.fullHeight >= _minBoard
+        ? EvalGraph.fullHeight
+        : EvalGraph.compactHeight;
+  }
+
+  /// Largest board that fits the width (16 px gutters, eval bar) and the
+  /// height left after the verdict line and the graph.
+  static double _boardSize(BoxConstraints c, double graph) {
+    final width =
+        c.maxWidth - 2 * AppSpacing.lg - EvalBar.width - AppSpacing.xs;
+    final height = c.maxHeight - ReviewInfoLine.height - graph - 2 * _gap;
+    return BoardFrame.boardSizeFor(math.max(0, math.min(width, height)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,58 +102,59 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, c) {
-                  // 8 dp side gutters so the eval bar is off the screen edge.
-                  final size = BoardFrame.boardSizeFor(
-                    (c.maxWidth -
-                            2 * AppSpacing.sm -
-                            EvalBar.width -
-                            AppSpacing.xs)
-                        .clamp(0, c.maxHeight)
-                        .toDouble(),
-                  );
+                  final graph = _graphHeight(c);
+                  final size = _boardSize(c, graph);
                   final framed = size + 2 * BoardTheme.frameWidth;
-                  return Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        EvalBar(
-                          whiteWin: eval?.whiteWin,
-                          height: framed,
-                          orientation: orientation,
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        ThemedBoard(
-                          size: size,
-                          orientation: orientation,
-                          fen: line.positions[ply].fen,
-                          lastMove: ply == 0
-                              ? null
-                              : Move.parse(line.moves[ply - 1].uci),
-                          shapes: {
-                            if (best is NormalMove)
-                              Arrow(
-                                color: AppColors.labelBest.withValues(
-                                  alpha: 0.85,
+                  final block =
+                      framed + _gap + ReviewInfoLine.height + graph + _gap;
+                  return Column(
+                    children: [
+                      SizedBox(height: math.max(0, (c.maxHeight - block) / 2)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          EvalBar(
+                            whiteWin: eval?.whiteWin,
+                            height: framed,
+                            orientation: orientation,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          ThemedBoard(
+                            size: size,
+                            orientation: orientation,
+                            fen: line.positions[ply].fen,
+                            lastMove: ply == 0
+                                ? null
+                                : Move.parse(line.moves[ply - 1].uci),
+                            shapes: {
+                              if (best is NormalMove)
+                                Arrow(
+                                  color: AppColors.labelBest.withValues(
+                                    alpha: 0.85,
+                                  ),
+                                  orig: best.from,
+                                  dest: best.to,
                                 ),
-                                orig: best.from,
-                                dest: best.to,
-                              ),
-                          },
-                        ),
-                      ],
-                    ),
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: _gap),
+                      ReviewInfoLine(state: state, onRetry: notifier.reanalyse),
+                      EvalGraph(
+                        height: graph,
+                        evals: state.evals,
+                        reviews: state.reviews,
+                        positions: state.total,
+                        ply: ply,
+                        onSelect: notifier.goTo,
+                      ),
+                    ],
                   );
                 },
               ),
             ),
-            ReviewInfoLine(state: state, onRetry: notifier.reanalyse),
-            EvalGraph(
-              evals: state.evals,
-              reviews: state.reviews,
-              positions: state.total,
-              ply: ply,
-              onSelect: notifier.goTo,
-            ),
+            const SizedBox(height: _gap),
             MoveList(
               sans: [for (final m in line.moves) m.san],
               selectedPly: ply,
