@@ -9,7 +9,8 @@ Langkah is a Flutter chess app (Android first) by Adaam (GitHub: Syafiyyy). It i
 4. Skills in `.claude/skills/`:
    - `karpathy-rules`: always
    - `chess-domain`: any chess, engine, game or online code
-   - `frontend-design`: any UI work
+   - `langkah-design`: any UI work (tokens, components, board themes; never hard-code colours)
+   - `frontend-design`: any UI work (after `langkah-design`, which wins on conflicts)
 
 ## Hard rules
 - Stack is fixed by ADRs: chessground + dartchess + multistockfish (light flavor) + Riverpod + go_router + Supabase. No Firebase. No `squares`, `bishop` or `stockfish` packages.
