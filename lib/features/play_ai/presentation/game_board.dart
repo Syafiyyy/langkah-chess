@@ -3,6 +3,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme/app_motion.dart';
 import '../../../core/board/board_prefs.dart';
 import '../../../shared/widgets/board_frame.dart';
 
@@ -90,6 +91,7 @@ class _GameBoardState extends ConsumerState<GameBoard> {
           pieceAssets: prefs.pieces.assets,
           enablePremoves: false,
           enablePremoveCastling: false,
+          animationDuration: AppMotion.of(context, AppMotion.base),
         ),
         onMove: (move, {viaDragAndDrop}) => widget.onMove(move),
       ),

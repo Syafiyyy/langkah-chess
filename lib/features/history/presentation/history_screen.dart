@@ -7,6 +7,7 @@ import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
 import '../../../shared/widgets/section_card.dart';
+import '../../play_ai/presentation/start_game_flow.dart';
 import '../application/history_providers.dart';
 import '../domain/finished_game.dart';
 
@@ -49,6 +50,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             child: switch (games) {
               AsyncData(:final value) when value.isEmpty => _Empty(
                 filter: _filter,
+                onShowAll: () => setState(() => _filter = HistoryFilter.all),
               ),
               AsyncData(:final value) => ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -132,24 +134,55 @@ class _GameTile extends StatelessWidget {
   }
 }
 
-class _Empty extends StatelessWidget {
-  const _Empty({required this.filter});
+/// First use: what belongs here + why + Play vs Bot.
+/// Filtered: no matches + one tap back to all games.
+class _Empty extends ConsumerWidget {
+  const _Empty({required this.filter, required this.onShowAll});
 
   final HistoryFilter filter;
+  final VoidCallback onShowAll;
 
   @override
-  Widget build(BuildContext context) {
-    final text = filter == HistoryFilter.all
-        ? 'No finished games yet. Games you finish against the bot are '
-              'saved here.'
-        : 'No games match this filter.';
+  Widget build(BuildContext context, WidgetRef ref) {
+    final firstUse = filter == HistoryFilter.all;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Text(
-          text,
-          style: AppType.secondary,
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              firstUse ? Icons.history_rounded : Icons.filter_alt_off_rounded,
+              size: 32,
+              color: AppColors.textMuted,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              firstUse ? 'No games yet' : 'No games match this filter',
+              style: AppType.heading,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              firstUse
+                  ? 'Finished games are saved here so you can replay them '
+                        'and review every move.'
+                  : 'Try another filter, or show all your games.',
+              style: AppType.secondary,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            if (firstUse)
+              FilledButton(
+                onPressed: () => startGameFlow(context, ref),
+                child: const Text('Play vs Bot'),
+              )
+            else
+              OutlinedButton(
+                onPressed: onShowAll,
+                child: const Text('Show all games'),
+              ),
+          ],
         ),
       ),
     );

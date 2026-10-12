@@ -65,8 +65,8 @@ void main() {
     for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(find.text('Settings'), findsOneWidget);
-    await tester.tap(find.text('Settings'));
+    expect(find.text('Open settings'), findsOneWidget);
+    await tester.tap(find.text('Open settings'));
     for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }

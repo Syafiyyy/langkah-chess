@@ -74,7 +74,7 @@ class _ReplayState extends State<_Replay> {
         actions: [
           TextButton(
             onPressed: () => context.push('/review/${game.id}'),
-            child: const Text('Review'),
+            child: const Text('Review game'),
           ),
           IconButton(
             tooltip: 'Copy PGN',

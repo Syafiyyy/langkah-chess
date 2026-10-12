@@ -39,7 +39,16 @@ class MemoryHistory implements HistoryRepository {
   @override
   Future<List<FinishedGame>> list({
     HistoryFilter filter = HistoryFilter.all,
-  }) async => saved.reversed.toList();
+  }) async => [
+    for (final g in saved.reversed)
+      if (switch (filter) {
+        HistoryFilter.all => true,
+        HistoryFilter.wins => g.playerResult == PlayerResult.win,
+        HistoryFilter.losses => g.playerResult == PlayerResult.loss,
+        HistoryFilter.draws => g.playerResult == PlayerResult.draw,
+      })
+        g,
+  ];
 
   @override
   Future<FinishedGame?> byId(String id) async =>

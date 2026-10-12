@@ -3,6 +3,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/theme/app_motion.dart';
 import '../../core/board/board_prefs.dart';
 import 'board_frame.dart';
 
@@ -40,6 +41,7 @@ class ThemedBoard extends ConsumerWidget {
           colorScheme: prefs.theme.colorScheme,
           pieceAssets: prefs.pieces.assets,
           enableCoordinates: true,
+          animationDuration: AppMotion.of(context, AppMotion.base),
         ),
       ),
     );

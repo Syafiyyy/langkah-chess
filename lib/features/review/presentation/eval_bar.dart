@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_motion.dart';
 import '../../../app/theme/app_radius.dart';
 
 /// Vertical evaluation bar beside the board. White's share grows from the
@@ -30,18 +31,18 @@ class EvalBar extends StatelessWidget {
         height: height,
         child: ColoredBox(
           color: AppColors.evalBlack,
+          // Animate a transform (scaleY), not the height.
           child: TweenAnimationBuilder<double>(
             tween: Tween(end: (whiteWin ?? 50) / 100),
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOut,
-            builder: (context, share, _) => Align(
+            duration: AppMotion.of(context, AppMotion.base),
+            curve: AppMotion.curve,
+            builder: (context, share, _) => Transform.scale(
+              scaleY: share,
               alignment: orientation == Side.white
                   ? Alignment.bottomCenter
                   : Alignment.topCenter,
-              child: FractionallySizedBox(
-                heightFactor: share,
-                widthFactor: 1,
-                child: const ColoredBox(color: AppColors.evalWhite),
+              child: const SizedBox.expand(
+                child: ColoredBox(color: AppColors.evalWhite),
               ),
             ),
           ),

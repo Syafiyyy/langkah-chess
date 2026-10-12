@@ -31,7 +31,7 @@ class GameStatusLine extends StatelessWidget {
     ) = switch (view) {
       PlayAiView(isBrowsing: true) => (
         'Viewing an earlier position',
-        'Back to game',
+        'Return to game',
         onBackToGame,
       ),
       PlayAiView(engineFailed: true) => (

@@ -124,27 +124,32 @@ class _MoveListState extends State<MoveList> {
             borderRadius: const BorderRadius.all(AppRadius.pill),
             onTap: () => widget.onSelect(ply),
             child: Container(
-              constraints: const BoxConstraints(minHeight: 36),
+              // 48 dp tap area; the pill itself is drawn inside it.
+              height: _MoveListState.height,
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              decoration: BoxDecoration(
-                color: selected ? AppColors.surfaceRaised : null,
-                borderRadius: const BorderRadius.all(AppRadius.pill),
-                border: selected ? Border.all(color: AppColors.accent) : null,
-              ),
-              child: Text.rich(
-                TextSpan(
-                  text: widget.sans[i],
-                  children: [
-                    if (_mark(i) case final mark?)
-                      TextSpan(
-                        text: mark.symbol,
-                        style: TextStyle(color: mark.color),
-                      ),
-                  ],
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: selected ? AppColors.surfaceRaised : null,
+                  borderRadius: const BorderRadius.all(AppRadius.pill),
+                  border: selected ? Border.all(color: AppColors.accent) : null,
                 ),
-                style: AppType.move.copyWith(
-                  color: selected ? AppColors.accent : AppColors.text,
+                child: Text.rich(
+                  TextSpan(
+                    text: widget.sans[i],
+                    children: [
+                      if (_mark(i) case final mark?)
+                        TextSpan(
+                          text: mark.symbol,
+                          style: TextStyle(color: mark.color),
+                        ),
+                    ],
+                  ),
+                  style: AppType.move.copyWith(
+                    color: selected ? AppColors.accent : AppColors.text,
+                  ),
                 ),
               ),
             ),

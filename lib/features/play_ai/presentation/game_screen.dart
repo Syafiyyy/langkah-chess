@@ -152,7 +152,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               _ => null,
             },
             itemBuilder: (context) => const [
-              PopupMenuItem(value: 'settings', child: Text('Settings')),
+              PopupMenuItem(value: 'settings', child: Text('Open settings')),
             ],
           ),
         ],

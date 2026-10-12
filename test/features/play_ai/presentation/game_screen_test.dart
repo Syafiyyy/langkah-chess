@@ -97,7 +97,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('You lost'), findsOneWidget);
-    expect(find.text('Rematch (swap colours)'), findsOneWidget);
+    expect(find.text('Play rematch (swap colours)'), findsOneWidget);
     expect(h.history.saved, hasLength(1));
   });
 
@@ -107,7 +107,7 @@ void main() {
     c.read(playAiProvider.notifier).resign();
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Rematch (swap colours)'));
+    await tester.tap(find.text('Play rematch (swap colours)'));
     await tester.pumpAndSettle();
 
     final game = c.read(playAiProvider)!.game;

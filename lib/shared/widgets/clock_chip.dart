@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
-import '../../app/theme/app_motion.dart';
 import '../../app/theme/app_radius.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../app/theme/app_type.dart';
@@ -27,9 +26,8 @@ class ClockChip extends StatelessWidget {
         : low
         ? AppColors.danger
         : AppColors.textMuted;
-    return AnimatedContainer(
-      duration: AppMotion.of(context, AppMotion.fast),
-      curve: AppMotion.curve,
+    // Instant switch (colour is not an allowed animated property).
+    return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,

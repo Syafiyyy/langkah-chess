@@ -84,17 +84,17 @@ class GameOverSheet extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
               onPressed: () => Navigator.pop(context, GameOverAction.rematch),
-              child: const Text('Rematch (swap colours)'),
+              child: const Text('Play rematch (swap colours)'),
             ),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
               onPressed: () => Navigator.pop(context, GameOverAction.newGame),
-              child: const Text('New game'),
+              child: const Text('Start new game'),
             ),
             const SizedBox(height: AppSpacing.sm),
             TextButton(
               onPressed: () => Navigator.pop(context, GameOverAction.home),
-              child: const Text('Home'),
+              child: const Text('Go home'),
             ),
           ],
         ),
