@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2a — Online backend: IN PROGRESS, paused after checkpoint 1 (2026-10-13).** See "F2a resume here" below.
+**F2a — Online backend: IN PROGRESS, checkpoint 2 done (2026-10-13).** See "F2a resume here" below.
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
@@ -15,24 +15,29 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 | Section | Status |
 |---|---|
 | 1. Schema + RLS | **Done.** Local pgTAP green; applied to remote. |
-| 2. apply_move + finish_game + make_move EF | **WIP, committed, NOT applied remotely.** SQL + pgTAP done and green locally (`20261013000200_apply_move.sql`, `tests/02_apply_move.test.sql`). Chess rules module `supabase/functions/_shared/chess_rules.ts` written, untested. |
-| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | Not started |
+| 2. apply_move + finish_game + make_move EF | **Done.** pgTAP green; migration applied to remote; `make_move` deployed (v1, verify_jwt on). |
+| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | Not started (next) |
 | 4. pg_cron sweep + delete_account | Not started |
-| 5. Tests (fixture Dart + Deno, concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started |
+| 5. Tests (concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started. The tricky-positions fixture (Dart + Deno) is already done in section 2. |
 
-**Next steps (section 2):**
-1. Write the Deno tests for `chess_rules.ts` against `test/fixtures/tricky_positions.json` (fixture not generated yet: the generator test failed to load; regenerate from dartchess with the position list in the plan's section 5 idea, then add the Dart test `test/online/tricky_positions_test.dart`).
-2. Write `supabase/functions/make_move/index.ts`: verify JWT (`auth.getUser(token)`), load game + moves (service role), `checkMove(history, game.fen, uci)`, call `apply_move` (service role), map errors (STALE, NOT_YOUR_TURN, ILLEGAL, GAME_OVER, NOT_A_PLAYER, NOT_FOUND) to JSON `{error}`; `applied` = returned ply == requested ply.
-3. Run `npx supabase test db` + `npx deno test`, then apply `20261013000200_apply_move` remotely with the MCP and rename its remote version to `20261013000200` (see below). Deploy make_move. Commit + push.
+**Next steps (section 3):** TDD in `supabase/tests/03_rpcs.test.sql`, then `20261013000300_rpcs.sql`: set_profile, create_invite, join_invite, join_queue/leave_queue (advisory lock + SKIP LOCKED), resign, offer/accept/decline_draw, abort, claim_timeout (use `settle_clock`). Apply remotely, rename the version, commit + push.
+
+**Section 2 notes:**
+- `make_move` = `functions/make_move/index.ts` (HTTP, `auth.getUser(token)`, service-role client from `SUPABASE_SECRET_KEYS.default`, fallback `SUPABASE_SERVICE_ROLE_KEY` locally) + `move.ts` (logic behind a `MoveDb` interface, unit-tested with a fake). Response `{game, applied}` or `{error}`: BAD_REQUEST 400, UNAUTHORIZED 401, NOT_A_PLAYER 403, NOT_FOUND 404, STALE/NOT_YOUR_TURN/GAME_OVER/DUPLICATE_MOVE_ID 409, ILLEGAL 422. A retry with a known `client_move_id` returns the current game with `applied: true`; `applied: false` with 200 = the mover's clock had run out (game ended on time).
+- Deno setup: `supabase/functions/deno.json` (import map: chess.js 1.4.0, supabase-js 2, @std/assert; `nodeModulesDir: none` because the root package.json would otherwise force node_modules mode) + `deno.lock`. Run: `npx deno test --config supabase/functions/deno.json --allow-read supabase/functions/`. Also `deno lint` / `deno fmt` with the same config.
+- Deploying with the MCP: files `index.ts`, `move.ts`, `../_shared/chess_rules.ts`, `deno.json` (without @std/assert), with LF line endings.
+- Fixture `test/fixtures/tricky_positions.json` (20 positions, every legal move with SAN, FEN after, check/mate/stalemate, insufficient material per side) is produced by `test/online/tricky_positions_test.dart` from dartchess (`UPDATE_FIXTURES=1 flutter test test/online/tricky_positions_test.dart` regenerates it; otherwise the test checks the file is current). chess.js + `chess_rules.ts` match it exactly. The old generator failed because dartchess exports its own `File`, which clashes with `dart:io` (`hide File`).
+- Tests: pgTAP 51, Deno 37, Flutter 255 green.
 
 **How to run locally:** Docker Desktop on; `npx supabase start -x studio,imgproxy,storage-api,logflare,vector,mailpit,postgres-meta,supavisor`; `npx supabase test db`. Supabase CLI 2.120.0 and Deno 2.9.6 are pinned npm devDependencies (`npm install` first). Note: the CLI's SQL splitter choked on `if x <> case ... end then` inside plpgsql; avoid inline CASE in IF conditions.
 
 **Remote migrations applied** (MCP `apply_migration`; its version is then renamed in `supabase_migrations.schema_migrations` to match the local file name, so `supabase db push` stays consistent):
 - `20261013000100_schema` (2026-10-13)
+- `20261013000200_apply_move` (2026-10-13; md5 of the stored statement matches the file, LF line endings)
 
 **Decisions so far:** termination strings use the Dart `Termination` names (`checkmate`, `timeout`, `resignation`, ... plus `agreement`, `firstMoveTimeout`); games store `white_can_mate`/`black_can_mate` (set by make_move) so timeouts in SQL need no chess code; clocks start after both first moves (30 s first-move deadline each, then abort); one advisory lock serialises matchmaking (planned). Details in the plan.
 
-**Open:** `review_notifier_test` "checkmate position is scored without the engine" failed once in a full `flutter test` run and passed on rerun (flaky under load; not touched by F2a).
+**Open:** the Supabase advisors check (`get_advisors`) was blocked by the Claude Code permission classifier; function EXECUTE grants were checked with SQL instead (only service_role can run apply_move). Adaam: allow `mcp__supabase__get_advisors` or run Advisors in the dashboard. `review_notifier_test` "checkmate position is scored without the engine" failed once in a full `flutter test` run and passed on rerun (flaky under load; not touched by F2a).
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.

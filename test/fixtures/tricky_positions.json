@@ -1,0 +1,2842 @@
+[
+  {
+    "name": "start",
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "normalizedFen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "legal": [
+      "a2a3",
+      "a2a4",
+      "b1a3",
+      "b1c3",
+      "b2b3",
+      "b2b4",
+      "c2c3",
+      "c2c4",
+      "d2d3",
+      "d2d4",
+      "e2e3",
+      "e2e4",
+      "f2f3",
+      "f2f4",
+      "g1f3",
+      "g1h3",
+      "g2g3",
+      "g2g4",
+      "h2h3",
+      "h2h4"
+    ],
+    "moves": {
+      "a2a3": {
+        "san": "a3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a2a4": {
+        "san": "a4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b1a3": {
+        "san": "Na3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/N7/PPPPPPPP/R1BQKBNR b KQkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b1c3": {
+        "san": "Nc3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/2N5/PPPPPPPP/R1BQKBNR b KQkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b2b3": {
+        "san": "b3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/1P6/P1PPPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b2b4": {
+        "san": "b4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/1P6/8/P1PPPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c2c3": {
+        "san": "c3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c2c4": {
+        "san": "c4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d2d3": {
+        "san": "d3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d2d4": {
+        "san": "d4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e2e3": {
+        "san": "e3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e2e4": {
+        "san": "e4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f2f3": {
+        "san": "f3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/5P2/PPPPP1PP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f2f4": {
+        "san": "f4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/5P2/8/PPPPP1PP/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1f3": {
+        "san": "Nf3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1h3": {
+        "san": "Nh3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/7N/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g2g3": {
+        "san": "g3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g2g4": {
+        "san": "g4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h2h3": {
+        "san": "h3",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/8/7P/PPPPPPP1/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h2h4": {
+        "san": "h4",
+        "fenAfter": "rnbqkbnr/pppppppp/8/8/7P/8/PPPPPPP1/RNBQKBNR b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "castling both sides",
+    "fen": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1",
+    "normalizedFen": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1",
+    "legal": [
+      "a1b1",
+      "a1c1",
+      "a1d1",
+      "a2a3",
+      "a2a4",
+      "b2b3",
+      "b2b4",
+      "c2c3",
+      "c2c4",
+      "d2d3",
+      "d2d4",
+      "e1c1",
+      "e1d1",
+      "e1f1",
+      "e1g1",
+      "e2e3",
+      "e2e4",
+      "f2f3",
+      "f2f4",
+      "g2g3",
+      "g2g4",
+      "h1f1",
+      "h1g1",
+      "h2h3",
+      "h2h4"
+    ],
+    "moves": {
+      "a1b1": {
+        "san": "Rb1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/1R2K2R b Kkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1c1": {
+        "san": "Rc1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/2R1K2R b Kkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1d1": {
+        "san": "Rd1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/3RK2R b Kkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a2a3": {
+        "san": "a3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/P7/1PPPPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a2a4": {
+        "san": "a4",
+        "fenAfter": "r3k2r/pppppppp/8/8/P7/8/1PPPPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b2b3": {
+        "san": "b3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/1P6/P1PPPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b2b4": {
+        "san": "b4",
+        "fenAfter": "r3k2r/pppppppp/8/8/1P6/8/P1PPPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c2c3": {
+        "san": "c3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/2P5/PP1PPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c2c4": {
+        "san": "c4",
+        "fenAfter": "r3k2r/pppppppp/8/8/2P5/8/PP1PPPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d2d3": {
+        "san": "d3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/3P4/PPP1PPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d2d4": {
+        "san": "d4",
+        "fenAfter": "r3k2r/pppppppp/8/8/3P4/8/PPP1PPPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1c1": {
+        "san": "O-O-O",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/2KR3R b kq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R2K3R b kq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R4K1R b kq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1g1": {
+        "san": "O-O",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R4RK1 b kq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e2e3": {
+        "san": "e3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/4P3/PPPP1PPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e2e4": {
+        "san": "e4",
+        "fenAfter": "r3k2r/pppppppp/8/8/4P3/8/PPPP1PPP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f2f3": {
+        "san": "f3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/5P2/PPPPP1PP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f2f4": {
+        "san": "f4",
+        "fenAfter": "r3k2r/pppppppp/8/8/5P2/8/PPPPP1PP/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g2g3": {
+        "san": "g3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/6P1/PPPPPP1P/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g2g4": {
+        "san": "g4",
+        "fenAfter": "r3k2r/pppppppp/8/8/6P1/8/PPPPPP1P/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1f1": {
+        "san": "Rf1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3KR2 b Qkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1g1": {
+        "san": "Rg1",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K1R1 b Qkq - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h2h3": {
+        "san": "h3",
+        "fenAfter": "r3k2r/pppppppp/8/8/8/7P/PPPPPPP1/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h2h4": {
+        "san": "h4",
+        "fenAfter": "r3k2r/pppppppp/8/8/7P/8/PPPPPPP1/R3K2R b KQkq - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "castling black",
+    "fen": "r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1",
+    "normalizedFen": "r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1",
+    "legal": [
+      "a8a1",
+      "a8a2",
+      "a8a3",
+      "a8a4",
+      "a8a5",
+      "a8a6",
+      "a8a7",
+      "a8b8",
+      "a8c8",
+      "a8d8",
+      "e8c8",
+      "e8d7",
+      "e8d8",
+      "e8e7",
+      "e8f7",
+      "e8f8",
+      "e8g8",
+      "h8f8",
+      "h8g8",
+      "h8h1",
+      "h8h2",
+      "h8h3",
+      "h8h4",
+      "h8h5",
+      "h8h6",
+      "h8h7"
+    ],
+    "moves": {
+      "a8a1": {
+        "san": "Rxa1+",
+        "fenAfter": "4k2r/8/8/8/8/8/8/r3K2R w k - 0 2",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a2": {
+        "san": "Ra2",
+        "fenAfter": "4k2r/8/8/8/8/8/r7/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a3": {
+        "san": "Ra3",
+        "fenAfter": "4k2r/8/8/8/8/r7/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a4": {
+        "san": "Ra4",
+        "fenAfter": "4k2r/8/8/8/r7/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a5": {
+        "san": "Ra5",
+        "fenAfter": "4k2r/8/8/r7/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a6": {
+        "san": "Ra6",
+        "fenAfter": "4k2r/8/r7/8/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8a7": {
+        "san": "Ra7",
+        "fenAfter": "4k2r/r7/8/8/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8b8": {
+        "san": "Rb8",
+        "fenAfter": "1r2k2r/8/8/8/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8c8": {
+        "san": "Rc8",
+        "fenAfter": "2r1k2r/8/8/8/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a8d8": {
+        "san": "Rd8",
+        "fenAfter": "3rk2r/8/8/8/8/8/8/R3K2R w k - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8c8": {
+        "san": "O-O-O",
+        "fenAfter": "2kr3r/8/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8d7": {
+        "san": "Kd7",
+        "fenAfter": "r6r/3k4/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8d8": {
+        "san": "Kd8",
+        "fenAfter": "r2k3r/8/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8e7": {
+        "san": "Ke7",
+        "fenAfter": "r6r/4k3/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8f7": {
+        "san": "Kf7",
+        "fenAfter": "r6r/5k2/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8f8": {
+        "san": "Kf8",
+        "fenAfter": "r4k1r/8/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8g8": {
+        "san": "O-O",
+        "fenAfter": "r4rk1/8/8/8/8/8/8/R3K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8f8": {
+        "san": "Rf8",
+        "fenAfter": "r3kr2/8/8/8/8/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8g8": {
+        "san": "Rg8",
+        "fenAfter": "r3k1r1/8/8/8/8/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h1": {
+        "san": "Rxh1+",
+        "fenAfter": "r3k3/8/8/8/8/8/8/R3K2r w q - 0 2",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h2": {
+        "san": "Rh2",
+        "fenAfter": "r3k3/8/8/8/8/8/7r/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h3": {
+        "san": "Rh3",
+        "fenAfter": "r3k3/8/8/8/8/7r/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h4": {
+        "san": "Rh4",
+        "fenAfter": "r3k3/8/8/8/7r/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h5": {
+        "san": "Rh5",
+        "fenAfter": "r3k3/8/8/7r/8/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h6": {
+        "san": "Rh6",
+        "fenAfter": "r3k3/8/7r/8/8/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h8h7": {
+        "san": "Rh7",
+        "fenAfter": "r3k3/7r/8/8/8/8/8/R3K2R w q - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "castling through check",
+    "fen": "4k3/8/8/8/8/8/5r2/R3K2R w KQ - 0 1",
+    "normalizedFen": "4k3/8/8/8/8/8/5r2/R3K2R w KQ - 0 1",
+    "legal": [
+      "a1a2",
+      "a1a3",
+      "a1a4",
+      "a1a5",
+      "a1a6",
+      "a1a7",
+      "a1a8",
+      "a1b1",
+      "a1c1",
+      "a1d1",
+      "e1c1",
+      "e1d1",
+      "e1f2",
+      "h1f1",
+      "h1g1",
+      "h1h2",
+      "h1h3",
+      "h1h4",
+      "h1h5",
+      "h1h6",
+      "h1h7",
+      "h1h8"
+    ],
+    "moves": {
+      "a1a2": {
+        "san": "Ra2",
+        "fenAfter": "4k3/8/8/8/8/8/R4r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a3": {
+        "san": "Ra3",
+        "fenAfter": "4k3/8/8/8/8/R7/5r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a4": {
+        "san": "Ra4",
+        "fenAfter": "4k3/8/8/8/R7/8/5r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a5": {
+        "san": "Ra5",
+        "fenAfter": "4k3/8/8/R7/8/8/5r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a6": {
+        "san": "Ra6",
+        "fenAfter": "4k3/8/R7/8/8/8/5r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a7": {
+        "san": "Ra7",
+        "fenAfter": "4k3/R7/8/8/8/8/5r2/4K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a8": {
+        "san": "Ra8+",
+        "fenAfter": "R3k3/8/8/8/8/8/5r2/4K2R b K - 1 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1b1": {
+        "san": "Rb1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/1R2K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1c1": {
+        "san": "Rc1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/2R1K2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1d1": {
+        "san": "Rd1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/3RK2R b K - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1c1": {
+        "san": "O-O-O",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/2KR3R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/R2K3R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kxf2",
+        "fenAfter": "4k3/8/8/8/8/8/5K2/R6R b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "h1f1": {
+        "san": "Rf1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/R3KR2 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1g1": {
+        "san": "Rg1",
+        "fenAfter": "4k3/8/8/8/8/8/5r2/R3K1R1 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h2": {
+        "san": "Rh2",
+        "fenAfter": "4k3/8/8/8/8/8/5r1R/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h3": {
+        "san": "Rh3",
+        "fenAfter": "4k3/8/8/8/8/7R/5r2/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h4": {
+        "san": "Rh4",
+        "fenAfter": "4k3/8/8/8/7R/8/5r2/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h5": {
+        "san": "Rh5",
+        "fenAfter": "4k3/8/8/7R/8/8/5r2/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h6": {
+        "san": "Rh6",
+        "fenAfter": "4k3/8/7R/8/8/8/5r2/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h7": {
+        "san": "Rh7",
+        "fenAfter": "4k3/7R/8/8/8/8/5r2/R3K3 b Q - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h8": {
+        "san": "Rh8+",
+        "fenAfter": "4k2R/8/8/8/8/8/5r2/R3K3 b Q - 1 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "castling out of check",
+    "fen": "4k3/8/8/8/8/8/4r3/R3K2R w KQ - 0 1",
+    "normalizedFen": "4k3/8/8/8/8/8/4r3/R3K2R w KQ - 0 1",
+    "legal": [
+      "e1d1",
+      "e1e2",
+      "e1f1"
+    ],
+    "moves": {
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "4k3/8/8/8/8/8/4r3/R2K3R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Kxe2",
+        "fenAfter": "4k3/8/8/8/8/8/4K3/R6R b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "4k3/8/8/8/8/8/4r3/R4K1R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "castling rights lost",
+    "fen": "r3k2r/8/8/8/8/8/8/R3K2R w - - 0 1",
+    "normalizedFen": "r3k2r/8/8/8/8/8/8/R3K2R w - - 0 1",
+    "legal": [
+      "a1a2",
+      "a1a3",
+      "a1a4",
+      "a1a5",
+      "a1a6",
+      "a1a7",
+      "a1a8",
+      "a1b1",
+      "a1c1",
+      "a1d1",
+      "e1d1",
+      "e1d2",
+      "e1e2",
+      "e1f1",
+      "e1f2",
+      "h1f1",
+      "h1g1",
+      "h1h2",
+      "h1h3",
+      "h1h4",
+      "h1h5",
+      "h1h6",
+      "h1h7",
+      "h1h8"
+    ],
+    "moves": {
+      "a1a2": {
+        "san": "Ra2",
+        "fenAfter": "r3k2r/8/8/8/8/8/R7/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a3": {
+        "san": "Ra3",
+        "fenAfter": "r3k2r/8/8/8/8/R7/8/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a4": {
+        "san": "Ra4",
+        "fenAfter": "r3k2r/8/8/8/R7/8/8/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a5": {
+        "san": "Ra5",
+        "fenAfter": "r3k2r/8/8/R7/8/8/8/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a6": {
+        "san": "Ra6",
+        "fenAfter": "r3k2r/8/R7/8/8/8/8/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a7": {
+        "san": "Ra7",
+        "fenAfter": "r3k2r/R7/8/8/8/8/8/4K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a8": {
+        "san": "Rxa8+",
+        "fenAfter": "R3k2r/8/8/8/8/8/8/4K2R b - - 0 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1b1": {
+        "san": "Rb1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/1R2K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1c1": {
+        "san": "Rc1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/2R1K2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1d1": {
+        "san": "Rd1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/3RK2R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/R2K3R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "r3k2r/8/8/8/8/8/3K4/R6R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "r3k2r/8/8/8/8/8/4K3/R6R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/R4K1R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "r3k2r/8/8/8/8/8/5K2/R6R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1f1": {
+        "san": "Rf1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/R3KR2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1g1": {
+        "san": "Rg1",
+        "fenAfter": "r3k2r/8/8/8/8/8/8/R3K1R1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h2": {
+        "san": "Rh2",
+        "fenAfter": "r3k2r/8/8/8/8/8/7R/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h3": {
+        "san": "Rh3",
+        "fenAfter": "r3k2r/8/8/8/8/7R/8/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h4": {
+        "san": "Rh4",
+        "fenAfter": "r3k2r/8/8/8/7R/8/8/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h5": {
+        "san": "Rh5",
+        "fenAfter": "r3k2r/8/8/7R/8/8/8/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h6": {
+        "san": "Rh6",
+        "fenAfter": "r3k2r/8/7R/8/8/8/8/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h7": {
+        "san": "Rh7",
+        "fenAfter": "r3k2r/7R/8/8/8/8/8/R3K3 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h1h8": {
+        "san": "Rxh8+",
+        "fenAfter": "r3k2R/8/8/8/8/8/8/R3K3 b - - 0 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "en passant",
+    "fen": "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 2",
+    "normalizedFen": "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 2",
+    "legal": [
+      "e1d1",
+      "e1d2",
+      "e1e2",
+      "e1f1",
+      "e1f2",
+      "e5d6",
+      "e5e6"
+    ],
+    "moves": {
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "4k3/8/8/3pP3/8/8/8/3K4 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "4k3/8/8/3pP3/8/8/3K4/8 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "4k3/8/8/3pP3/8/8/4K3/8 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "4k3/8/8/3pP3/8/8/8/5K2 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "4k3/8/8/3pP3/8/8/5K2/8 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e5d6": {
+        "san": "exd6",
+        "fenAfter": "4k3/8/3P4/8/8/8/8/4K3 b - - 0 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e5e6": {
+        "san": "e6",
+        "fenAfter": "4k3/8/4P3/3p4/8/8/8/4K3 b - - 0 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "en passant pinned",
+    "fen": "8/8/8/K2pP2r/8/8/8/4k3 w - d6 0 2",
+    "normalizedFen": "8/8/8/K2pP2r/8/8/8/4k3 w - - 0 2",
+    "legal": [
+      "a5a4",
+      "a5a6",
+      "a5b4",
+      "a5b5",
+      "a5b6",
+      "e5e6"
+    ],
+    "moves": {
+      "a5a4": {
+        "san": "Ka4",
+        "fenAfter": "8/8/8/3pP2r/K7/8/8/4k3 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a5a6": {
+        "san": "Ka6",
+        "fenAfter": "8/8/K7/3pP2r/8/8/8/4k3 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a5b4": {
+        "san": "Kb4",
+        "fenAfter": "8/8/8/3pP2r/1K6/8/8/4k3 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a5b5": {
+        "san": "Kb5",
+        "fenAfter": "8/8/8/1K1pP2r/8/8/8/4k3 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a5b6": {
+        "san": "Kb6",
+        "fenAfter": "8/8/1K6/3pP2r/8/8/8/4k3 b - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e5e6": {
+        "san": "e6",
+        "fenAfter": "8/8/4P3/K2p3r/8/8/8/4k3 b - - 0 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "ep square without capturer",
+    "fen": "4k3/8/8/8/3P4/8/8/4K3 b - d3 0 1",
+    "normalizedFen": "4k3/8/8/8/3P4/8/8/4K3 b - - 0 1",
+    "legal": [
+      "e8d7",
+      "e8d8",
+      "e8e7",
+      "e8f7",
+      "e8f8"
+    ],
+    "moves": {
+      "e8d7": {
+        "san": "Kd7",
+        "fenAfter": "8/3k4/8/8/3P4/8/8/4K3 w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e8d8": {
+        "san": "Kd8",
+        "fenAfter": "3k4/8/8/8/3P4/8/8/4K3 w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e8e7": {
+        "san": "Ke7",
+        "fenAfter": "8/4k3/8/8/3P4/8/8/4K3 w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e8f7": {
+        "san": "Kf7",
+        "fenAfter": "8/5k2/8/8/3P4/8/8/4K3 w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e8f8": {
+        "san": "Kf8",
+        "fenAfter": "5k2/8/8/8/3P4/8/8/4K3 w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      }
+    }
+  },
+  {
+    "name": "promotion",
+    "fen": "8/P6k/8/8/8/8/8/4K3 w - - 0 1",
+    "normalizedFen": "8/P6k/8/8/8/8/8/4K3 w - - 0 1",
+    "legal": [
+      "a7a8b",
+      "a7a8n",
+      "a7a8q",
+      "a7a8r",
+      "e1d1",
+      "e1d2",
+      "e1e2",
+      "e1f1",
+      "e1f2"
+    ],
+    "moves": {
+      "a7a8b": {
+        "san": "a8=B",
+        "fenAfter": "B7/7k/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "a7a8n": {
+        "san": "a8=N",
+        "fenAfter": "N7/7k/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "a7a8q": {
+        "san": "a8=Q",
+        "fenAfter": "Q7/7k/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "a7a8r": {
+        "san": "a8=R",
+        "fenAfter": "R7/7k/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "8/P6k/8/8/8/8/8/3K4 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "8/P6k/8/8/8/8/3K4/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "8/P6k/8/8/8/8/4K3/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "8/P6k/8/8/8/8/8/5K2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "8/P6k/8/8/8/8/5K2/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      }
+    }
+  },
+  {
+    "name": "capture promotion",
+    "fen": "1r5k/P7/8/8/8/8/8/4K3 w - - 0 1",
+    "normalizedFen": "1r5k/P7/8/8/8/8/8/4K3 w - - 0 1",
+    "legal": [
+      "a7a8b",
+      "a7a8n",
+      "a7a8q",
+      "a7a8r",
+      "a7b8b",
+      "a7b8n",
+      "a7b8q",
+      "a7b8r",
+      "e1d1",
+      "e1d2",
+      "e1e2",
+      "e1f1",
+      "e1f2"
+    ],
+    "moves": {
+      "a7a8b": {
+        "san": "a8=B",
+        "fenAfter": "Br5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": false
+      },
+      "a7a8n": {
+        "san": "a8=N",
+        "fenAfter": "Nr5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a7a8q": {
+        "san": "a8=Q",
+        "fenAfter": "Qr5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a7a8r": {
+        "san": "a8=R",
+        "fenAfter": "Rr5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a7b8b": {
+        "san": "axb8=B",
+        "fenAfter": "1B5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "a7b8n": {
+        "san": "axb8=N",
+        "fenAfter": "1N5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "a7b8q": {
+        "san": "axb8=Q+",
+        "fenAfter": "1Q5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "a7b8r": {
+        "san": "axb8=R+",
+        "fenAfter": "1R5k/8/8/8/8/8/8/4K3 b - - 0 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "1r5k/P7/8/8/8/8/8/3K4 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "1r5k/P7/8/8/8/8/3K4/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "1r5k/P7/8/8/8/8/4K3/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "1r5k/P7/8/8/8/8/8/5K2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "1r5k/P7/8/8/8/8/5K2/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "black promotion with check",
+    "fen": "4k3/8/8/8/8/8/p7/4K2R b - - 0 1",
+    "normalizedFen": "4k3/8/8/8/8/8/p7/4K2R b - - 0 1",
+    "legal": [
+      "a2a1b",
+      "a2a1n",
+      "a2a1q",
+      "a2a1r",
+      "e8d7",
+      "e8d8",
+      "e8e7",
+      "e8f7",
+      "e8f8"
+    ],
+    "moves": {
+      "a2a1b": {
+        "san": "a1=B",
+        "fenAfter": "4k3/8/8/8/8/8/8/b3K2R w - - 0 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "a2a1n": {
+        "san": "a1=N",
+        "fenAfter": "4k3/8/8/8/8/8/8/n3K2R w - - 0 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a2a1q": {
+        "san": "a1=Q+",
+        "fenAfter": "4k3/8/8/8/8/8/8/q3K2R w - - 0 2",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a2a1r": {
+        "san": "a1=R+",
+        "fenAfter": "4k3/8/8/8/8/8/8/r3K2R w - - 0 2",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8d7": {
+        "san": "Kd7",
+        "fenAfter": "8/3k4/8/8/8/8/p7/4K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8d8": {
+        "san": "Kd8",
+        "fenAfter": "3k4/8/8/8/8/8/p7/4K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8e7": {
+        "san": "Ke7",
+        "fenAfter": "8/4k3/8/8/8/8/p7/4K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8f7": {
+        "san": "Kf7",
+        "fenAfter": "8/5k2/8/8/8/8/p7/4K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8f8": {
+        "san": "Kf8",
+        "fenAfter": "5k2/8/8/8/8/8/p7/4K2R w - - 1 2",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "promotion mate",
+    "fen": "k7/7P/1K6/8/8/8/8/8 w - - 0 1",
+    "normalizedFen": "k7/7P/1K6/8/8/8/8/8 w - - 0 1",
+    "legal": [
+      "b6a5",
+      "b6a6",
+      "b6b5",
+      "b6c5",
+      "b6c6",
+      "b6c7",
+      "h7h8b",
+      "h7h8n",
+      "h7h8q",
+      "h7h8r"
+    ],
+    "moves": {
+      "b6a5": {
+        "san": "Ka5",
+        "fenAfter": "k7/7P/8/K7/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "b6a6": {
+        "san": "Ka6",
+        "fenAfter": "k7/7P/K7/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "b6b5": {
+        "san": "Kb5",
+        "fenAfter": "k7/7P/8/1K6/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "b6c5": {
+        "san": "Kc5",
+        "fenAfter": "k7/7P/8/2K5/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "b6c6": {
+        "san": "Kc6",
+        "fenAfter": "k7/7P/2K5/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "b6c7": {
+        "san": "Kc7",
+        "fenAfter": "k7/2K4P/8/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "h7h8b": {
+        "san": "h8=B",
+        "fenAfter": "k6B/8/1K6/8/8/8/8/8 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "h7h8n": {
+        "san": "h8=N",
+        "fenAfter": "k6N/8/1K6/8/8/8/8/8 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "h7h8q": {
+        "san": "h8=Q#",
+        "fenAfter": "k6Q/8/1K6/8/8/8/8/8 b - - 0 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "h7h8r": {
+        "san": "h8=R#",
+        "fenAfter": "k6R/8/1K6/8/8/8/8/8 b - - 0 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      }
+    }
+  },
+  {
+    "name": "in check",
+    "fen": "4k3/4r3/8/8/8/8/8/R3K3 w Q - 0 1",
+    "normalizedFen": "4k3/4r3/8/8/8/8/8/R3K3 w Q - 0 1",
+    "legal": [
+      "e1d1",
+      "e1d2",
+      "e1f1",
+      "e1f2"
+    ],
+    "moves": {
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "4k3/4r3/8/8/8/8/8/R2K4 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "4k3/4r3/8/8/8/8/3K4/R7 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "4k3/4r3/8/8/8/8/8/R4K2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "4k3/4r3/8/8/8/8/5K2/R7 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "double check",
+    "fen": "4k3/8/8/8/8/5n2/8/4K2r w - - 0 1",
+    "normalizedFen": "4k3/8/8/8/8/5n2/8/4K2r w - - 0 1",
+    "legal": [
+      "e1e2",
+      "e1f2"
+    ],
+    "moves": {
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "4k3/8/8/8/8/5n2/4K3/7r b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "4k3/8/8/8/8/5n2/5K2/7r b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "fools mate",
+    "fen": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq g3 0 2",
+    "normalizedFen": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+    "legal": [
+      "a7a5",
+      "a7a6",
+      "b7b5",
+      "b7b6",
+      "b8a6",
+      "b8c6",
+      "c7c5",
+      "c7c6",
+      "d7d5",
+      "d7d6",
+      "d8e7",
+      "d8f6",
+      "d8g5",
+      "d8h4",
+      "e5e4",
+      "e8e7",
+      "f7f5",
+      "f7f6",
+      "f8a3",
+      "f8b4",
+      "f8c5",
+      "f8d6",
+      "f8e7",
+      "g7g5",
+      "g7g6",
+      "g8e7",
+      "g8f6",
+      "g8h6",
+      "h7h5",
+      "h7h6"
+    ],
+    "moves": {
+      "a7a5": {
+        "san": "a5",
+        "fenAfter": "rnbqkbnr/1ppp1ppp/8/p3p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a7a6": {
+        "san": "a6",
+        "fenAfter": "rnbqkbnr/1ppp1ppp/p7/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b7b5": {
+        "san": "b5",
+        "fenAfter": "rnbqkbnr/p1pp1ppp/8/1p2p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b7b6": {
+        "san": "b6",
+        "fenAfter": "rnbqkbnr/p1pp1ppp/1p6/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b8a6": {
+        "san": "Na6",
+        "fenAfter": "r1bqkbnr/pppp1ppp/n7/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "b8c6": {
+        "san": "Nc6",
+        "fenAfter": "r1bqkbnr/pppp1ppp/2n5/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c7c5": {
+        "san": "c5",
+        "fenAfter": "rnbqkbnr/pp1p1ppp/8/2p1p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "c7c6": {
+        "san": "c6",
+        "fenAfter": "rnbqkbnr/pp1p1ppp/2p5/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d7d5": {
+        "san": "d5",
+        "fenAfter": "rnbqkbnr/ppp2ppp/8/3pp3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d7d6": {
+        "san": "d6",
+        "fenAfter": "rnbqkbnr/ppp2ppp/3p4/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d8e7": {
+        "san": "Qe7",
+        "fenAfter": "rnb1kbnr/ppppqppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d8f6": {
+        "san": "Qf6",
+        "fenAfter": "rnb1kbnr/pppp1ppp/5q2/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d8g5": {
+        "san": "Qg5",
+        "fenAfter": "rnb1kbnr/pppp1ppp/8/4p1q1/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "d8h4": {
+        "san": "Qh4#",
+        "fenAfter": "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e5e4": {
+        "san": "e4",
+        "fenAfter": "rnbqkbnr/pppp1ppp/8/8/4p1P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e8e7": {
+        "san": "Ke7",
+        "fenAfter": "rnbq1bnr/ppppkppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQ - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f7f5": {
+        "san": "f5",
+        "fenAfter": "rnbqkbnr/pppp2pp/8/4pp2/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f7f6": {
+        "san": "f6",
+        "fenAfter": "rnbqkbnr/pppp2pp/5p2/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f8a3": {
+        "san": "Ba3",
+        "fenAfter": "rnbqk1nr/pppp1ppp/8/4p3/6P1/b4P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f8b4": {
+        "san": "Bb4",
+        "fenAfter": "rnbqk1nr/pppp1ppp/8/4p3/1b4P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f8c5": {
+        "san": "Bc5",
+        "fenAfter": "rnbqk1nr/pppp1ppp/8/2b1p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f8d6": {
+        "san": "Bd6",
+        "fenAfter": "rnbqk1nr/pppp1ppp/3b4/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "f8e7": {
+        "san": "Be7",
+        "fenAfter": "rnbqk1nr/ppppbppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g7g5": {
+        "san": "g5",
+        "fenAfter": "rnbqkbnr/pppp1p1p/8/4p1p1/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g7g6": {
+        "san": "g6",
+        "fenAfter": "rnbqkbnr/pppp1p1p/6p1/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g8e7": {
+        "san": "Ne7",
+        "fenAfter": "rnbqkb1r/ppppnppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g8f6": {
+        "san": "Nf6",
+        "fenAfter": "rnbqkb1r/pppp1ppp/5n2/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g8h6": {
+        "san": "Nh6",
+        "fenAfter": "rnbqkb1r/pppp1ppp/7n/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h7h5": {
+        "san": "h5",
+        "fenAfter": "rnbqkbnr/pppp1pp1/8/4p2p/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "h7h6": {
+        "san": "h6",
+        "fenAfter": "rnbqkbnr/pppp1pp1/7p/4p3/6P1/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 3",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "back rank mate",
+    "fen": "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1",
+    "normalizedFen": "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1",
+    "legal": [
+      "a1a2",
+      "a1a3",
+      "a1a4",
+      "a1a5",
+      "a1a6",
+      "a1a7",
+      "a1a8",
+      "a1b1",
+      "a1c1",
+      "a1d1",
+      "a1e1",
+      "a1f1",
+      "g1f1",
+      "g1f2",
+      "g1g2",
+      "g1h1",
+      "g1h2"
+    ],
+    "moves": {
+      "a1a2": {
+        "san": "Ra2",
+        "fenAfter": "6k1/5ppp/8/8/8/8/R7/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a3": {
+        "san": "Ra3",
+        "fenAfter": "6k1/5ppp/8/8/8/R7/8/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a4": {
+        "san": "Ra4",
+        "fenAfter": "6k1/5ppp/8/8/R7/8/8/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a5": {
+        "san": "Ra5",
+        "fenAfter": "6k1/5ppp/8/R7/8/8/8/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a6": {
+        "san": "Ra6",
+        "fenAfter": "6k1/5ppp/R7/8/8/8/8/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a7": {
+        "san": "Ra7",
+        "fenAfter": "6k1/R4ppp/8/8/8/8/8/6K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1a8": {
+        "san": "Ra8#",
+        "fenAfter": "R5k1/5ppp/8/8/8/8/8/6K1 b - - 1 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1b1": {
+        "san": "Rb1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/1R4K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1c1": {
+        "san": "Rc1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/2R3K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1d1": {
+        "san": "Rd1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/3R2K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1e1": {
+        "san": "Re1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/4R1K1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "a1f1": {
+        "san": "Rf1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/5RK1 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1f1": {
+        "san": "Kf1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/R4K2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1f2": {
+        "san": "Kf2",
+        "fenAfter": "6k1/5ppp/8/8/8/8/5K2/R7 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1g2": {
+        "san": "Kg2",
+        "fenAfter": "6k1/5ppp/8/8/8/8/6K1/R7 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1h1": {
+        "san": "Kh1",
+        "fenAfter": "6k1/5ppp/8/8/8/8/8/R6K b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "g1h2": {
+        "san": "Kh2",
+        "fenAfter": "6k1/5ppp/8/8/8/8/7K/R7 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "stalemate trap",
+    "fen": "7k/5Q2/6K1/8/8/8/8/8 w - - 0 1",
+    "normalizedFen": "7k/5Q2/6K1/8/8/8/8/8 w - - 0 1",
+    "legal": [
+      "f7a2",
+      "f7a7",
+      "f7b3",
+      "f7b7",
+      "f7c4",
+      "f7c7",
+      "f7d5",
+      "f7d7",
+      "f7e6",
+      "f7e7",
+      "f7e8",
+      "f7f1",
+      "f7f2",
+      "f7f3",
+      "f7f4",
+      "f7f5",
+      "f7f6",
+      "f7f8",
+      "f7g7",
+      "f7g8",
+      "f7h7",
+      "g6f5",
+      "g6f6",
+      "g6g5",
+      "g6h5",
+      "g6h6"
+    ],
+    "moves": {
+      "f7a2": {
+        "san": "Qa2",
+        "fenAfter": "7k/8/6K1/8/8/8/Q7/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7a7": {
+        "san": "Qa7",
+        "fenAfter": "7k/Q7/6K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7b3": {
+        "san": "Qb3",
+        "fenAfter": "7k/8/6K1/8/8/1Q6/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7b7": {
+        "san": "Qb7",
+        "fenAfter": "7k/1Q6/6K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7c4": {
+        "san": "Qc4",
+        "fenAfter": "7k/8/6K1/8/2Q5/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7c7": {
+        "san": "Qc7",
+        "fenAfter": "7k/2Q5/6K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7d5": {
+        "san": "Qd5",
+        "fenAfter": "7k/8/6K1/3Q4/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7d7": {
+        "san": "Qd7",
+        "fenAfter": "7k/3Q4/6K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7e6": {
+        "san": "Qe6",
+        "fenAfter": "7k/8/4Q1K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7e7": {
+        "san": "Qe7",
+        "fenAfter": "7k/4Q3/6K1/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7e8": {
+        "san": "Qe8#",
+        "fenAfter": "4Q2k/8/6K1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f1": {
+        "san": "Qf1",
+        "fenAfter": "7k/8/6K1/8/8/8/8/5Q2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f2": {
+        "san": "Qf2",
+        "fenAfter": "7k/8/6K1/8/8/8/5Q2/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f3": {
+        "san": "Qf3",
+        "fenAfter": "7k/8/6K1/8/8/5Q2/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f4": {
+        "san": "Qf4",
+        "fenAfter": "7k/8/6K1/8/5Q2/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f5": {
+        "san": "Qf5",
+        "fenAfter": "7k/8/6K1/5Q2/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f6": {
+        "san": "Qf6+",
+        "fenAfter": "7k/8/5QK1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7f8": {
+        "san": "Qf8#",
+        "fenAfter": "5Q1k/8/6K1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7g7": {
+        "san": "Qg7#",
+        "fenAfter": "7k/6Q1/6K1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7g8": {
+        "san": "Qg8+",
+        "fenAfter": "6Qk/8/6K1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "f7h7": {
+        "san": "Qh7#",
+        "fenAfter": "7k/7Q/6K1/8/8/8/8/8 b - - 1 1",
+        "check": true,
+        "checkmate": true,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "g6f5": {
+        "san": "Kf5",
+        "fenAfter": "7k/5Q2/8/5K2/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "g6f6": {
+        "san": "Kf6",
+        "fenAfter": "7k/5Q2/5K2/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "g6g5": {
+        "san": "Kg5",
+        "fenAfter": "7k/5Q2/8/6K1/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "g6h5": {
+        "san": "Kh5",
+        "fenAfter": "7k/5Q2/8/7K/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      },
+      "g6h6": {
+        "san": "Kh6",
+        "fenAfter": "7k/5Q2/7K/8/8/8/8/8 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": true,
+        "whiteInsufficient": false,
+        "blackInsufficient": true
+      }
+    }
+  },
+  {
+    "name": "capture to bare kings",
+    "fen": "8/8/8/4k3/8/8/4r3/4K3 w - - 0 1",
+    "normalizedFen": "8/8/8/4k3/8/8/4r3/4K3 w - - 0 1",
+    "legal": [
+      "e1d1",
+      "e1e2",
+      "e1f1"
+    ],
+    "moves": {
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "8/8/8/4k3/8/8/4r3/3K4 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Kxe2",
+        "fenAfter": "8/8/8/4k3/8/8/4K3/8 b - - 0 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": true
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "8/8/8/4k3/8/8/4r3/5K2 b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": true,
+        "blackInsufficient": false
+      }
+    }
+  },
+  {
+    "name": "knight vs king",
+    "fen": "8/8/8/4k3/8/8/2n5/4K2R w - - 0 1",
+    "normalizedFen": "8/8/8/4k3/8/8/2n5/4K2R w - - 0 1",
+    "legal": [
+      "e1d1",
+      "e1d2",
+      "e1e2",
+      "e1f1",
+      "e1f2"
+    ],
+    "moves": {
+      "e1d1": {
+        "san": "Kd1",
+        "fenAfter": "8/8/8/4k3/8/8/2n5/3K3R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1d2": {
+        "san": "Kd2",
+        "fenAfter": "8/8/8/4k3/8/8/2nK4/7R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1e2": {
+        "san": "Ke2",
+        "fenAfter": "8/8/8/4k3/8/8/2n1K3/7R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f1": {
+        "san": "Kf1",
+        "fenAfter": "8/8/8/4k3/8/8/2n5/5K1R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      },
+      "e1f2": {
+        "san": "Kf2",
+        "fenAfter": "8/8/8/4k3/8/8/2n2K2/7R b - - 1 1",
+        "check": false,
+        "checkmate": false,
+        "stalemate": false,
+        "whiteInsufficient": false,
+        "blackInsufficient": false
+      }
+    }
+  }
+]

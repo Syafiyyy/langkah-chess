@@ -1,7 +1,7 @@
 // Chess rules for the server, on chess.js. Mirrors the app's offline rules
 // (lib/features/play_ai/domain/game_result.dart) so online and offline games
 // end the same way. Termination names match the Dart `Termination` enum.
-import { Chess, type Move } from "npm:chess.js@1.4.0";
+import { Chess, type Move } from "chess.js";
 
 export type Side = "w" | "b";
 export type Result = "white" | "black" | "draw";
