@@ -59,7 +59,7 @@ class _NewGameSheetState extends State<NewGameSheet> {
           children: [
             const Text('Play vs Bot', style: AppType.title),
             const SizedBox(height: AppSpacing.lg),
-            Text('Level · ${_setup.level.label}', style: AppType.label),
+            Text(_setup.level.label, style: AppType.label),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: AppSpacing.sm,

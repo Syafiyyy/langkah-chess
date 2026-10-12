@@ -51,6 +51,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.dispose();
   }
 
+  /// Largest square board that leaves room for both player bars.
+  static double _boardSize(BoxConstraints c) =>
+      (c.maxHeight - 2 * PlayerBar.height).clamp(0, c.maxWidth).toDouble();
+
   Future<void> _onGameOver(GameState game) async {
     final action = await GameOverSheet.show(context, game);
     if (!mounted) return;
@@ -116,29 +120,32 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            bar(orientation.opposite),
             Expanded(
               child: LayoutBuilder(
-                builder: (context, constraints) => Center(
-                  child: GameBoard(
-                    size: constraints.biggest.shortestSide,
-                    position: game.positions[ply],
-                    lastMove: ply == 0
-                        ? null
-                        : Move.parse(game.moves[ply - 1].uci),
-                    orientation: orientation,
-                    interactiveSide:
-                        !view.isBrowsing &&
-                            game.isPlayerTurn &&
-                            !view.botThinking
-                        ? game.playerSide
-                        : null,
-                    onMove: _notifier.move,
-                  ),
+                builder: (context, constraints) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    bar(orientation.opposite),
+                    GameBoard(
+                      size: _boardSize(constraints),
+                      position: game.positions[ply],
+                      lastMove: ply == 0
+                          ? null
+                          : Move.parse(game.moves[ply - 1].uci),
+                      orientation: orientation,
+                      interactiveSide:
+                          !view.isBrowsing &&
+                              game.isPlayerTurn &&
+                              !view.botThinking
+                          ? game.playerSide
+                          : null,
+                      onMove: _notifier.move,
+                    ),
+                    bar(orientation),
+                  ],
                 ),
               ),
             ),
-            bar(orientation),
             _StatusLine(
               view: view,
               onBackToGame: () => _notifier.viewPly(null),

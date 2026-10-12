@@ -102,7 +102,7 @@ class _ReplayState extends State<_Replay> {
                     fen: _line.fens[_ply],
                     lastMove: _line.lastMoves[_ply],
                     settings: const StaticChessboardSettings(
-                      colorScheme: ChessboardColorScheme.olive,
+                      colorScheme: ChessboardColorScheme.green,
                       enableCoordinates: true,
                     ),
                   ),

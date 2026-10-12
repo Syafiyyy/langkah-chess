@@ -28,7 +28,7 @@ class GameBoard extends StatefulWidget {
   final void Function(Move move) onMove;
 
   static const settings = ChessboardSettings(
-    colorScheme: ChessboardColorScheme.olive,
+    colorScheme: ChessboardColorScheme.green,
     enablePremoves: false,
     enablePremoveCastling: false,
   );

@@ -17,6 +17,9 @@ class PlayerBar extends StatelessWidget {
     this.status,
   });
 
+  /// Fixed height, so the game screen can size the board around two bars.
+  static const double height = 56;
+
   final String name;
   final Side side;
 
@@ -29,11 +32,9 @@ class PlayerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final clock = this.clock;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.sm,
-      ),
+    return Container(
+      height: height,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         children: [
           Container(
@@ -48,6 +49,7 @@ class PlayerBar extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
