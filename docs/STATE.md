@@ -60,6 +60,7 @@ F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish 
   - Home: "Recent games" (last 3: level, W/L/D badge, accuracy if reviewed, date; tap → replay) with a stats row (games · wins · best accuracy) and a first-use empty state ("Start a game"). "View all" opens History (the History card is gone). Settings icon removed from the app bar; the Settings card stays.
   - `historyRevisionProvider`: bumped when a game is saved or a review is cached; Home summary and History lists watch it.
   - Tests: 254 green (home summary, recent games, revision bump, game layout incl. 360x640 and pill/gutter, review chips/graph height/board theme). Goldens and all screenshots updated.
+- 2026-10-13: Renamed Langkah → Skak (prompt `docs/prompts/rename_skak.md`). Dart package `skak`, `kAppName` "Skak" (wordmark, Android label), PGN Event/Site, app id/namespace `com.syafiyyy.skak` (old dev install uninstalled on the emulator; no data migration, dev data only), DB file `skak.db`. Docs, ADR-0001 note, skill `skak-design`. GitHub repo renamed to `Syafiyyy/skak-chess` (remote updated; description and topics set). Brand assets have no text, unchanged. Screenshots with the wordmark retaken (home, game ×3, game over); the others show no name. Release APK checked: label "Skak", package `com.syafiyyy.skak`. Also fixed a flaky test (revision bump now awaits `whenSaved()`).
 
 ## Contrast ratios (WCAG, checked in `test/app/theme/contrast_test.dart`)
 | Text | on ground #101826 | on surface #18233A | on raised #1F2C48 |
