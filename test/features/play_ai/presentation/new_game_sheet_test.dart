@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/app/theme/app_theme.dart';
-import 'package:langkah/features/play_ai/domain/game_setup.dart';
-import 'package:langkah/features/play_ai/presentation/new_game_sheet.dart';
+import 'package:skak/app/theme/app_theme.dart';
+import 'package:skak/features/play_ai/domain/game_setup.dart';
+import 'package:skak/features/play_ai/presentation/new_game_sheet.dart';
 
 void main() {
   testWidgets('shows level names and returns the chosen bot speed', (

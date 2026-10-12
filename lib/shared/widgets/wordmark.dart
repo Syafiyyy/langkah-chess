@@ -30,7 +30,7 @@ class DiamondMark extends StatelessWidget {
   }
 }
 
-/// "◆ Langkah" in Sora 700.
+/// "◆ Skak" in Sora 700.
 class Wordmark extends StatelessWidget {
   const Wordmark({super.key, this.style = AppType.wordmark});
 

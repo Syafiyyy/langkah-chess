@@ -2,11 +2,11 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/app/theme/app_theme.dart';
-import 'package:langkah/core/board/board_theme.dart';
-import 'package:langkah/core/board/piece_choice.dart';
-import 'package:langkah/features/play_ai/domain/game_setup.dart';
-import 'package:langkah/features/settings/presentation/settings_screen.dart';
+import 'package:skak/app/theme/app_theme.dart';
+import 'package:skak/core/board/board_theme.dart';
+import 'package:skak/core/board/piece_choice.dart';
+import 'package:skak/features/play_ai/domain/game_setup.dart';
+import 'package:skak/features/settings/presentation/settings_screen.dart';
 
 import '../play_ai/application/bot_engine_fake.dart';
 import '../play_ai/presentation/game_test_harness.dart';

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/app/theme/app_colors.dart';
+import 'package:skak/app/theme/app_colors.dart';
 
 /// WCAG 2.x relative luminance and contrast ratio.
 double _luminance(Color c) {

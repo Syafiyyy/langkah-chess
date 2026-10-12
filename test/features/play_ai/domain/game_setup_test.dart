@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_setup.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_setup.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 void main() {
   test('round-trips through its storage string', () {

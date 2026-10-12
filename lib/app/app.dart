@@ -8,14 +8,14 @@ import 'router.dart';
 import 'theme/app_theme.dart';
 
 /// Root widget. Owns the engine lifecycle hooks (detach and hot reload).
-class LangkahApp extends ConsumerStatefulWidget {
-  const LangkahApp({super.key});
+class SkakApp extends ConsumerStatefulWidget {
+  const SkakApp({super.key});
 
   @override
-  ConsumerState<LangkahApp> createState() => _LangkahAppState();
+  ConsumerState<SkakApp> createState() => _SkakAppState();
 }
 
-class _LangkahAppState extends ConsumerState<LangkahApp> {
+class _SkakAppState extends ConsumerState<SkakApp> {
   late final AppLifecycleListener _lifecycle;
 
   @override

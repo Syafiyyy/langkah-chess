@@ -1,10 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/storage/app_database.dart';
-import 'package:langkah/features/history/data/history_repository.dart';
-import 'package:langkah/features/history/domain/finished_game.dart';
-import 'package:langkah/features/play_ai/domain/game_result.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/core/storage/app_database.dart';
+import 'package:skak/features/history/data/history_repository.dart';
+import 'package:skak/features/history/domain/finished_game.dart';
+import 'package:skak/features/play_ai/domain/game_result.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 FinishedGame _game(

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/storage/app_database.dart';
-import 'package:langkah/features/review/data/analysis_repository.dart';
-import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:skak/core/storage/app_database.dart';
+import 'package:skak/features/review/data/analysis_repository.dart';
+import 'package:skak/features/review/domain/position_eval.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 const _key = AnalysisKey(settings: 'mt250', engine: 'sf19-light');
@@ -59,7 +59,7 @@ void main() {
   });
 
   test('a version 1 database is upgraded and keeps its games', () async {
-    final dir = await Directory.systemTemp.createTemp('langkah_db');
+    final dir = await Directory.systemTemp.createTemp('skak_db');
     addTearDown(() => dir.delete(recursive: true));
     final path = '${dir.path}/v1.db';
     final v1 = await databaseFactoryFfi.openDatabase(

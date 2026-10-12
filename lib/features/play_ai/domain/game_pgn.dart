@@ -13,8 +13,8 @@ String gamePgn(GameState state) {
   final initial = state.initialPosition;
 
   final headers = <String, String>{
-    'Event': 'Langkah vs Bot',
-    'Site': 'Langkah',
+    'Event': 'Skak vs Bot',
+    'Site': 'Skak',
     'Date': '${date.year}.${_two(date.month)}.${_two(date.day)}',
     'Round': '-',
     'White': white,

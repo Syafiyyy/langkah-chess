@@ -8,12 +8,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:langkah/core/storage/app_database.dart';
-import 'package:langkah/features/play_ai/application/play_ai_notifier.dart';
-import 'package:langkah/features/play_ai/application/play_ai_providers.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_setup.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/core/storage/app_database.dart';
+import 'package:skak/features/play_ai/application/play_ai_notifier.dart';
+import 'package:skak/features/play_ai/application/play_ai_providers.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_setup.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// A random-move player against the bot until the game ends (or 300 plies,

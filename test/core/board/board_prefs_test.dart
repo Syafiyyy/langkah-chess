@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/board/board_prefs.dart';
-import 'package:langkah/core/board/board_theme.dart';
-import 'package:langkah/core/board/piece_choice.dart';
-import 'package:langkah/core/storage/kv_store.dart';
+import 'package:skak/core/board/board_prefs.dart';
+import 'package:skak/core/board/board_theme.dart';
+import 'package:skak/core/board/piece_choice.dart';
+import 'package:skak/core/storage/kv_store.dart';
 
 import '../../features/play_ai/presentation/game_test_harness.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:langkah/core/engine/uci_engine.dart';
+import 'package:skak/core/engine/uci_engine.dart';
 
 /// Scripted UCI engine for tests. Records commands; replies via [onCommand].
 class FakeUciEngine implements UciEngine {

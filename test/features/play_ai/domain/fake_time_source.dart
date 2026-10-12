@@ -1,4 +1,4 @@
-import 'package:langkah/features/play_ai/domain/time_source.dart';
+import 'package:skak/features/play_ai/domain/time_source.dart';
 
 /// Manually advanced monotonic time for tests.
 class FakeTimeSource implements TimeSource {

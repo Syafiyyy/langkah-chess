@@ -1,5 +1,5 @@
-import 'package:langkah/features/review/data/analysis_repository.dart';
-import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:skak/features/review/data/analysis_repository.dart';
+import 'package:skak/features/review/domain/position_eval.dart';
 
 /// In-memory analysis cache for tests (ignores the key).
 class MemoryAnalysis implements AnalysisRepository {

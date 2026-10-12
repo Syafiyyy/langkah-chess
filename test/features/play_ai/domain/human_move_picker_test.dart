@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/chess/win_percent.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/human_move_picker.dart';
-import 'package:langkah/features/play_ai/domain/human_style.dart';
+import 'package:skak/core/chess/win_percent.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/human_move_picker.dart';
+import 'package:skak/features/play_ai/domain/human_style.dart';
 
 /// Start position with made-up evals: a few good moves, some bad ones and
 /// two that lose a lot (win% drop >= 30 from the best).

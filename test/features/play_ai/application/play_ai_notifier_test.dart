@@ -4,16 +4,16 @@ import 'dart:math';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/engine/engine_provider.dart';
-import 'package:langkah/core/engine/engine_service.dart';
-import 'package:langkah/core/storage/app_database.dart';
-import 'package:langkah/features/history/application/history_providers.dart';
-import 'package:langkah/features/play_ai/application/play_ai_notifier.dart';
-import 'package:langkah/features/play_ai/application/play_ai_providers.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_result.dart';
-import 'package:langkah/features/play_ai/domain/game_setup.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/core/engine/engine_provider.dart';
+import 'package:skak/core/engine/engine_service.dart';
+import 'package:skak/core/storage/app_database.dart';
+import 'package:skak/features/history/application/history_providers.dart';
+import 'package:skak/features/play_ai/application/play_ai_notifier.dart';
+import 'package:skak/features/play_ai/application/play_ai_providers.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_result.dart';
+import 'package:skak/features/play_ai/domain/game_setup.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../../core/engine/fake_uci_engine.dart';
@@ -245,7 +245,7 @@ void main() {
     final notifier = c.read(playAiProvider.notifier);
     await notifier.start(_setup());
     notifier.resign();
-    await settle();
+    await notifier.whenSaved(); // the bump is the last step of the save
     expect(c.read(historyRevisionProvider), before + 1);
   });
 

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/thinking_time.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/thinking_time.dart';
 
 Position _pos(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 

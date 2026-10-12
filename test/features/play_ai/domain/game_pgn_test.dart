@@ -1,10 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_controller.dart';
-import 'package:langkah/features/play_ai/domain/game_pgn.dart';
-import 'package:langkah/features/play_ai/domain/game_state.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_controller.dart';
+import 'package:skak/features/play_ai/domain/game_pgn.dart';
+import 'package:skak/features/play_ai/domain/game_state.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 import 'fake_time_source.dart';
 

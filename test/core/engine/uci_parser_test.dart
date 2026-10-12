@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/engine/uci_parser.dart';
+import 'package:skak/core/engine/uci_parser.dart';
 
 void main() {
   group('parseInfoLine', () {

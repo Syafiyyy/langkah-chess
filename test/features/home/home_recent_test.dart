@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/home/presentation/home_screen.dart';
-import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:skak/features/home/presentation/home_screen.dart';
+import 'package:skak/features/review/domain/position_eval.dart';
 
 import '../play_ai/application/bot_engine_fake.dart';
 import '../play_ai/presentation/game_test_harness.dart';

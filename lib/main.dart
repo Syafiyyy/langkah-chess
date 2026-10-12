@@ -10,12 +10,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final db = await openAppDatabase(
     databaseFactory,
-    '${await getDatabasesPath()}/langkah.db',
+    '${await getDatabasesPath()}/skak.db',
   );
   runApp(
     ProviderScope(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
-      child: const LangkahApp(),
+      child: const SkakApp(),
     ),
   );
 }

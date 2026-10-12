@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
 
 // Stockfish 19 ranges, read from its `uci` output on 2026-10-12.
 const _minElo = 1320;

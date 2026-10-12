@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
-import 'package:langkah/features/history/domain/finished_game.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_controller.dart';
-import 'package:langkah/features/play_ai/domain/game_state.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/history/domain/finished_game.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_controller.dart';
+import 'package:skak/features/play_ai/domain/game_state.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 import '../play_ai/domain/fake_time_source.dart';
 

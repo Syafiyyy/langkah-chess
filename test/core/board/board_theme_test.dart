@@ -1,8 +1,8 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/board/board_theme.dart';
-import 'package:langkah/core/board/piece_choice.dart';
+import 'package:skak/core/board/board_theme.dart';
+import 'package:skak/core/board/piece_choice.dart';
 
 void main() {
   test('three themes with the approved square colours, songket first', () {

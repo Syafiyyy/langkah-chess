@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/home/application/home_summary.dart';
-import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:skak/features/home/application/home_summary.dart';
+import 'package:skak/features/review/domain/position_eval.dart';
 
 import '../play_ai/presentation/game_test_harness.dart';
 import '../review/memory_analysis.dart';

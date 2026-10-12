@@ -8,14 +8,14 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:langkah/core/engine/engine_service.dart';
-import 'package:langkah/core/engine/uci_engine.dart';
-import 'package:langkah/features/play_ai/application/bot_mover.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_controller.dart';
-import 'package:langkah/features/play_ai/domain/game_state.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
-import 'package:langkah/features/play_ai/domain/time_source.dart';
+import 'package:skak/core/engine/engine_service.dart';
+import 'package:skak/core/engine/uci_engine.dart';
+import 'package:skak/features/play_ai/application/bot_mover.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_controller.dart';
+import 'package:skak/features/play_ai/domain/game_state.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/domain/time_source.dart';
 
 const _games = int.fromEnvironment('CALIB_GAMES', defaultValue: 10);
 const _pairs = String.fromEnvironment(

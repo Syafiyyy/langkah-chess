@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/chess/win_percent.dart';
+import 'package:skak/core/chess/win_percent.dart';
 
 void main() {
   test('0 cp is 50%', () => expect(winPercent(cp: 0), closeTo(50, 0.001)));

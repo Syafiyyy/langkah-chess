@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/app/theme/app_theme.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
-import 'package:langkah/features/play_ai/presentation/custom_time_dialog.dart';
+import 'package:skak/app/theme/app_theme.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/presentation/custom_time_dialog.dart';
 
 Future<TimeControl? Function()> _open(WidgetTester tester) async {
   TimeControl? result;

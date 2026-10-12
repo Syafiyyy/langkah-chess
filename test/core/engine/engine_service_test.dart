@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/engine/engine_service.dart';
+import 'package:skak/core/engine/engine_service.dart';
 
 import 'fake_uci_engine.dart';
 

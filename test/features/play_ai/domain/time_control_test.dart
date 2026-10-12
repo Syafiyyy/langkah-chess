@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 void main() {
   test('presets match the spec', () {

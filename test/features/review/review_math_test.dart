@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/chess/win_percent.dart';
-import 'package:langkah/features/play_ai/domain/game_state.dart';
-import 'package:langkah/features/review/domain/move_review.dart';
-import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:skak/core/chess/win_percent.dart';
+import 'package:skak/features/play_ai/domain/game_state.dart';
+import 'package:skak/features/review/domain/move_review.dart';
+import 'package:skak/features/review/domain/position_eval.dart';
 
 void main() {
   group('PositionEval', () {

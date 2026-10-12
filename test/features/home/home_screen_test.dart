@@ -2,12 +2,12 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/app/theme/app_theme.dart';
-import 'package:langkah/features/home/presentation/home_screen.dart';
-import 'package:langkah/features/play_ai/data/saved_game_codec.dart';
-import 'package:langkah/features/play_ai/domain/bot_level.dart';
-import 'package:langkah/features/play_ai/domain/game_state.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/app/theme/app_theme.dart';
+import 'package:skak/features/home/presentation/home_screen.dart';
+import 'package:skak/features/play_ai/data/saved_game_codec.dart';
+import 'package:skak/features/play_ai/domain/bot_level.dart';
+import 'package:skak/features/play_ai/domain/game_state.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 import '../play_ai/application/bot_engine_fake.dart';
 import '../play_ai/presentation/game_test_harness.dart';

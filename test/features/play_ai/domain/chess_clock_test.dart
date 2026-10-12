@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/features/play_ai/domain/chess_clock.dart';
-import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:skak/features/play_ai/domain/chess_clock.dart';
+import 'package:skak/features/play_ai/domain/time_control.dart';
 
 Duration _s(num seconds) => Duration(milliseconds: (seconds * 1000).round());
 

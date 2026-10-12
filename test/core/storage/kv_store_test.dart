@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langkah/core/storage/app_database.dart';
-import 'package:langkah/core/storage/kv_store.dart';
+import 'package:skak/core/storage/app_database.dart';
+import 'package:skak/core/storage/kv_store.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
