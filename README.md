@@ -1,17 +1,26 @@
-# langkah
+# Langkah
 
-A new Flutter project.
+A chess app for Android: play the engine at your level, review your games move by move, and play friends online.
 
-## Getting Started
+**Status:** in development.
 
-This project is a starting point for a Flutter application.
+## Stack
+- Flutter (Android first), Riverpod, go_router
+- [chessground](https://pub.dev/packages/chessground) board and [dartchess](https://pub.dev/packages/dartchess) rules, both from Lichess
+- Stockfish 19 on device through [multistockfish](https://pub.dev/packages/multistockfish), light flavor
+- Supabase for accounts and online play (planned)
 
-A few resources to get you started if this is your first Flutter project:
+Design decisions are recorded in [docs/adr](docs/adr). The plan is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Build
+```sh
+flutter pub get
+flutter test
+flutter build apk --split-per-abi --release
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## History
+Langkah is a full rebuild of [v1, uptm-chess-game](https://github.com/Syafiyyy/uptm-chess-game).
+
+## License
+GPL-3.0. See [LICENSE](LICENSE).
