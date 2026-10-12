@@ -7,18 +7,21 @@ import '../../app/theme/app_type.dart';
 
 /// Horizontal SAN move list. [selectedPly] is the highlighted half-move
 /// (1 = first move, 0 = start position). Tapping a move calls [onSelect]
-/// with its ply.
+/// with its ply. Optional [marks] (one per move) add a coloured symbol such
+/// as "??" after the SAN.
 class MoveList extends StatefulWidget {
   const MoveList({
     super.key,
     required this.sans,
     required this.selectedPly,
     required this.onSelect,
+    this.marks = const [],
   });
 
   final List<String> sans;
   final int selectedPly;
   final ValueChanged<int> onSelect;
+  final List<({String symbol, Color color})?> marks;
 
   @override
   State<MoveList> createState() => _MoveListState();
@@ -40,6 +43,9 @@ class _MoveListState extends State<MoveList> {
       });
     }
   }
+
+  ({String symbol, Color color})? _mark(int i) =>
+      i < widget.marks.length ? widget.marks[i] : null;
 
   @override
   void dispose() {
@@ -88,8 +94,17 @@ class _MoveListState extends State<MoveList> {
                     color: selected ? AppColors.surfaceRaised : null,
                     borderRadius: const BorderRadius.all(AppRadius.sm),
                   ),
-                  child: Text(
-                    widget.sans[i],
+                  child: Text.rich(
+                    TextSpan(
+                      text: widget.sans[i],
+                      children: [
+                        if (_mark(i) case final mark?)
+                          TextSpan(
+                            text: mark.symbol,
+                            style: TextStyle(color: mark.color),
+                          ),
+                      ],
+                    ),
                     style: AppType.label.copyWith(
                       color: selected ? AppColors.accent : AppColors.text,
                     ),

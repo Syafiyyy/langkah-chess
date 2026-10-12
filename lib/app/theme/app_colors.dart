@@ -11,4 +11,9 @@ abstract final class AppColors {
   static const Color accent = Color(0xFFD4A84B);
   static const Color onAccent = Color(0xFF1A1405);
   static const Color danger = Color(0xFFE5675C);
+
+  // Move judgements (game review). Blunders use [danger].
+  static const Color best = Color(0xFF7DBB6E);
+  static const Color inaccuracy = Color(0xFFE2C25B);
+  static const Color mistake = Color(0xFFE59A4C);
 }

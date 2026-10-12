@@ -42,6 +42,7 @@ dependencies:
   flutter_animate: ^4.5.2
   sqflite: ^2.4.4+1
   share_plus: ^13.3.1
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:

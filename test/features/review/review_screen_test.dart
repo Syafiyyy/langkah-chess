@@ -1,0 +1,131 @@
+import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:langkah/app/theme/app_theme.dart';
+import 'package:langkah/features/history/domain/finished_game.dart';
+import 'package:langkah/features/play_ai/domain/bot_level.dart';
+import 'package:langkah/features/play_ai/domain/game_controller.dart';
+import 'package:langkah/features/play_ai/domain/game_state.dart';
+import 'package:langkah/features/play_ai/domain/time_control.dart';
+import 'package:langkah/features/review/application/review_notifier.dart';
+import 'package:langkah/features/review/data/analysis_repository.dart';
+import 'package:langkah/features/review/domain/position_eval.dart';
+import 'package:langkah/features/review/presentation/eval_graph.dart';
+import 'package:langkah/features/review/presentation/review_screen.dart';
+
+import '../play_ai/application/bot_engine_fake.dart';
+import '../play_ai/domain/fake_time_source.dart';
+import '../play_ai/presentation/game_test_harness.dart';
+
+class _MemoryAnalysis implements AnalysisRepository {
+  final Map<String, List<PositionEval>> saved = {};
+
+  @override
+  Future<List<PositionEval>?> load(String gameId, AnalysisKey key) async =>
+      saved[gameId];
+
+  @override
+  Future<void> save(String id, AnalysisKey key, List<PositionEval> e) async =>
+      saved[id] = e;
+}
+
+/// 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6?? 4. Qxf7#, the player had black.
+FinishedGame _game() {
+  final c = GameController(
+    state: GameState.start(
+      id: 'g',
+      level: BotLevel.of(2),
+      timeControl: TimeControl.unlimited,
+      playerSide: Side.black,
+      startedAt: DateTime.utc(2026, 10, 12),
+    ),
+    time: FakeTimeSource(),
+    wallClock: () => DateTime.utc(2026, 10, 12, 0, 2),
+  );
+  for (final uci in ['e2e4', 'e7e5', 'd1h5', 'b8c6', 'f1c4', 'g8f6', 'h5f7']) {
+    c.play(Move.parse(uci)!);
+  }
+  return FinishedGame.fromState(c.state);
+}
+
+final _evals = [
+  const PositionEval(cp: 20, bestMove: 'e2e4'),
+  const PositionEval(cp: 30, bestMove: 'e7e5'),
+  const PositionEval(cp: 30, bestMove: 'g1f3'),
+  const PositionEval(cp: 40, bestMove: 'b8c6'),
+  const PositionEval(cp: 40, bestMove: 'f1c4'),
+  const PositionEval(cp: 50, bestMove: 'd8e7'),
+  const PositionEval(mate: 1, bestMove: 'h5f7'),
+  PositionEval.gameOver(Outcome.whiteWins),
+];
+
+Future<GameTestHarness> _pump(
+  WidgetTester tester, {
+  bool cached = true,
+  bool holdEngine = false,
+}) async {
+  tester.view.physicalSize = const Size(360, 640);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  final h = GameTestHarness(botEngine(holdUntilStop: holdEngine));
+  final analysis = _MemoryAnalysis();
+  if (cached) analysis.saved['g'] = _evals;
+  await h.history.save(_game());
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        ...h.overrides,
+        analysisRepositoryProvider.overrideWithValue(analysis),
+      ],
+      child: MaterialApp(
+        theme: buildAppTheme(),
+        home: const ReviewScreen(gameId: 'g'),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  return h;
+}
+
+void main() {
+  testWidgets('a cached review fits a 360 dp phone', (tester) async {
+    await _pump(tester);
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(StaticChessboard), findsOneWidget);
+    expect(find.byType(EvalGraph), findsOneWidget);
+    expect(find.text('Start position'), findsOneWidget);
+    expect(find.text('You · Black'), findsOneWidget);
+    // Black's only error is 3... Nf6?? (a blunder), marked in the list.
+    expect(find.textContaining('??'), findsWidgets);
+  });
+
+  testWidgets('"Your next mistake" jumps to it and shows the verdict', (
+    tester,
+  ) async {
+    await _pump(tester);
+
+    await tester.tap(find.byTooltip('Your next mistake'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('3... Nf6'), findsOneWidget);
+    expect(find.textContaining('Blunder'), findsOneWidget);
+    expect(find.textContaining('best Qe7'), findsOneWidget);
+    expect(find.text('#1'), findsOneWidget);
+  });
+
+  testWidgets('shows analysis progress while the engine runs', (tester) async {
+    final h = await _pump(tester, cached: false, holdEngine: true);
+
+    expect(find.textContaining('Analysing'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(h.engine.commands.where((c) => c.startsWith('go')), hasLength(1));
+
+    // Leaving the screen stops the search.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    expect(h.engine.commands, contains('stop'));
+  });
+}

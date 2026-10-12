@@ -5,7 +5,7 @@ import '../../../app/theme/app_type.dart';
 import '../domain/game_state.dart';
 
 /// What the player chose on the game-over sheet.
-enum GameOverAction { newGame, rematch, home }
+enum GameOverAction { review, newGame, rematch, home }
 
 /// Result, reason, move count and duration, plus the next actions.
 class GameOverSheet extends StatelessWidget {
@@ -17,6 +17,8 @@ class GameOverSheet extends StatelessWidget {
     return showModalBottomSheet<GameOverAction>(
       context: context,
       showDragHandle: true,
+      // Sized to its content (the default caps sheets at 9/16 of the screen).
+      isScrollControlled: true,
       builder: (context) => GameOverSheet(game: game),
     );
   }
@@ -39,7 +41,7 @@ class GameOverSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.xl,
           0,
@@ -55,6 +57,11 @@ class GameOverSheet extends StatelessWidget {
             Text(_details, style: AppType.body),
             const SizedBox(height: AppSpacing.xl),
             FilledButton(
+              onPressed: () => Navigator.pop(context, GameOverAction.review),
+              child: const Text('Review game'),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton(
               onPressed: () => Navigator.pop(context, GameOverAction.rematch),
               child: const Text('Rematch (swap colours)'),
             ),

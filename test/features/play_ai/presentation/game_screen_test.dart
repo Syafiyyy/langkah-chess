@@ -127,6 +127,16 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('5:00'), findsNWidgets(2));
+
+    // The game-over sheet (with "Review game") fits too.
+    final c = ProviderScope.containerOf(
+      tester.element(find.byType(GameScreen)),
+    );
+    c.read(playAiProvider.notifier).resign();
+    await tester.pumpAndSettle();
+    expect(find.text('Review game'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
     // Close the screen so the flag timer is cancelled.
     await tester.pumpWidget(const SizedBox());
     await tester.pumpAndSettle();

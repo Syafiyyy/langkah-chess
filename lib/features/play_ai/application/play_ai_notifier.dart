@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/engine/engine_provider.dart';
-import '../../history/domain/finished_game.dart';
 import '../domain/game_controller.dart';
 import '../domain/game_setup.dart';
 import '../domain/game_state.dart';
 import 'bot_mover.dart';
+import 'game_persistence.dart';
 import 'play_ai_providers.dart';
 import 'play_ai_view.dart';
 
@@ -29,6 +29,7 @@ final playAiProvider = NotifierProvider<PlayAiNotifier, PlayAiView?>(
 class PlayAiNotifier extends Notifier<PlayAiView?> {
   GameController? _controller;
   BotMover? _bot;
+  late final GamePersistence _persistence = GamePersistence(ref);
   int _generation = 0;
   Timer? _flagTimer;
 
@@ -60,6 +61,9 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
     await _load(state);
   }
 
+  /// Completes once the last finished game is in history (for "Review").
+  Future<void> whenSaved() => _persistence.whenSaved();
+
   /// Drops the unfinished game: stops the bot, forgets the game and its
   /// autosave. Nothing goes to history (an abandoned game is not a loss).
   Future<void> abandon() async {
@@ -69,12 +73,7 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
     _bot = null;
     if (!ref.mounted) return;
     state = null;
-    try {
-      await ref.read(playAiStoreProvider).clearGame();
-    } on Object catch (e) {
-      debugPrint('[play_ai] clear autosave: $e');
-    }
-    _refreshResumeBanner();
+    await _persistence.clear();
   }
 
   /// Continues the in-memory game, or the autosaved one. False if neither.
@@ -174,7 +173,10 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
     _controller = GameController(
       state: game,
       time: ref.read(timeSourceProvider),
-      onFinished: _onFinished,
+      onFinished: (game) {
+        _flagTimer?.cancel();
+        _persistence.finished(game);
+      },
     );
     _bot = BotMover(
       engine: ref.read(engineServiceProvider),
@@ -270,31 +272,6 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
 
   void _autosave() {
     final game = _controller?.state;
-    if (game == null || game.isOver) return;
-    unawaited(
-      ref
-          .read(playAiStoreProvider)
-          .saveGame(game, _now)
-          .then((_) => _refreshResumeBanner())
-          // A failed autosave only loses resume-after-kill; never the game.
-          .catchError((Object e) => debugPrint('[play_ai] autosave: $e')),
-    );
-  }
-
-  void _onFinished(GameState finished) {
-    _flagTimer?.cancel();
-    final store = ref.read(playAiStoreProvider);
-    final history = ref.read(historyRepositoryProvider);
-    unawaited(
-      history
-          .save(FinishedGame.fromState(finished))
-          .then((_) => store.clearGame())
-          .then((_) => _refreshResumeBanner())
-          .catchError((Object e) => debugPrint('[play_ai] save failed: $e')),
-    );
-  }
-
-  void _refreshResumeBanner() {
-    if (ref.mounted) ref.invalidate(savedGameProvider);
+    if (game != null) _persistence.autosave(game, _now);
   }
 }

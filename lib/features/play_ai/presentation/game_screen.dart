@@ -59,6 +59,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final action = await GameOverSheet.show(context, game);
     if (!mounted) return;
     switch (action) {
+      case GameOverAction.review:
+        await _notifier.whenSaved();
+        if (mounted) await context.push('/review/${game.id}');
       case GameOverAction.rematch:
         final swapped = game.playerSide == Side.white
             ? ColorChoice.black
