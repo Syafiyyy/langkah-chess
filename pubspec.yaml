@@ -58,6 +58,8 @@ dev_dependencies:
   sqflite_common_ffi: ^2.4.3
   integration_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 # package:sqlite3 (only via the test-only sqflite_common_ffi) would otherwise
 # download a prebuilt libsqlite3 during every app build and bundle it into the
@@ -132,3 +134,25 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Launcher icon (dart run flutter_launcher_icons). Android only.
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/brand/icon.png
+  adaptive_icon_background: "#101826"
+  adaptive_icon_foreground: assets/brand/icon_foreground.png
+  adaptive_icon_monochrome: assets/brand/icon_monochrome.png
+  min_sdk_android: 24
+
+# Native splash (dart run flutter_native_splash:create): navy + mark, shown
+# only while the engine starts (no artificial delay).
+flutter_native_splash:
+  android: true
+  ios: false
+  web: false
+  color: "#101826"
+  image: assets/brand/splash.png
+  android_12:
+    color: "#101826"
+    image: assets/brand/splash_android12.png
