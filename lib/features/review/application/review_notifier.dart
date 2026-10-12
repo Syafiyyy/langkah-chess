@@ -12,12 +12,12 @@ import '../domain/position_eval.dart';
 import 'review_state.dart';
 
 /// Search time per position. Tuned on the emulator (see docs/STATE.md).
-const reviewMoveTime = Duration(milliseconds: 250);
+const reviewMoveTime = Duration(milliseconds: 350);
 
 /// Cache key: analysis settings + engine build. Change either and old
 /// cached analyses are ignored.
 const reviewAnalysisKey = AnalysisKey(
-  settings: 'movetime250',
+  settings: 'movetime350',
   engine: 'stockfish19-light/multistockfish-0.6.1',
 );
 
