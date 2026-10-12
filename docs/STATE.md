@@ -16,11 +16,20 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 |---|---|
 | 1. Schema + RLS | **Done.** Local pgTAP green; applied to remote. |
 | 2. apply_move + finish_game + make_move EF | **Done.** pgTAP green; migration applied to remote; `make_move` deployed (v1, verify_jwt on). |
-| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | Not started (next) |
+| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | **Written + tested locally, NOT applied remotely** (the remote `apply_migration` was declined at the permission prompt on 2026-10-13; waiting for Adaam). `20261013000300_rpcs.sql`, `tests/03_rpcs.test.sql` (52 tests). |
 | 4. pg_cron sweep + delete_account | Not started |
 | 5. Tests (concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started. The tricky-positions fixture (Dart + Deno) is already done in section 2. |
 
-**Next steps (section 3):** TDD in `supabase/tests/03_rpcs.test.sql`, then `20261013000300_rpcs.sql`: set_profile, create_invite, join_invite, join_queue/leave_queue (advisory lock + SKIP LOCKED), resign, offer/accept/decline_draw, abort, claim_timeout (use `settle_clock`). Apply remotely, rename the version, commit + push.
+**Next steps:** once Adaam approves, apply `20261013000300_rpcs` with the MCP (same SQL as the file, LF), check its md5 against the file, rename its version to `20261013000300`, update the table above, commit + push. Then section 4 (sweep + delete_account).
+
+**Section 3 notes (decisions):**
+- RPCs: `set_profile(p_username, p_avatar)`, `create_invite`, `join_invite(code)`, `join_queue` (returns `setof games`: one row = paired, none = queued), `leave_queue`, `resign`, `offer_draw`, `accept_draw`, `decline_draw`, `abort`, `claim_timeout`. EXECUTE for `authenticated` only; helpers (`require_uid`, `check_time_control`, `random_invite_code`, `start_game`, `lock_my_game`) are internal.
+- Game actions return the game. On a game that is already over they change nothing and return it (safe retries). Each settles the clock first, so a flag beats a late resign/draw.
+- Usernames are set once (`USERNAME_LOCKED` after); names starting with `u_` are rejected (`BAD_USERNAME`) because they could clash with a future signup's temporary name and make that signup fail. Avatar key `^[a-z0-9_]{1,32}$`, changeable.
+- `create_invite` returns the caller's existing waiting invite with the same time control instead of a second one. Codes: 6 chars from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` via `gen_random_bytes` (pgcrypto, present on remote in `extensions`).
+- `offer_draw` when the opponent already offered = agreement (Lichess). `abort` works while ply < 2, and the creator can cancel a waiting invite (termination `aborted`).
+- `join_queue` returns the caller's active matchmaking game if there is one (that is how a queued player learns about the pairing), so one matchmaking game at a time.
+- Mutation check: breaking the resign winner or the `u_` reservation makes the suite fail (tests 46–47, 12/14).
 
 **Section 2 notes:**
 - `make_move` = `functions/make_move/index.ts` (HTTP, `auth.getUser(token)`, service-role client from `SUPABASE_SECRET_KEYS.default`, fallback `SUPABASE_SERVICE_ROLE_KEY` locally) + `move.ts` (logic behind a `MoveDb` interface, unit-tested with a fake). Response `{game, applied}` or `{error}`: BAD_REQUEST 400, UNAUTHORIZED 401, NOT_A_PLAYER 403, NOT_FOUND 404, STALE/NOT_YOUR_TURN/GAME_OVER/DUPLICATE_MOVE_ID 409, ILLEGAL 422. A retry with a known `client_move_id` returns the current game with `applied: true`; `applied: false` with 200 = the mover's clock had run out (game ended on time).
