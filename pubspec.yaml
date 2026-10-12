@@ -1,5 +1,5 @@
 name: langkah
-description: "A new Flutter project."
+description: "Langkah: a chess app. Play the engine, review your games, play friends online."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
