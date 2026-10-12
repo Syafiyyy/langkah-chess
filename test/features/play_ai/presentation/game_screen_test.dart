@@ -63,8 +63,8 @@ void main() {
 
     expect(find.byType(Chessboard), findsOneWidget);
     expect(find.text('You'), findsOneWidget);
-    expect(find.text('Bot'), findsOneWidget);
-    expect(find.text('Level 3 · Casual'), findsOneWidget);
+    expect(find.text('Casual'), findsOneWidget);
+    expect(find.text('Level 3 · Bot'), findsOneWidget);
     expect(find.text('Moves'), findsOneWidget);
     expect(find.text('Moves appear here'), findsOneWidget);
     expect(find.text('Takeback'), findsOneWidget);

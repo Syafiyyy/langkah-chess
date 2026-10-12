@@ -1,4 +1,3 @@
-import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
@@ -13,27 +12,32 @@ class PlayerBar extends StatelessWidget {
   const PlayerBar({
     super.key,
     required this.name,
-    required this.side,
     this.subtitle,
     this.isBot = false,
     this.thinking = false,
+    this.toMove = false,
     this.clock,
   });
 
   final String name;
-  final Side side;
 
-  /// e.g. "Level 3 · Casual".
+  /// e.g. "Level 3 · Bot".
   final String? subtitle;
   final bool isBot;
 
   /// Replaces the subtitle with animated "Thinking…".
   final bool thinking;
 
+  /// Draws the gold side-to-move dot on the avatar.
+  final bool toMove;
+
   /// Usually a ClockChip; null for untimed games.
   final Widget? clock;
 
-  static const double height = 60;
+  static const double height = 48;
+
+  /// The side-to-move dot (for tests).
+  static const toMoveKey = ValueKey('to-move');
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class PlayerBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         child: Row(
           children: [
-            _Avatar(isBot: isBot, side: side),
+            _Avatar(isBot: isBot, toMove: toMove),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
@@ -77,13 +81,13 @@ class PlayerBar extends StatelessWidget {
   }
 }
 
-/// Avatar tile: a bot glyph or a person glyph, with a dot in the player's
-/// piece colour.
+/// Avatar tile: a bot glyph or a person glyph; a gold dot when it is this
+/// player's turn.
 class _Avatar extends StatelessWidget {
-  const _Avatar({required this.isBot, required this.side});
+  const _Avatar({required this.isBot, required this.toMove});
 
   final bool isBot;
-  final Side side;
+  final bool toMove;
 
   @override
   Widget build(BuildContext context) {
@@ -110,19 +114,22 @@ class _Avatar extends StatelessWidget {
               color: AppColors.textMuted,
             ),
           ),
-          Positioned(
-            right: -2,
-            bottom: -2,
-            child: Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: side == Side.white ? AppColors.text : AppColors.ground,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.textMuted),
+          if (toMove)
+            Positioned(
+              right: -3,
+              bottom: -3,
+              child: Container(
+                key: PlayerBar.toMoveKey,
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                  // Ground ring separates the dot from the tile edge.
+                  border: Border.all(color: AppColors.ground, width: 2),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

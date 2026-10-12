@@ -23,6 +23,15 @@ class MoveList extends StatefulWidget {
   final ValueChanged<int> onSelect;
   final List<({String symbol, Color color})?> marks;
 
+  /// The strip (for layout tests).
+  static const stripKey = ValueKey('move-strip');
+
+  /// The pill drawn around the selected move.
+  static const selectedPillKey = ValueKey('move-pill');
+
+  /// Strip height: a 48 dp tap row plus the 1 px border top and bottom.
+  static const double height = _MoveListState.itemHeight + 2;
+
   @override
   State<MoveList> createState() => _MoveListState();
 }
@@ -67,18 +76,28 @@ class _MoveListState extends State<MoveList> {
     super.dispose();
   }
 
-  static const double height = 48;
+  /// Tap row height (48 dp target); the pill inside is [_pillHeight].
+  static const double itemHeight = 48;
+  static const double _pillHeight = 28;
 
   @override
   Widget build(BuildContext context) {
-    // An L1 strip: surface + hairline borders, so the list reads as a panel.
+    // An L1 card on the 16 px gutter, the same width as the tiles below.
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      child: _strip(),
+    );
+  }
+
+  Widget _strip() {
     return Container(
-      height: height,
+      key: MoveList.stripKey,
+      height: MoveList.height,
+      clipBehavior: Clip.antiAlias,
       decoration: const BoxDecoration(
         color: AppColors.surface,
-        border: Border.symmetric(
-          horizontal: BorderSide(color: AppColors.border),
-        ),
+        borderRadius: BorderRadius.all(AppRadius.md),
+        border: Border.fromBorderSide(BorderSide(color: AppColors.border)),
       ),
       child: widget.sans.isEmpty
           ? const Center(
@@ -89,7 +108,7 @@ class _MoveListState extends State<MoveList> {
           : SingleChildScrollView(
               controller: _scroll,
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               child: Row(
                 children: [
                   for (var i = 0; i < widget.sans.length; i++) _item(i),
@@ -123,32 +142,39 @@ class _MoveListState extends State<MoveList> {
           child: InkWell(
             borderRadius: const BorderRadius.all(AppRadius.pill),
             onTap: () => widget.onSelect(ply),
-            child: Container(
-              // 48 dp tap area; the pill itself is drawn inside it.
-              height: _MoveListState.height,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.surfaceRaised : null,
-                  borderRadius: const BorderRadius.all(AppRadius.pill),
-                  border: selected ? Border.all(color: AppColors.accent) : null,
-                ),
-                child: Text.rich(
-                  TextSpan(
-                    text: widget.sans[i],
-                    children: [
-                      if (_mark(i) case final mark?)
-                        TextSpan(
-                          text: mark.symbol,
-                          style: TextStyle(color: mark.color),
-                        ),
-                    ],
+            child: SizedBox(
+              // 48 dp tap area; the compact pill is centred inside it.
+              height: itemHeight,
+              child: Center(
+                child: Container(
+                  key: selected ? MoveList.selectedPillKey : null,
+                  height: _pillHeight,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
                   ),
-                  style: AppType.move.copyWith(
-                    color: selected ? AppColors.accent : AppColors.text,
+                  decoration: selected
+                      ? const BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.all(AppRadius.pill),
+                        )
+                      : null,
+                  child: Text.rich(
+                    TextSpan(
+                      text: widget.sans[i],
+                      children: [
+                        if (_mark(i) case final mark?)
+                          TextSpan(
+                            text: mark.symbol,
+                            style: TextStyle(
+                              color: selected ? AppColors.onAccent : mark.color,
+                            ),
+                          ),
+                      ],
+                    ),
+                    style: AppType.move.copyWith(
+                      color: selected ? AppColors.onAccent : AppColors.text,
+                    ),
                   ),
                 ),
               ),

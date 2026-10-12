@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../core/board/board_theme.dart';
 import '../../../shared/widgets/board_frame.dart';
 import '../../../shared/widgets/move_list.dart';
 import '../../../shared/widgets/player_bar.dart';
@@ -55,10 +57,27 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.dispose();
   }
 
-  /// Largest framed board that leaves room for both player bars.
+  /// Gap between each player bar and the board.
+  static const double _gap = AppSpacing.sm;
+
+  /// Height of bars + gaps around the framed board.
+  static const double _chrome = 2 * PlayerBar.height + 2 * _gap;
+
+  /// Largest framed board that leaves room for both bars and the status
+  /// line (reserved even when empty, so the board never jumps).
   static double _boardSize(BoxConstraints c) => BoardFrame.boardSizeFor(
-    (c.maxHeight - 2 * PlayerBar.height).clamp(0, c.maxWidth).toDouble(),
+    (c.maxHeight - _chrome - GameStatusLine.height)
+        .clamp(0, c.maxWidth)
+        .toDouble(),
   );
+
+  /// Space above the block: half of what is left, but never so much that
+  /// the status line below the block runs out of room.
+  static double _topGap(BoxConstraints c, double boardSize) {
+    final framed = boardSize + 2 * BoardTheme.frameWidth;
+    final free = c.maxHeight - _chrome - framed;
+    return math.max(0, math.min(free / 2, free - GameStatusLine.height));
+  }
 
   Future<void> _onGameOver(GameState game) async {
     final action = await GameOverSheet.show(context, game);
@@ -130,11 +149,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     PlayerBar bar(Side side) {
       final isBot = side == game.botSide;
       return PlayerBar(
-        name: isBot ? 'Bot' : 'You',
-        subtitle: isBot ? level.label : game.timeControl.label,
-        side: side,
+        name: isBot ? level.name : 'You',
+        subtitle: isBot
+            ? 'Level ${level.number} · Bot'
+            : game.timeControl.label,
         isBot: isBot,
         thinking: isBot && view.botThinking,
+        toMove: !game.isOver && game.position.turn == side,
         clock: clock == null ? null : ClockText(clock: clock, side: side),
       );
     }
@@ -162,35 +183,40 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           children: [
             Expanded(
               child: LayoutBuilder(
-                builder: (context, constraints) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    bar(orientation.opposite),
-                    GameBoard(
-                      size: _boardSize(constraints),
-                      position: game.positions[ply],
-                      lastMove: ply == 0
-                          ? null
-                          : Move.parse(game.moves[ply - 1].uci),
-                      orientation: orientation,
-                      interactiveSide:
-                          !view.isBrowsing &&
-                              game.isPlayerTurn &&
-                              !view.botThinking
-                          ? game.playerSide
-                          : null,
-                      onMove: _notifier.move,
-                    ),
-                    bar(orientation),
-                  ],
-                ),
+                builder: (context, constraints) {
+                  final size = _boardSize(constraints);
+                  return Column(
+                    children: [
+                      SizedBox(height: _topGap(constraints, size)),
+                      bar(orientation.opposite),
+                      const SizedBox(height: _gap),
+                      GameBoard(
+                        size: size,
+                        position: game.positions[ply],
+                        lastMove: ply == 0
+                            ? null
+                            : Move.parse(game.moves[ply - 1].uci),
+                        orientation: orientation,
+                        interactiveSide:
+                            !view.isBrowsing &&
+                                game.isPlayerTurn &&
+                                !view.botThinking
+                            ? game.playerSide
+                            : null,
+                        onMove: _notifier.move,
+                      ),
+                      const SizedBox(height: _gap),
+                      bar(orientation),
+                      GameStatusLine(
+                        view: view,
+                        onBackToGame: () => _notifier.viewPly(null),
+                        onRetry: _notifier.retryBot,
+                        onShowResult: () => _onGameOver(game),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ),
-            GameStatusLine(
-              view: view,
-              onBackToGame: () => _notifier.viewPly(null),
-              onRetry: _notifier.retryBot,
-              onShowResult: () => _onGameOver(game),
             ),
             MoveList(
               sans: [for (final m in game.moves) m.san],

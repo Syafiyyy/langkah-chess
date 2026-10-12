@@ -112,6 +112,7 @@ void main() {
     );
     await c.read(playAiProvider.notifier).resumeSaved();
     await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(); // paint the move strip scrolled to the latest move
     await expectLater(
       find.byType(GameScreen),
       matchesGoldenFile('goldens/game.png'),
