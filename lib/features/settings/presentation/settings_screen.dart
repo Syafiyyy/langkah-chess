@@ -156,7 +156,9 @@ class _ThemeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget square(Color c) => Expanded(child: ColoredBox(color: c));
+    Widget square(Color c) => Expanded(
+      child: ColoredBox(color: c, child: const SizedBox.expand()),
+    );
     return Semantics(
       selected: selected,
       label: '${theme.name} board',

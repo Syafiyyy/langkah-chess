@@ -5,14 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Loads every font in FontManifest.json (Sora, Plus Jakarta Sans, DM Mono,
-/// Material icons) so goldens show real text instead of test boxes.
-Future<void> loadAppFonts() async {
+/// Loads the Material icon font so icons render in goldens.
+///
+/// Text deliberately stays in Flutter's test font (boxes): real fonts
+/// rasterise differently on Windows and Linux (7–11% pixel difference on
+/// text-heavy screens), which would make CI goldens flaky. Goldens check
+/// layout, colours, boards and icons; docs/screenshots show the real type.
+Future<void> loadIconFont() async {
   final manifest = jsonDecode(
     await rootBundle.loadString('FontManifest.json'),
   ) as List<Object?>;
   for (final entry in manifest.cast<Map<String, Object?>>()) {
     final family = entry['family']! as String;
+    if (family != 'MaterialIcons') continue;
     final loader = FontLoader(family.split('/').last);
     for (final font
         in (entry['fonts']! as List<Object?>).cast<Map<String, Object?>>()) {

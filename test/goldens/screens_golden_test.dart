@@ -85,7 +85,7 @@ Future<void> _pumpScreen(
 void main() {
   setUpAll(() async {
     useTolerantGoldens('test/goldens/screens_golden_test.dart');
-    await loadAppFonts();
+    await loadIconFont();
   });
 
   testWidgets('home', (tester) async {

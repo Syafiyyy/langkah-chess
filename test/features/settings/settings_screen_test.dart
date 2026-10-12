@@ -35,6 +35,12 @@ void main() {
   ) async {
     final h = await _pump(tester);
     expect(_preview(tester).colorScheme, BoardTheme.songket.colorScheme);
+    // Each theme card shows its square colours (they once rendered 0 px).
+    final swatch = find.byWidgetPredicate(
+      (w) => w is ColoredBox && w.color == BoardTheme.walnut.dark,
+    );
+    expect(swatch, findsWidgets);
+    expect(tester.getSize(swatch.first).height, greaterThan(10));
 
     await tester.tap(find.text('Graphite'));
     await tester.pumpAndSettle();
