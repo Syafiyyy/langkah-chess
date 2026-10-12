@@ -58,6 +58,16 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
+# package:sqlite3 (only via the test-only sqflite_common_ffi) would otherwise
+# download a prebuilt libsqlite3 during every app build and bundle it into the
+# APK, although Android uses sqflite's platform SQLite. Use the system SQLite
+# instead: winsqlite3.dll on Windows, libsqlite3.so on Linux CI.
+hooks:
+  user_defines:
+    sqlite3:
+      source: system
+      name_windows: winsqlite3
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

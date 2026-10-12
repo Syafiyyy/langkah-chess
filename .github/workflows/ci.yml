@@ -27,6 +27,9 @@ jobs:
           channel: stable
           cache: true
 
+      # Host tests use the system SQLite (see hooks in pubspec.yaml).
+      - run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
