@@ -48,7 +48,12 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
       playerSide: setup.resolveSide(Random()),
       startedAt: DateTime.now(),
     );
-    unawaited(ref.read(playAiStoreProvider).saveSetup(setup));
+    unawaited(
+      ref
+          .read(playAiStoreProvider)
+          .saveSetup(setup)
+          .catchError((Object e) => debugPrint('[play_ai] setup save: $e')),
+    );
     await _load(state);
   }
 
@@ -256,7 +261,9 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
       ref
           .read(playAiStoreProvider)
           .saveGame(game, _now)
-          .then((_) => _refreshResumeBanner()),
+          .then((_) => _refreshResumeBanner())
+          // A failed autosave only loses resume-after-kill; never the game.
+          .catchError((Object e) => debugPrint('[play_ai] autosave: $e')),
     );
   }
 

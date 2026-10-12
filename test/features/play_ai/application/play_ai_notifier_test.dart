@@ -191,6 +191,19 @@ void main() {
     expect(view.game.level.number, 4);
   });
 
+  test('a failing autosave never breaks the game', () async {
+    final c = container(botEngine(script: ['e7e5']));
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup());
+    await settle();
+    await db.close(); // every later write fails
+
+    notifier.move(Move.parse('e2e4')!);
+    await settle();
+
+    expect(c.read(playAiProvider)!.game.moves, hasLength(2));
+  });
+
   test('the last setup is remembered', () async {
     final c = container(botEngine());
     await c

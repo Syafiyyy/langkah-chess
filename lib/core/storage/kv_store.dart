@@ -16,11 +16,16 @@ class KvStore {
     return rows.isEmpty ? null : rows.single['value']! as String;
   }
 
-  Future<void> set(String key, String value) => _db.insert('kv', {
-    'key': key,
-    'value': value,
-  }, conflictAlgorithm: ConflictAlgorithm.replace);
+  // async (not `=>`): sqflite can throw synchronously (e.g. closed db);
+  // async turns that into a failed Future callers can handle.
+  Future<void> set(String key, String value) async {
+    await _db.insert('kv', {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
 
-  Future<void> remove(String key) =>
-      _db.delete('kv', where: 'key = ?', whereArgs: [key]);
+  Future<void> remove(String key) async {
+    await _db.delete('kv', where: 'key = ?', whereArgs: [key]);
+  }
 }

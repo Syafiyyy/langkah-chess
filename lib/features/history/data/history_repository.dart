@@ -25,11 +25,14 @@ class SqfliteHistoryRepository implements HistoryRepository {
   final Database _db;
 
   @override
-  Future<void> save(FinishedGame game) => _db.insert(
-    'games',
-    _toRow(game),
-    conflictAlgorithm: ConflictAlgorithm.ignore,
-  );
+  Future<void> save(FinishedGame game) async {
+    // async so a synchronous sqflite throw becomes a failed Future.
+    await _db.insert(
+      'games',
+      _toRow(game),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
 
   @override
   Future<List<FinishedGame>> list({
