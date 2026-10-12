@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
-import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
 import '../../../shared/widgets/section_card.dart';
 import '../../play_ai/presentation/start_game_flow.dart';
 import '../application/history_providers.dart';
 import '../domain/finished_game.dart';
+import 'result_badge.dart';
 
 /// Finished games, newest first, with a win/loss/draw filter.
 class HistoryScreen extends ConsumerStatefulWidget {
@@ -97,25 +97,10 @@ class _GameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (letter, color) = switch (game.playerResult) {
-      PlayerResult.win => ('W', AppColors.success),
-      PlayerResult.loss => ('L', AppColors.danger),
-      PlayerResult.draw => ('D', AppColors.textMuted),
-    };
     final date = MaterialLocalizations.of(context)
         .formatShortDate(game.endedAt.toLocal());
     return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceRaised,
-          borderRadius: const BorderRadius.all(AppRadius.md),
-          border: Border.all(color: color),
-        ),
-        child: Text(letter, style: AppType.move.copyWith(color: color)),
-      ),
+      leading: ResultBadge(game.playerResult),
       trailing: const Icon(
         Icons.chevron_right_rounded,
         color: AppColors.textMuted,

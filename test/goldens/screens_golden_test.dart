@@ -17,29 +17,16 @@ import 'package:langkah/features/play_ai/domain/game_controller.dart';
 import 'package:langkah/features/play_ai/domain/game_state.dart';
 import 'package:langkah/features/play_ai/domain/time_control.dart';
 import 'package:langkah/features/play_ai/presentation/game_screen.dart';
-import 'package:langkah/features/review/application/review_notifier.dart';
-import 'package:langkah/features/review/data/analysis_repository.dart';
 import 'package:langkah/features/review/domain/position_eval.dart';
 import 'package:langkah/features/review/presentation/review_screen.dart';
 
+import '../features/home/finished_games.dart';
 import '../features/play_ai/application/bot_engine_fake.dart';
 import '../features/play_ai/domain/fake_time_source.dart';
 import '../features/play_ai/presentation/game_test_harness.dart';
 import 'golden_helpers.dart';
 
 const _size = Size(390, 844);
-
-class _MemoryAnalysis implements AnalysisRepository {
-  _MemoryAnalysis(this.saved);
-  final Map<String, List<PositionEval>> saved;
-
-  @override
-  Future<List<PositionEval>?> load(String gameId, AnalysisKey key) async =>
-      saved[gameId];
-
-  @override
-  Future<void> save(String id, AnalysisKey key, List<PositionEval> e) async {}
-}
 
 GameState _played(List<String> ucis, {TimeControl? tc, Side? player}) {
   final c = GameController(
@@ -89,11 +76,22 @@ void main() {
   });
 
   testWidgets('home', (tester) async {
+    // Recent games with one reviewed game, so the lower half is populated.
     final h = GameTestHarness(botEngine());
-    h.kv.values['play_ai.saved_game'] = encodeSavedGame(
-      _played(['e2e4']),
-      Duration.zero,
-    );
+    for (final g in [
+      finishedGame('a', day: 1, kind: 'loss'),
+      finishedGame('b', day: 2, kind: 'draw'),
+      finishedGame('c', day: 3, kind: 'win'),
+    ]) {
+      await h.history.save(g);
+    }
+    h.analysis.saved['c'] = [
+      const PositionEval(cp: 0),
+      const PositionEval(cp: 0),
+      const PositionEval(cp: 0),
+      const PositionEval(mate: -1),
+      PositionEval.gameOver(Outcome.blackWins),
+    ];
     await _pumpScreen(tester, h, const HomeScreen());
     await tester.pumpAndSettle();
     await expectLater(
@@ -140,16 +138,8 @@ void main() {
       const PositionEval(mate: 1, bestMove: 'h5f7'),
       PositionEval.gameOver(Outcome.whiteWins),
     ];
-    await _pumpScreen(
-      tester,
-      h,
-      const ReviewScreen(gameId: 'golden'),
-      extra: [
-        analysisRepositoryProvider.overrideWithValue(
-          _MemoryAnalysis({'golden': evals}),
-        ),
-      ],
-    );
+    h.analysis.saved['golden'] = evals;
+    await _pumpScreen(tester, h, const ReviewScreen(gameId: 'golden'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Your next mistake'));
     await tester.pumpAndSettle();

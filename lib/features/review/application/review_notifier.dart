@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/engine/engine_provider.dart';
+import '../../history/application/history_providers.dart';
 import '../../play_ai/application/play_ai_providers.dart';
 import '../data/analysis_repository.dart';
 import '../domain/game_line.dart';
@@ -133,6 +134,11 @@ class ReviewNotifier extends Notifier<ReviewState> {
               ref
                   .read(analysisRepositoryProvider)
                   .save(gameId, reviewAnalysisKey, all)
+                  .then((_) {
+                    if (ref.mounted) {
+                      ref.read(historyRevisionProvider.notifier).bump();
+                    }
+                  })
                   .catchError((Object e) => debugPrint('[review] cache: $e')),
             );
           },

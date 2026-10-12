@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../history/application/history_providers.dart';
 import '../../history/domain/finished_game.dart';
 import '../domain/game_state.dart';
 import 'play_ai_providers.dart';
@@ -39,6 +40,7 @@ class GamePersistence {
           .save(FinishedGame.fromState(game))
           .then((_) => store.clearGame())
           .then((_) => _refreshResumeBanner())
+          .then((_) => _bumpHistory())
           .catchError((Object e) => debugPrint('[play_ai] save failed: $e')),
     );
   }
@@ -51,6 +53,10 @@ class GamePersistence {
       debugPrint('[play_ai] clear autosave: $e');
     }
     _refreshResumeBanner();
+  }
+
+  void _bumpHistory() {
+    if (_ref.mounted) _ref.read(historyRevisionProvider.notifier).bump();
   }
 
   void _refreshResumeBanner() {

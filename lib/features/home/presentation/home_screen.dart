@@ -11,8 +11,9 @@ import '../../../shared/widgets/wordmark.dart';
 import '../../play_ai/application/play_ai_notifier.dart';
 import '../../play_ai/application/play_ai_providers.dart';
 import '../../play_ai/presentation/start_game_flow.dart';
+import 'recent_games.dart';
 
-/// Start screen: play the bot, resume a saved game, history, settings.
+/// Start screen: play the bot, resume a saved game, recent games, settings.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -25,17 +26,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasSaved = ref.watch(savedGameProvider).value ?? false;
     return Scaffold(
-      appBar: AppBar(
-        title: const Wordmark(),
-        actions: [
-          IconButton(
-            tooltip: 'Settings',
-            onPressed: () => context.push('/settings'),
-            icon: const Icon(Icons.tune_rounded),
-          ),
-          const SizedBox(width: AppSpacing.xs),
-        ],
-      ),
+      appBar: AppBar(title: const Wordmark()),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
@@ -58,13 +49,8 @@ class HomeScreen extends ConsumerWidget {
             ],
             _PlayCard(onTap: () => startGameFlow(context, ref)),
             const SizedBox(height: AppSpacing.xl),
-            _LinkRow(
-              icon: Icons.history_rounded,
-              title: 'History',
-              subtitle: 'Finished games, replays and reviews',
-              onTap: () => context.push('/history'),
-            ),
-            const SizedBox(height: AppSpacing.sm),
+            const RecentGames(),
+            const SizedBox(height: AppSpacing.xl),
             _LinkRow(
               icon: Icons.tune_rounded,
               title: 'Settings',

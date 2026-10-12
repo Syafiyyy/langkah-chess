@@ -9,8 +9,6 @@ import 'package:langkah/features/play_ai/domain/bot_level.dart';
 import 'package:langkah/features/play_ai/domain/game_controller.dart';
 import 'package:langkah/features/play_ai/domain/game_state.dart';
 import 'package:langkah/features/play_ai/domain/time_control.dart';
-import 'package:langkah/features/review/application/review_notifier.dart';
-import 'package:langkah/features/review/data/analysis_repository.dart';
 import 'package:langkah/features/review/domain/position_eval.dart';
 import 'package:langkah/features/review/presentation/eval_graph.dart';
 import 'package:langkah/features/review/presentation/review_screen.dart';
@@ -18,18 +16,6 @@ import 'package:langkah/features/review/presentation/review_screen.dart';
 import '../play_ai/application/bot_engine_fake.dart';
 import '../play_ai/domain/fake_time_source.dart';
 import '../play_ai/presentation/game_test_harness.dart';
-
-class _MemoryAnalysis implements AnalysisRepository {
-  final Map<String, List<PositionEval>> saved = {};
-
-  @override
-  Future<List<PositionEval>?> load(String gameId, AnalysisKey key) async =>
-      saved[gameId];
-
-  @override
-  Future<void> save(String id, AnalysisKey key, List<PositionEval> e) async =>
-      saved[id] = e;
-}
 
 /// 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6?? 4. Qxf7#, the player had black.
 FinishedGame _game() {
@@ -70,15 +56,11 @@ Future<GameTestHarness> _pump(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final h = GameTestHarness(botEngine(holdUntilStop: holdEngine));
-  final analysis = _MemoryAnalysis();
-  if (cached) analysis.saved['g'] = _evals;
+  if (cached) h.analysis.saved['g'] = _evals;
   await h.history.save(_game());
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [
-        ...h.overrides,
-        analysisRepositoryProvider.overrideWithValue(analysis),
-      ],
+      overrides: h.overrides,
       child: MaterialApp(
         theme: buildAppTheme(),
         home: const ReviewScreen(gameId: 'g'),

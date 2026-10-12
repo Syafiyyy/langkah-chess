@@ -11,8 +11,10 @@ import 'package:langkah/features/history/data/history_repository.dart';
 import 'package:langkah/features/history/domain/finished_game.dart';
 import 'package:langkah/features/play_ai/application/play_ai_providers.dart';
 import 'package:langkah/features/play_ai/data/play_ai_store.dart';
+import 'package:langkah/features/review/application/review_notifier.dart';
 
 import '../../../core/engine/fake_uci_engine.dart';
+import '../../review/memory_analysis.dart';
 import '../domain/fake_time_source.dart';
 
 /// In-memory key-value store.
@@ -64,6 +66,7 @@ class GameTestHarness {
   final time = FakeTimeSource();
   final kv = MemoryKvStore();
   final history = MemoryHistory();
+  final analysis = MemoryAnalysis();
   final pauses = <Duration>[];
 
   late final List<Override> overrides = [
@@ -72,6 +75,7 @@ class GameTestHarness {
     playAiStoreProvider.overrideWithValue(PlayAiStore(kv)),
     kvStoreProvider.overrideWithValue(kv),
     historyRepositoryProvider.overrideWithValue(history),
+    analysisRepositoryProvider.overrideWithValue(analysis),
     randomProvider.overrideWithValue(Random(1)),
     // Thinking pauses are recorded, not waited for.
     pauseProvider.overrideWithValue((d) async => pauses.add(d)),

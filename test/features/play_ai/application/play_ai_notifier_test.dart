@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:langkah/core/engine/engine_provider.dart';
 import 'package:langkah/core/engine/engine_service.dart';
 import 'package:langkah/core/storage/app_database.dart';
+import 'package:langkah/features/history/application/history_providers.dart';
 import 'package:langkah/features/play_ai/application/play_ai_notifier.dart';
 import 'package:langkah/features/play_ai/application/play_ai_providers.dart';
 import 'package:langkah/features/play_ai/domain/bot_level.dart';
@@ -236,6 +237,16 @@ void main() {
     await settle();
     expect(await historyCount(c), 1);
     expect(await c.read(playAiStoreProvider).loadGame(time.now()), isNull);
+  });
+
+  test('a saved game bumps the history revision (Home refreshes)', () async {
+    final c = container(botEngine());
+    final before = c.read(historyRevisionProvider);
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup());
+    notifier.resign();
+    await settle();
+    expect(c.read(historyRevisionProvider), before + 1);
   });
 
   test('resigning saves the loss once', () async {
