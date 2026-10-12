@@ -29,19 +29,33 @@ class MoveList extends StatefulWidget {
 
 class _MoveListState extends State<MoveList> {
   final _scroll = ScrollController();
+  final _selectedKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _revealSelectedAfterFrame();
+  }
 
   @override
   void didUpdateWidget(MoveList old) {
     super.didUpdateWidget(old);
-    // Follow the game: keep the newest move in view.
-    if (widget.sans.length > old.sans.length &&
-        widget.selectedPly == widget.sans.length) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scroll.hasClients) {
-          _scroll.jumpTo(_scroll.position.maxScrollExtent);
-        }
-      });
+    // Keep the selected move in view: new moves, browsing, jumps.
+    if (widget.selectedPly != old.selectedPly ||
+        widget.sans.length != old.sans.length) {
+      _revealSelectedAfterFrame();
     }
+  }
+
+  void _revealSelectedAfterFrame() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final target = _selectedKey.currentContext;
+      if (target != null) {
+        Scrollable.ensureVisible(target, alignment: 0.5);
+      } else if (_scroll.hasClients) {
+        _scroll.jumpTo(0); // start position selected
+      }
+    });
   }
 
   ({String symbol, Color color})? _mark(int i) =>
@@ -70,12 +84,17 @@ class _MoveListState extends State<MoveList> {
           ? const Center(
               child: Text('Moves appear here', style: AppType.secondary),
             )
-          : ListView.builder(
+          // Not a lazy ListView: the scroll extent must be exact so the
+          // newest move can be scrolled fully into view on first open.
+          : SingleChildScrollView(
               controller: _scroll,
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              itemCount: widget.sans.length,
-              itemBuilder: (context, i) => _item(i),
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.sans.length; i++) _item(i),
+                ],
+              ),
             ),
     );
   }
@@ -98,6 +117,7 @@ class _MoveListState extends State<MoveList> {
             ),
           ),
         Semantics(
+          key: selected ? _selectedKey : null,
           button: true,
           selected: selected,
           child: InkWell(
