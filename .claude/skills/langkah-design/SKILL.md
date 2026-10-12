@@ -19,12 +19,14 @@ One fixed app look (navy + cream + gold) and user-selectable board themes. Token
 ## Components (`lib/shared/widgets/`)
 - `Wordmark` / `DiamondMark`: gold rhombus + "Langkah" (Sora 700). App bars of top-level screens.
 - `TileButton`: 60 px surface tile, icon over meta label; `destructive` uses `danger`. Game controls row of four.
-- `PlayerBar`: avatar tile (bot/person glyph + piece-colour dot), name, subtitle or `ThinkingDots`, optional clock. Height 60.
+- `PlayerBar`: avatar tile (bot/person glyph; gold side-to-move dot via `toMove`), name, subtitle or `ThinkingDots`, optional clock. Height 48. Bot bar: persona name, "Level n · Bot" subtitle.
 - `ClockChip`: gold when running (`onAccent` digits), raised surface when idle, danger when low.
 - `SectionCard`: L1 card (1 px border, radius 14), tappable; `selected` = 2 px gold border (+ a check icon in the content).
 - `showAppSheet`: bottom sheet sized to content, scrolls, title in `title` style.
 - `showConfirmDialog`: confirm button names the action ("Resign game", "Abandon game"); `destructive` colours it danger. Never "OK".
-- `MoveList`: DM Mono strip on an L1 surface; current move is a pill (raised + gold border + gold text); error marks (?! ? ??) coloured by label.
+- `MoveList`: DM Mono strip, rounded L1 card on the 16 px gutter (full width); current move is a compact 28 px pill (gold fill, navy text) inside a 48 dp tap row; error marks (?! ? ??) coloured by label (navy on the pill).
+- `ResultBadge` (`features/history/presentation`): W/L/D tile, success/danger/muted border; used by History and Home recent games.
+- Layout: on board screens the bars/board (or board/verdict/graph) form one block with 8 px gaps; leftover height is split above and below, never left as a band.
 - `BoardFrame` / `ThemedBoard`: every board goes through these (or `GameBoard` for play) so the theme, piece set and frame apply everywhere.
 
 ## Board themes (`lib/core/board/`)

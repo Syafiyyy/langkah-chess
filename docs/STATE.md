@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-F1.8 — Design system + offline redesign: done (2026-10-13). F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
+F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
@@ -53,6 +53,12 @@ F1.8 — Design system + offline redesign: done (2026-10-13). F1.5 Game Review d
   - Tests: 237 host tests green, incl. contrast test, board theme/prefs, settings screen, abandon/home, history empty states, custom time dialog validation, game menu clock pause, goldens (Home/Game/Review 390x844).
   - Fixed along the way: rematch kept the old bot speed default; resumed games opened with the move strip scrolled away from the latest move; theme swatches rendered 0 px; clock kept running while Settings was open from a game.
   - Screenshots (release build, emulator, real fonts) in `docs/screenshots/`.
+- 2026-10-13: F1.8b polish (prompt `docs/prompts/F1_8b_polish.md`, from Adaam's screenshot review).
+  - Game screen: bot bar + board + player bar are one block (8 px gaps, bars 48 px); spare height split above and below. The status line has reserved room under the block, so the board never jumps when it appears. Compact gold current-move pill (28 px, navy text) in a 48 dp tap row; move strip is a rounded L1 card on the 16 px gutter, full width even with few moves. Bot bar shows the persona ("Beginner") with "Level 2 · Bot".
+  - Review: error counts are dot + label ("1 Blunder"), zero counts hidden, "No errors" when none. Summary → board/eval bar → verdict → graph as one centred block. Eval graph 128 px (72 px if the board would drop under 240 px), rounded card, dashed midline.
+  - Home: "Recent games" (last 3: level, W/L/D badge, accuracy if reviewed, date; tap → replay) with a stats row (games · wins · best accuracy) and a first-use empty state ("Start a game"). "View all" opens History (the History card is gone). Settings icon removed from the app bar; the Settings card stays.
+  - `historyRevisionProvider`: bumped when a game is saved or a review is cached; Home summary and History lists watch it.
+  - Tests: 254 green (home summary, recent games, revision bump, game layout incl. 360x640 and pill/gutter, review chips/graph height/board theme). Goldens and all screenshots updated.
 
 ## Contrast ratios (WCAG, checked in `test/app/theme/contrast_test.dart`)
 | Text | on ground #101826 | on surface #18233A | on raised #1F2C48 |
@@ -167,7 +173,15 @@ chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light 
 - Opening Settings from a game pauses the clock (it resumes on return).
 - Brand PNGs drawn by a small Pillow script (not committed; mark = gold rhombus #D9A93F on #101826).
 
-## UX audit (vectorlab ux-audit, 2026-10-13)
+## Decisions (F1.8b)
+- Avatar dot: kept as a **side-to-move indicator** (solid gold dot with a ground ring on the player whose turn it is; none when the game is over). The old piece-colour dot read like a presence dot; board orientation already shows colours.
+- Current-move pill: gold fill + navy text (8.21:1), not raised fill + gold text: raised on surface is too subtle to find at a glance.
+- Review error counts: plain dot + text, no pill backgrounds (static information; anti-slop).
+- Item 8 (review board on Graphite while Settings showed Songket): not a bug. The review screenshot was captured after switching to Graphite for the theme shots. A test now pins the review board to the chosen theme.
+- Home accuracy comes from the cached review (same analysis key as the review screen); unreviewed games show no accuracy and Home never starts an analysis.
+
+## UX audit (vectorlab ux-audit, 2026-10-13; re-run for F1.8b on Home, Game, Review)
+- F1.8b: verb-first labels ("Start a game", "View all"); first-use empty state has header, value sentence and action; no decorative pills on static counts; no new motion; tap targets 48 dp (move items, View all, list rows 56+); no overflow at 360x640 (tests); visual pass from the new screenshots. No hard-rule fails.
 - Fixed: custom time dialog (no disabled submit; blur validation; clear on edit), verb-first labels, actionable empty states in History, motion limited to transform/opacity (clock chip, eval bar) and reduced-motion for board animations, 48 dp move pills.
 - Unproven (no device a11y tooling run): TalkBack reading order, focus order with a hardware keyboard, reduced-motion on a device with "Remove animations" on.
 
@@ -195,7 +209,8 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - The clock widget repaints every frame while a side's clock runs. Cheap, but could be throttled to ~10 fps if battery matters.
 - Still missing from the game screen (F3 polish): move sounds, captured pieces, coordinates toggle, haptics.
 - Graphite's frame (#1E242E) is close to the navy ground, so the board looks frameless in that theme. Fine for now; revisit with a lighter frame if Adaam wants.
-- Home has a lot of empty space below the cards on tall phones (intentionally calm; could hold "Continue last review" or stats later).
+- Replay screen still has the old loose vertical rhythm (board centred, empty bands); not in the F1.8b list. Apply the game-screen block layout there next.
+- Home date uses the device clock/locale (`formatShortDate`), no relative "today".
 - During scripted emulator taps the piece set once switched to Merida without an intended tap; a clean re-run behaved correctly and it did not reproduce. Watch for it in the hand check.
 - Material sheet/dialog/page transitions do not follow reduced motion automatically (only our own animations do).
 - The scaffold commit already contains the dependency lines in pubspec (they were added before `git init`).
@@ -203,7 +218,7 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
-- Adaam: hand check of the redesign (list in the hand-off message); record the Gate 1.5 demo clip with the new look.
+- Adaam: hand check of the F1.8b polish (5 items in the hand-off message); record the Gate 1.5 demo clip with the new look.
 - Then F2 — Online (Supabase).
 
 ## Environment
