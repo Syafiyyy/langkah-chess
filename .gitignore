@@ -52,3 +52,15 @@ app.*.map.json
 
 # Golden test diff output
 **/goldens/failures/
+
+# Node (Supabase CLI)
+node_modules/
+
+# App secrets (dart-define files)
+/env/*.json
+!/env/example.json
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+supabase/functions/.env

@@ -3,8 +3,36 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
+**F2a — Online backend: IN PROGRESS, paused after checkpoint 1 (2026-10-13).** See "F2a resume here" below.
+
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
+
+## F2a resume here (read this first)
+Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).
+Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mcp.json` is pinned to it). Never touch another project.
+
+| Section | Status |
+|---|---|
+| 1. Schema + RLS | **Done.** Local pgTAP green; applied to remote. |
+| 2. apply_move + finish_game + make_move EF | **WIP, committed, NOT applied remotely.** SQL + pgTAP done and green locally (`20261013000200_apply_move.sql`, `tests/02_apply_move.test.sql`). Chess rules module `supabase/functions/_shared/chess_rules.ts` written, untested. |
+| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | Not started |
+| 4. pg_cron sweep + delete_account | Not started |
+| 5. Tests (fixture Dart + Deno, concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started |
+
+**Next steps (section 2):**
+1. Write the Deno tests for `chess_rules.ts` against `test/fixtures/tricky_positions.json` (fixture not generated yet: the generator test failed to load; regenerate from dartchess with the position list in the plan's section 5 idea, then add the Dart test `test/online/tricky_positions_test.dart`).
+2. Write `supabase/functions/make_move/index.ts`: verify JWT (`auth.getUser(token)`), load game + moves (service role), `checkMove(history, game.fen, uci)`, call `apply_move` (service role), map errors (STALE, NOT_YOUR_TURN, ILLEGAL, GAME_OVER, NOT_A_PLAYER, NOT_FOUND) to JSON `{error}`; `applied` = returned ply == requested ply.
+3. Run `npx supabase test db` + `npx deno test`, then apply `20261013000200_apply_move` remotely with the MCP and rename its remote version to `20261013000200` (see below). Deploy make_move. Commit + push.
+
+**How to run locally:** Docker Desktop on; `npx supabase start -x studio,imgproxy,storage-api,logflare,vector,mailpit,postgres-meta,supavisor`; `npx supabase test db`. Supabase CLI 2.120.0 and Deno 2.9.6 are pinned npm devDependencies (`npm install` first). Note: the CLI's SQL splitter choked on `if x <> case ... end then` inside plpgsql; avoid inline CASE in IF conditions.
+
+**Remote migrations applied** (MCP `apply_migration`; its version is then renamed in `supabase_migrations.schema_migrations` to match the local file name, so `supabase db push` stays consistent):
+- `20261013000100_schema` (2026-10-13)
+
+**Decisions so far:** termination strings use the Dart `Termination` names (`checkmate`, `timeout`, `resignation`, ... plus `agreement`, `firstMoveTimeout`); games store `white_can_mate`/`black_can_mate` (set by make_move) so timeouts in SQL need no chess code; clocks start after both first moves (30 s first-move deadline each, then abort); one advisory lock serialises matchmaking (planned). Details in the plan.
+
+**Open:** `review_notifier_test` "checkmate position is scored without the engine" failed once in a full `flutter test` run and passed on rerun (flaky under load; not touched by F2a).
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
@@ -228,4 +256,4 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Flutter 3.47.7 stable (D:\dev\flutter), Dart 3.13.5, JDK 21 (Android Studio jbr), Android SDK 36, licenses accepted (2026-10-12)
 - Emulator: Pixel_8a_API_35 (system image android-35 google_apis_playstore x86_64 installed 2026-10-12). Other AVDs use the same image.
 - GitHub: Syafiyyy/skak-chess (public; renamed from langkah-chess, GitHub redirects old links)
-- Supabase project: not created yet (F2)
+- Supabase project: `skak` (ref ivznhyyaswhnpdrnnbno, Singapore), created by Adaam 2026-10-13. Project-scoped Supabase MCP in `.mcp.json`.
