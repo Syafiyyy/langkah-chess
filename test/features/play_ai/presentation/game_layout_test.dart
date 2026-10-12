@@ -116,7 +116,7 @@ void main() {
   });
 
   testWidgets('move strip and tiles share the 16 px gutter', (tester) async {
-    await _open(tester);
+    await _open(tester, ucis: ['e2e4', 'e7e5']); // short list: no shrink
     final strip = _rect(tester, find.byKey(MoveList.stripKey));
     final tiles = find.byType(TileButton);
     expect(strip.left, 16);

@@ -93,6 +93,7 @@ class _MoveListState extends State<MoveList> {
     return Container(
       key: MoveList.stripKey,
       height: MoveList.height,
+      width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: const BoxDecoration(
         color: AppColors.surface,
