@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-F1 — Core offline: done, including the bot fix (2026-10-12). Gate 1: passed on the emulator after the bot fix; real-phone timing pending (F4, Firebase Test Lab, see ROADMAP). Next: Adaam's hand check of the bot fix, then F1.5 — Game Review.
+F1.5 — Game Review: done in code (2026-10-12); Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab).
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
@@ -33,6 +33,23 @@ F1 — Core offline: done, including the bot fix (2026-10-12). Gate 1: passed on
   - `core/chess/win_percent.dart` (Lichess win% formula, reused by game review).
   - Calibration test `integration_test/bot_calibration_test.dart` (results below). chess-domain skill: new "Bot behaviour" section.
   - Tests: 154 host tests green (picker: legality, determinism, strength ordering, mate-in-one rates, no two big blunders in a row; thinking time; MultiPV; notifier pause + cancel; new game sheet). Promotion widget test exists and passes (`game_screen_test.dart`: a7-a8, picker, queen).
+
+- 2026-10-12: Abandon game. "Play vs Bot" with an unfinished game asks "Abandon current game?" (Keep game / Abandon game). Abandoning deletes the autosave; the game never reaches history (not a loss).
+- 2026-10-12: F1.5 Game Review (prompt `docs/prompts/F1_5.md`, plan `docs/superpowers/plans/2026-10-12-f1-5-game-review.md`).
+  - `EngineService.analyse(fens)`: MultiPV-1 search per position, streamed; cancelling stops before the next position.
+  - Review math (`features/review/domain`, pure Dart): `PositionEval` (White POV, flipped in one place), win%, labels, Lichess per-move accuracy, per-side summary. `GameLine` replays the saved PGN.
+  - Cache: DB v2 `analysis` table (game id + settings + engine build); v1 → v2 migration keeps existing games.
+  - `ReviewNotifier` (autoDispose family by game id): cache hit = instant; else analyses at full strength, fills progressively, saves the cache; leaving the screen stops the engine; navigation by ply and between the player's own errors.
+  - Review screen (layout A, Lichess-style): summary strip (accuracy + ?! ? ?? per side), vertical eval bar + board with the engine's best move as an arrow, current-move verdict line with score / progress, fl_chart win% graph (progressive fill, tap/drag to jump, mistakes/blunders dotted), move list with marks, flip / move / your-mistake navigation, re-analyse. Entry points: "Review game" on the game-over sheet, "Review" on the history replay.
+  - Tests: 188 host tests green (review math incl. boundaries and a full Fool's mate review; analysis stream; cache + migration; notifier with fake engine; review screen at 360 dp; abandon flow). On-device: `integration_test/review_analysis_test.dart`.
+
+## Measurements (F1.5, emulator x86_64)
+| What | Value |
+|---|---|
+| 40-move game (81 positions), 250 ms/position | 24.0 s |
+| 40-move game, 350 ms/position (chosen) | 31.9 s |
+| Reopening a reviewed game (cache) | 21–31 ms |
+- Time is almost device-independent (move time × positions + ~15% overhead); a slower phone just searches less deep. Real-phone check: F4, Firebase Test Lab.
 
 ## Bot calibration (emulator x86_64, 2026-10-12)
 Bot vs bot through the app's own `BotMover`, one engine, in-game search settings, Fast speed, real rules (`GameController`), 300 plies = draw, colours alternate. Score is the higher level's.
@@ -71,7 +88,7 @@ Bot vs bot through the app's own `BotMover`, one engine, in-game search settings
 | Release APK armeabi-v7a / x86_64 | 31.1 MB / 36.5 MB |
 
 ## Package versions (latest on pub.dev, 2026-10-12)
-chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light flavor), flutter_riverpod 3.4.3, go_router 18.0.2, flutter_animate 4.5.2, sqflite 2.4.4+1, share_plus 13.3.1; dev: flutter_lints 6.0.0, mocktail 1.0.5, sqflite_common_ffi 2.4.3, integration_test (SDK).
+chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light flavor), flutter_riverpod 3.4.3, go_router 18.0.2, flutter_animate 4.5.2, sqflite 2.4.4+1, share_plus 13.3.1, fl_chart 1.2.0; dev: flutter_lints 6.0.0, mocktail 1.0.5, sqflite_common_ffi 2.4.3, integration_test (SDK).
 
 ## Decisions (F0)
 - Engine access goes through a small `UciEngine` interface (real: `StockfishUciEngine`; tests: `FakeUciEngine`). Keeps EngineService testable without native code.
@@ -102,6 +119,13 @@ chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light 
 - Natural is the default; the choice is stored with the other new-game choices.
 - **Build**: `pubspec.yaml` sets the sqlite3 build hook to `source: system` (Windows `winsqlite3.dll`, Linux CI `libsqlite3-dev`). Otherwise every debug build downloaded a prebuilt libsqlite3 (CI failed once on a hash mismatch). The release APK never contained it; Android uses sqflite's platform SQLite.
 
+## Decisions (F1.5)
+- Formulas checked against lila source on 2026-10-12: win% = Lichess formula (mate = 100/0); labels by the mover's win% drop >= 15 / 10 / 5 (= lila's 0.3 / 0.2 / 0.1 winning-chance thresholds); "Best" = played the engine's move; no error label when the game was already decided (mover >= 90% before and after, or <= 10% before and after); per-move accuracy = lila `AccuracyPercent.fromWinPercents` incl. its +1 bonus; game accuracy = plain mean per side (lila: mean of volatility-weighted and harmonic means).
+- Analysis: 350 ms per position (~32 s for 40 moves; target was 30–45 s), full-strength options set first, MultiPV 1. Cache key `movetime350` + `stockfish19-light/multistockfish-0.6.1`.
+- "Your previous/next mistake" means the player's own inaccuracies, mistakes and blunders; the buttons are disabled when there is none that way.
+- Layout A (Lichess-style) over a horizontal eval bar (unusual) and tabs (hide the graph or summary).
+- Abandoned games are deleted, not saved as losses (Adaam, 2026-10-12).
+
 ## Gate 1 checklist
 Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Status: **passed on the emulator after the bot fix; real-phone timing pending (F4, Firebase Test Lab).**
 - [x] Full games vs the engine at a low and a high level: no duplicate engine moves, no stuck thinking (emulator, automated)
@@ -120,7 +144,9 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Bot levels are calibrated against each other, not against humans. Level 1 "Newcomer" should feel very weak, but only Adaam's games can confirm that. Retune `HumanStyle` values and rerun the calibration test if not.
 - Level 1 vs 2 is the smallest step (58% in the final run; 85% with a slightly stronger Beginner). Revisit if players feel no difference.
 - The calibration test takes ~1.5 h on the emulator (20 games per low pair). It is not part of CI.
-- A game abandoned by starting a new one is dropped, not saved as a loss. Decide in F3 whether it should count.
+- Review: the engine-best arrow is shown for the position on the board (what to play next), not the alternative to the move just played; the verdict line names the better move ("best Qe7") for errors.
+- Review accuracy is the plain mean, so it can differ a few points from Lichess for the same game.
+- Optional F1.5 item "Review a PGN" (paste/import) not built; ask Adaam first.
 - The clock widget repaints every frame while a side's clock runs. Cheap, but could be throttled to ~10 fps if battery matters.
 - Game screen visuals are minimal (F3 redesign): no move sounds, no captured pieces, no coordinates toggle.
 - The scaffold commit already contains the dependency lines in pubspec (they were added before `git init`).
@@ -128,8 +154,8 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
-- Adaam: hand check of the bot fix on the emulator (5 items in the hand-off message).
-- Then F1.5 — Game Review: engine analysis of a finished game from history, eval bar and graph, move labels, accuracy.
+- Adaam: hand check of the bot fix and of game review (lists in the hand-off messages); record the Gate 1.5 demo clip.
+- Then F2 — Online (Supabase).
 
 ## Environment
 - Flutter 3.47.7 stable (D:\dev\flutter), Dart 3.13.5, JDK 21 (Android Studio jbr), Android SDK 36, licenses accepted (2026-10-12)

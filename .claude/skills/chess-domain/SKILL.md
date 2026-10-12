@@ -45,4 +45,7 @@ description: Rules and conventions for Langkah's chess logic, engine and online 
 ## Game review labels (win-probability based)
 - Convert centipawns to win% (Lichess formula: `50 + 50 * (2 / (1 + exp(-0.00368208 * cp)) - 1)`).
 - Label by win% drop for the mover (Lichess uses winning-chance drops of 0.3/0.2/0.1 on a -1..1 scale, i.e. 15/10/5 win% points): >= 15 blunder, >= 10 mistake, >= 5 inaccuracy. Tune if needed and document in code.
-- Accuracy per move from win% drop; game accuracy = average (document the formula used).
+- Implemented in `features/review/domain/move_review.dart` (win% in `core/chess/win_percent.dart`). Engine scores become White's view in exactly one place: `PositionEval.fromSideToMove`. Finished positions (mate/stalemate/insufficient) are scored without the engine.
+- "Best" when the played move equals the engine's best move. No error label when the game was already decided: mover >= 90% before and after, or <= 10% before and after.
+- Per-move accuracy = lila `AccuracyPercent.fromWinPercents`: 100 without a drop, else `103.1668100711649 * exp(-0.04354415386753951 * drop) - 3.166924740191411 + 1` (the +1 is lila's "uncertainty bonus"), clamped 0..100. Game accuracy per side = plain mean (lila uses the mean of a volatility-weighted mean and a harmonic mean).
+- Analysis: `EngineService.analyse` (MultiPV 1, full-strength options set first), 350 ms per position, cached in the `analysis` table keyed by game id + settings + engine build. Change the settings string when the settings change.
