@@ -48,6 +48,17 @@ class ReviewState {
   MoveReview? reviewAt(int ply) =>
       ply >= 1 && ply <= reviews.length ? reviews[ply - 1] : null;
 
+  /// Ply of the player's next / previous error (inaccuracy, mistake or
+  /// blunder) from [ply], or null if there is none that way.
+  int? playerErrorAfter(int ply) =>
+      _playerErrors().where((r) => r.ply > ply).firstOrNull?.ply;
+  int? playerErrorBefore(int ply) =>
+      _playerErrors().where((r) => r.ply < ply).lastOrNull?.ply;
+
+  Iterable<MoveReview> _playerErrors() => reviews.where(
+    (r) => r.mover == game?.playerSide && (r.label?.isError ?? false),
+  );
+
   ReviewState copyWith({
     FinishedGame? game,
     GameLine? line,

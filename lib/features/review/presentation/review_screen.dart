@@ -166,7 +166,9 @@ class _Controls extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'Your previous mistake',
-          onPressed: atStart ? null : notifier.previousError,
+          onPressed: state.playerErrorBefore(state.ply) == null
+              ? null
+              : notifier.previousError,
           icon: const Icon(Icons.fast_rewind),
         ),
         IconButton(
@@ -181,7 +183,9 @@ class _Controls extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'Your next mistake',
-          onPressed: atEnd ? null : notifier.nextError,
+          onPressed: state.playerErrorAfter(state.ply) == null
+              ? null
+              : notifier.nextError,
           icon: const Icon(Icons.fast_forward),
         ),
       ],

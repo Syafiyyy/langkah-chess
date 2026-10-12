@@ -172,19 +172,12 @@ class ReviewNotifier extends Notifier<ReviewState> {
 
   /// Jumps to the player's next inaccuracy, mistake or blunder.
   void nextError() {
-    final hit = _playerErrors().where((r) => r.ply > state.ply).firstOrNull;
-    if (hit != null) goTo(hit.ply);
+    final ply = state.playerErrorAfter(state.ply);
+    if (ply != null) goTo(ply);
   }
 
   void previousError() {
-    final hit = _playerErrors().where((r) => r.ply < state.ply).lastOrNull;
-    if (hit != null) goTo(hit.ply);
-  }
-
-  Iterable<MoveReview> _playerErrors() {
-    final player = state.game?.playerSide;
-    return state.reviews.where(
-      (r) => r.mover == player && (r.label?.isError ?? false),
-    );
+    final ply = state.playerErrorBefore(state.ply);
+    if (ply != null) goTo(ply);
   }
 }

@@ -116,6 +116,29 @@ void main() {
     expect(find.text('#1'), findsOneWidget);
   });
 
+  testWidgets('mistake buttons are disabled when there is none that way', (
+    tester,
+  ) async {
+    await _pump(tester);
+    bool enabled(String tooltip) =>
+        tester
+            .widget<IconButton>(
+              find.ancestor(
+                of: find.byTooltip(tooltip),
+                matching: find.byType(IconButton),
+              ),
+            )
+            .onPressed !=
+        null;
+
+    expect(enabled('Your previous mistake'), isFalse); // at the start
+    expect(enabled('Your next mistake'), isTrue); // 3... Nf6??
+    await tester.tap(find.byTooltip('Your next mistake'));
+    await tester.pumpAndSettle();
+    expect(enabled('Your next mistake'), isFalse); // none after it
+    expect(enabled('Your previous mistake'), isFalse); // none before it
+  });
+
   testWidgets('shows analysis progress while the engine runs', (tester) async {
     final h = await _pump(tester, cached: false, holdEngine: true);
 
