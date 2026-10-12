@@ -100,12 +100,13 @@ chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light 
 - **Human-style picking** happens in Dart, not via Stockfish's Skill Level: mate in one unless missed → newcomer-only random move → deliberate mistake (drop ≥ 10 win%, big ≥ 30 only by `bigBlunderShare`) → softmax over win% drop. Never two big blunders in a row.
 - **Thinking time** at Natural speed: levels 1–4 take 0.6–2.5 s (more legal moves, captures or check → longer; recapture → shorter); forced moves 0.3–0.5 s; levels 5–8 pad to 0.6–1.2 s. The pause counts against the bot's clock and is capped by the same safe budget as the search (1/30 of remaining + half increment). Fast = no pause.
 - Natural is the default; the choice is stored with the other new-game choices.
+- **Build**: `pubspec.yaml` sets the sqlite3 build hook to `source: system` (Windows `winsqlite3.dll`, Linux CI `libsqlite3-dev`). Otherwise every debug build downloaded a prebuilt libsqlite3 (CI failed once on a hash mismatch). The release APK never contained it; Android uses sqflite's platform SQLite.
 
 ## Gate 1 checklist
 Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Status: **passed on the emulator after the bot fix; real-phone timing pending (F4, Firebase Test Lab).**
 - [x] Full games vs the engine at a low and a high level: no duplicate engine moves, no stuck thinking (emulator, automated)
 - [x] Memory stable over 3 games (emulator RSS, see measurements)
-- [x] Tests green locally and in CI
+- [x] Tests green locally and in CI (run 38255109365 after the bot fix)
 - [x] Adaam's emulator hand test (everything worked except bot strength/speed → fixed, see bot fix)
 - [x] Bot levels calibrated and monotonic (table above)
 - [ ] Adaam's hand check of the bot fix (5 items in the hand-off message)
