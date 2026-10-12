@@ -1,17 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sqflite/sqflite.dart';
 
-import '../../../core/storage/kv_store.dart';
+import '../../../core/storage/storage_providers.dart';
 import '../../history/data/history_repository.dart';
 import '../data/play_ai_store.dart';
 import '../domain/time_source.dart';
 
-/// The app database. Opened in `main()` and provided by an override.
-final appDatabaseProvider = Provider<Database>(
-  (ref) => throw UnimplementedError('Override appDatabaseProvider in main()'),
-);
+export '../../../core/storage/storage_providers.dart';
 
 /// Randomness for bot moves, thinking pauses and colour choice (seeded in
 /// tests).
@@ -30,7 +26,7 @@ final historyRepositoryProvider = Provider<HistoryRepository>(
 );
 
 final playAiStoreProvider = Provider<PlayAiStore>(
-  (ref) => PlayAiStore(KvStore(ref.watch(appDatabaseProvider))),
+  (ref) => PlayAiStore(ref.watch(kvStoreProvider)),
 );
 
 /// Whether an unfinished game is saved (drives the "Resume game" banner).

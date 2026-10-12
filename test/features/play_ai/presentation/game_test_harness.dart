@@ -61,6 +61,7 @@ class GameTestHarness {
     engineServiceProvider.overrideWithValue(EngineService(() async => engine)),
     timeSourceProvider.overrideWithValue(time),
     playAiStoreProvider.overrideWithValue(PlayAiStore(kv)),
+    kvStoreProvider.overrideWithValue(kv),
     historyRepositoryProvider.overrideWithValue(history),
     randomProvider.overrideWithValue(Random(1)),
     // Thinking pauses are recorded, not waited for.
