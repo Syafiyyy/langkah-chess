@@ -60,6 +60,23 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
     await _load(state);
   }
 
+  /// Drops the unfinished game: stops the bot, forgets the game and its
+  /// autosave. Nothing goes to history (an abandoned game is not a loss).
+  Future<void> abandon() async {
+    await _cancelSearch();
+    _flagTimer?.cancel();
+    _controller = null;
+    _bot = null;
+    if (!ref.mounted) return;
+    state = null;
+    try {
+      await ref.read(playAiStoreProvider).clearGame();
+    } on Object catch (e) {
+      debugPrint('[play_ai] clear autosave: $e');
+    }
+    _refreshResumeBanner();
+  }
+
   /// Continues the in-memory game, or the autosaved one. False if neither.
   Future<bool> resumeSaved() async {
     final current = _controller;

@@ -299,6 +299,23 @@ void main() {
     expect(c.read(playAiProvider)!.game.moves, hasLength(2));
   });
 
+  test('abandoning drops the game without saving it to history', () async {
+    final c = container(botEngine(script: ['e7e5']));
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup());
+    notifier.move(Move.parse('e2e4')!);
+    await settle();
+    expect(await c.read(playAiStoreProvider).loadGame(time.now()), isNotNull);
+
+    await notifier.abandon();
+    await settle();
+
+    expect(c.read(playAiProvider), isNull);
+    expect(await historyCount(c), 0);
+    expect(await c.read(playAiStoreProvider).loadGame(time.now()), isNull);
+    expect(await c.read(savedGameProvider.future), isFalse);
+  });
+
   test('the last setup is remembered', () async {
     final c = container(botEngine());
     await c

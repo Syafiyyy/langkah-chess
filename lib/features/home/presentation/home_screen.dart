@@ -16,10 +16,40 @@ class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   Future<void> _play(BuildContext context, WidgetRef ref) async {
+    final unfinished = await ref.read(savedGameProvider.future);
+    if (unfinished) {
+      if (!context.mounted || !await _confirmAbandon(context)) return;
+      await ref.read(playAiProvider.notifier).abandon();
+    }
+    if (!context.mounted) return;
     final setup = await showNewGameSheet(context, ref);
     if (setup == null || !context.mounted) return;
     await ref.read(playAiProvider.notifier).start(setup);
     if (context.mounted) await context.push('/play');
+  }
+
+  Future<bool> _confirmAbandon(BuildContext context) async {
+    final abandon = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Abandon current game?'),
+        content: const Text(
+          'Your unfinished game will be deleted. It is not saved to history '
+          'and does not count as a loss.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep game'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Abandon game'),
+          ),
+        ],
+      ),
+    );
+    return abandon ?? false;
   }
 
   Future<void> _resume(BuildContext context, WidgetRef ref) async {
