@@ -73,7 +73,7 @@ chessground 10.3.0, dartchess 0.14.0, multistockfish 0.6.1 (Stockfish 19, light 
 - [x] Full games vs the engine at a low and a high level: no duplicate engine moves, no stuck thinking (emulator, automated)
 - [x] Memory stable over 3 games (emulator RSS, see measurements)
 - [x] Tests green locally (120 + on-device integration test)
-- [ ] CI green after push
+- [x] CI green after push (run 38223183710)
 - [ ] A smooth full game on a real phone (Adaam)
 - [ ] Engine timings re-measured on a real arm64 phone
 
