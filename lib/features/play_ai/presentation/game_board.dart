@@ -1,13 +1,18 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Interactive chessground board driven by a dartchess position.
+import '../../../shared/widgets/board_frame.dart';
+import '../../settings/application/board_prefs.dart';
+
+/// Interactive chessground board driven by a dartchess position, in the
+/// player's board theme and piece set, inside the theme's frame.
 ///
 /// The board only renders [position]; moves go out through [onMove] and come
 /// back as a new [position]. Premoves are off. Promotion uses chessground's
 /// own piece picker.
-class GameBoard extends StatefulWidget {
+class GameBoard extends ConsumerStatefulWidget {
   const GameBoard({
     super.key,
     required this.size,
@@ -18,6 +23,7 @@ class GameBoard extends StatefulWidget {
     required this.onMove,
   });
 
+  /// Board size without the frame.
   final double size;
   final Position position;
   final Move? lastMove;
@@ -27,17 +33,11 @@ class GameBoard extends StatefulWidget {
   final Side? interactiveSide;
   final void Function(Move move) onMove;
 
-  static const settings = ChessboardSettings(
-    colorScheme: ChessboardColorScheme.green,
-    enablePremoves: false,
-    enablePremoveCastling: false,
-  );
-
   @override
-  State<GameBoard> createState() => _GameBoardState();
+  ConsumerState<GameBoard> createState() => _GameBoardState();
 }
 
-class _GameBoardState extends State<GameBoard> {
+class _GameBoardState extends ConsumerState<GameBoard> {
   late final ChessboardController _controller = ChessboardController(
     game: _data(),
   );
@@ -77,12 +77,22 @@ class _GameBoardState extends State<GameBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return Chessboard(
-      size: widget.size,
-      controller: _controller,
-      orientation: widget.orientation,
-      settings: GameBoard.settings,
-      onMove: (move, {viaDragAndDrop}) => widget.onMove(move),
+    final prefs = ref.watch(boardPrefsProvider);
+    return BoardFrame(
+      theme: prefs.theme,
+      boardSize: widget.size,
+      child: Chessboard(
+        size: widget.size,
+        controller: _controller,
+        orientation: widget.orientation,
+        settings: ChessboardSettings(
+          colorScheme: prefs.theme.colorScheme,
+          pieceAssets: prefs.pieces.assets,
+          enablePremoves: false,
+          enablePremoveCastling: false,
+        ),
+        onMove: (move, {viaDragAndDrop}) => widget.onMove(move),
+      ),
     );
   }
 }

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/theme/app_colors.dart';
-import '../../../app/theme/app_radius.dart';
-import '../../../app/theme/app_spacing.dart';
+import '../../../shared/widgets/clock_chip.dart';
 import '../application/play_ai_providers.dart';
 import '../domain/chess_clock.dart';
 
@@ -61,30 +59,10 @@ class _ClockTextState extends ConsumerState<ClockText>
   Widget build(BuildContext context) {
     final now = ref.watch(timeSourceProvider).now();
     final left = widget.clock.remaining(widget.side, now);
-    final low = left < const Duration(seconds: 20);
-    final active = widget.clock.running == widget.side;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: active ? AppColors.accent : AppColors.surfaceRaised,
-        borderRadius: const BorderRadius.all(AppRadius.sm),
-      ),
-      child: Text(
-        formatClock(left),
-        style: TextStyle(
-          fontSize: 22,
-          height: 1.2,
-          fontWeight: FontWeight.w700,
-          fontFeatures: const [FontFeature.tabularFigures()],
-          color: active
-              ? (low ? AppColors.danger : AppColors.onAccent)
-              : (low ? AppColors.danger : AppColors.textMuted),
-        ),
-      ),
+    return ClockChip(
+      text: formatClock(left),
+      active: widget.clock.running == widget.side,
+      low: left < const Duration(seconds: 20),
     );
   }
 }

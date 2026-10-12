@@ -53,70 +53,84 @@ class _MoveListState extends State<MoveList> {
     super.dispose();
   }
 
+  static const double height = 48;
+
   @override
   Widget build(BuildContext context) {
-    if (widget.sans.isEmpty) {
-      return const SizedBox(
-        height: 40,
-        child: Center(
-          child: Text('Moves appear here', style: AppType.secondary),
+    // An L1 strip: surface + hairline borders, so the list reads as a panel.
+    return Container(
+      height: height,
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border.symmetric(
+          horizontal: BorderSide(color: AppColors.border),
         ),
-      );
-    }
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        controller: _scroll,
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        itemCount: widget.sans.length,
-        itemBuilder: (context, i) {
-          final ply = i + 1;
-          final selected = ply == widget.selectedPly;
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (i.isEven)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: AppSpacing.sm,
-                    right: AppSpacing.xs,
-                  ),
-                  child: Text('${i ~/ 2 + 1}.', style: AppType.secondary),
+      ),
+      child: widget.sans.isEmpty
+          ? const Center(
+              child: Text('Moves appear here', style: AppType.secondary),
+            )
+          : ListView.builder(
+              controller: _scroll,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              itemCount: widget.sans.length,
+              itemBuilder: (context, i) => _item(i),
+            ),
+    );
+  }
+
+  Widget _item(int i) {
+    final ply = i + 1;
+    final selected = ply == widget.selectedPly;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (i.isEven)
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.sm,
+              right: AppSpacing.xs,
+            ),
+            child: Text(
+              '${i ~/ 2 + 1}.',
+              style: AppType.move.copyWith(color: AppColors.textMuted),
+            ),
+          ),
+        Semantics(
+          button: true,
+          selected: selected,
+          child: InkWell(
+            borderRadius: const BorderRadius.all(AppRadius.pill),
+            onTap: () => widget.onSelect(ply),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 36),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              decoration: BoxDecoration(
+                color: selected ? AppColors.surfaceRaised : null,
+                borderRadius: const BorderRadius.all(AppRadius.pill),
+                border: selected ? Border.all(color: AppColors.accent) : null,
+              ),
+              child: Text.rich(
+                TextSpan(
+                  text: widget.sans[i],
+                  children: [
+                    if (_mark(i) case final mark?)
+                      TextSpan(
+                        text: mark.symbol,
+                        style: TextStyle(color: mark.color),
+                      ),
+                  ],
                 ),
-              InkWell(
-                borderRadius: const BorderRadius.all(AppRadius.sm),
-                onTap: () => widget.onSelect(ply),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: selected ? AppColors.surfaceRaised : null,
-                    borderRadius: const BorderRadius.all(AppRadius.sm),
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      text: widget.sans[i],
-                      children: [
-                        if (_mark(i) case final mark?)
-                          TextSpan(
-                            text: mark.symbol,
-                            style: TextStyle(color: mark.color),
-                          ),
-                      ],
-                    ),
-                    style: AppType.label.copyWith(
-                      color: selected ? AppColors.accent : AppColors.text,
-                    ),
-                  ),
+                style: AppType.move.copyWith(
+                  color: selected ? AppColors.accent : AppColors.text,
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

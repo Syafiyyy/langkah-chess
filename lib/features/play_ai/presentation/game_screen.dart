@@ -7,16 +7,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../shared/widgets/board_frame.dart';
 import '../../../shared/widgets/move_list.dart';
+import '../../../shared/widgets/player_bar.dart';
+import '../../../shared/widgets/wordmark.dart';
 import '../application/play_ai_notifier.dart';
-import '../application/play_ai_view.dart';
 import '../domain/game_setup.dart';
 import '../domain/game_state.dart';
+import 'clock_text.dart';
 import 'game_board.dart';
 import 'game_controls.dart';
 import 'game_over_sheet.dart';
+import 'game_status_line.dart';
+import 'moves_sheet.dart';
 import 'new_game_sheet.dart';
-import 'player_bar.dart';
 
 /// The offline game against the bot. Renders [playAiProvider] and sends the
 /// player's actions to it; holds only view state (board flipped).
@@ -51,9 +55,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.dispose();
   }
 
-  /// Largest square board that leaves room for both player bars.
-  static double _boardSize(BoxConstraints c) =>
-      (c.maxHeight - 2 * PlayerBar.height).clamp(0, c.maxWidth).toDouble();
+  /// Largest framed board that leaves room for both player bars.
+  static double _boardSize(BoxConstraints c) => BoardFrame.boardSizeFor(
+    (c.maxHeight - 2 * PlayerBar.height).clamp(0, c.maxWidth).toDouble(),
+  );
 
   Future<void> _onGameOver(GameState game) async {
     final action = await GameOverSheet.show(context, game);
@@ -72,6 +77,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             level: game.level,
             color: swapped,
             timeControl: game.timeControl,
+            botSpeed: game.botSpeed,
           ),
         );
       case GameOverAction.newGame:
@@ -84,6 +90,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       case null:
         break;
     }
+  }
+
+  Future<void> _showMoves(GameState game, int ply) async {
+    final picked = await showMovesSheet(
+      context,
+      sans: [for (final m in game.moves) m.san],
+      selectedPly: ply,
+    );
+    if (picked != null) _notifier.viewPly(picked);
   }
 
   @override
@@ -103,20 +118,37 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final ply = view.viewedPly ?? game.moves.length;
     final orientation = _flipped ? game.playerSide.opposite : game.playerSide;
     final level = game.level;
+    final clock = game.clock;
 
     PlayerBar bar(Side side) {
       final isBot = side == game.botSide;
       return PlayerBar(
-        name: isBot ? 'Bot · ${level.label}' : 'You',
+        name: isBot ? 'Bot' : 'You',
+        subtitle: isBot ? level.label : game.timeControl.label,
         side: side,
-        clock: game.clock,
+        isBot: isBot,
         thinking: isBot && view.botThinking,
+        clock: clock == null ? null : ClockText(clock: clock, side: side),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Level ${level.number} · ${game.timeControl.label}'),
+        title: const Wordmark(),
+        centerTitle: true,
+        actions: [
+          PopupMenuButton<String>(
+            tooltip: 'Game menu',
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (value) => switch (value) {
+              'settings' => context.push('/settings'),
+              _ => null,
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: 'settings', child: Text('Settings')),
+            ],
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
@@ -147,7 +179,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 ),
               ),
             ),
-            _StatusLine(
+            GameStatusLine(
               view: view,
               onBackToGame: () => _notifier.viewPly(null),
               onRetry: _notifier.retryBot,
@@ -158,66 +190,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               selectedPly: ply,
               onSelect: _notifier.viewPly,
             ),
+            const SizedBox(height: AppSpacing.sm),
             GameControls(
-              onFlip: () => setState(() => _flipped = !_flipped),
               onTakeback: view.canTakeback ? _notifier.takeback : null,
+              onFlip: () => setState(() => _flipped = !_flipped),
+              onMoves: () => _showMoves(game, ply),
               onResign: game.isOver ? null : _notifier.resign,
             ),
-            const SizedBox(height: AppSpacing.sm),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// One line between board and move list: browsing, engine trouble, result.
-class _StatusLine extends StatelessWidget {
-  const _StatusLine({
-    required this.view,
-    required this.onBackToGame,
-    required this.onRetry,
-    required this.onShowResult,
-  });
-
-  final PlayAiView view;
-  final VoidCallback onBackToGame;
-  final VoidCallback onRetry;
-  final VoidCallback onShowResult;
-
-  @override
-  Widget build(BuildContext context) {
-    final (
-      String text,
-      String? action,
-      VoidCallback? onAction,
-    ) = switch (view) {
-      PlayAiView(isBrowsing: true) => (
-        'Viewing an earlier position',
-        'Back to game',
-        onBackToGame,
-      ),
-      PlayAiView(engineFailed: true) => (
-        'The bot did not answer.',
-        'Retry',
-        onRetry,
-      ),
-      PlayAiView(game: GameState(isOver: true, :final result?)) => (
-        result.reason,
-        'Show result',
-        onShowResult,
-      ),
-      _ => ('', null, null),
-    };
-    return SizedBox(
-      height: 40,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        child: Row(
-          children: [
-            Expanded(child: Text(text, style: AppType.secondary)),
-            if (action != null)
-              TextButton(onPressed: onAction, child: Text(action)),
+            const SizedBox(height: AppSpacing.md),
           ],
         ),
       ),

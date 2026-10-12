@@ -63,7 +63,9 @@ void main() {
 
     expect(find.byType(Chessboard), findsOneWidget);
     expect(find.text('You'), findsOneWidget);
-    expect(find.text('Bot · Level 3 · Casual'), findsOneWidget);
+    expect(find.text('Bot'), findsOneWidget);
+    expect(find.text('Level 3 · Casual'), findsOneWidget);
+    expect(find.text('Moves'), findsOneWidget);
     expect(find.text('Moves appear here'), findsOneWidget);
     expect(find.text('Takeback'), findsOneWidget);
     expect(find.text('Resign'), findsOneWidget);
@@ -91,7 +93,7 @@ void main() {
     await tester.tap(find.text('Resign'));
     await tester.pumpAndSettle();
     expect(find.text('Resign this game?'), findsOneWidget);
-    await tester.tap(find.widgetWithText(TextButton, 'Resign').last);
+    await tester.tap(find.text('Resign game'));
     await tester.pumpAndSettle();
 
     expect(find.text('You lost'), findsOneWidget);
