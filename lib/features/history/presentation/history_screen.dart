@@ -51,13 +51,13 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
               AsyncData(:final value) => ListView.separated(
                 itemCount: value.length,
                 separatorBuilder: (_, _) =>
-                    const Divider(height: 1, color: AppColors.line),
+                    const Divider(height: 1, color: AppColors.border),
                 itemBuilder: (context, i) => _GameTile(game: value[i]),
               ),
               AsyncError() => const Center(
                 child: Text(
                   'History could not be loaded. Restart the app to try again.',
-                  style: AppType.caption,
+                  style: AppType.secondary,
                 ),
               ),
               _ => const SizedBox.shrink(),
@@ -95,7 +95,7 @@ class _GameTile extends StatelessWidget {
       ),
       subtitle: Text(
         '${game.result.reason} · ${game.moveCount} moves · $date',
-        style: AppType.caption,
+        style: AppType.secondary,
       ),
       onTap: () => context.push('/history/${game.id}'),
     );
@@ -116,7 +116,11 @@ class _Empty extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Text(text, style: AppType.caption, textAlign: TextAlign.center),
+        child: Text(
+          text,
+          style: AppType.secondary,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

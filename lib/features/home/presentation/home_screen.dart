@@ -68,11 +68,11 @@ class HomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: AppSpacing.xxl),
-              const Text(kAppName, style: AppType.display),
+              const Text(kAppName, style: AppType.headline),
               const SizedBox(height: AppSpacing.xs),
               const Text(
                 'Chess against Stockfish, on your phone.',
-                style: AppType.caption,
+                style: AppType.secondary,
               ),
               const Spacer(),
               if (hasSaved) ...[

@@ -1,8 +1,16 @@
 import 'package:flutter/widgets.dart';
 
-/// Corner radius tokens.
+/// Corner radius tokens: 8 / 10 / 14 / pill.
 abstract final class AppRadius {
-  static const Radius sm = Radius.circular(6);
+  /// Chips, small tiles, clock chips.
+  static const Radius sm = Radius.circular(8);
+
+  /// Buttons, inputs, tile buttons.
   static const Radius md = Radius.circular(10);
-  static const Radius lg = Radius.circular(16);
+
+  /// Cards, sheets, dialogs.
+  static const Radius lg = Radius.circular(14);
+
+  /// Pills (current move, badges).
+  static const Radius pill = Radius.circular(999);
 }

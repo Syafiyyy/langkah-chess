@@ -215,7 +215,7 @@ class _StatusLine extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         child: Row(
           children: [
-            Expanded(child: Text(text, style: AppType.caption)),
+            Expanded(child: Text(text, style: AppType.secondary)),
             if (action != null)
               TextButton(onPressed: onAction, child: Text(action)),
           ],

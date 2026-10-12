@@ -6,10 +6,10 @@ import '../domain/position_eval.dart';
 
 /// Colour for a move judgement.
 Color labelColor(MoveLabel label) => switch (label) {
-  MoveLabel.best => AppColors.best,
-  MoveLabel.inaccuracy => AppColors.inaccuracy,
-  MoveLabel.mistake => AppColors.mistake,
-  MoveLabel.blunder => AppColors.danger,
+  MoveLabel.best => AppColors.labelBest,
+  MoveLabel.inaccuracy => AppColors.labelInaccuracy,
+  MoveLabel.mistake => AppColors.labelMistake,
+  MoveLabel.blunder => AppColors.labelBlunder,
 };
 
 /// Move-list mark: only errors get a symbol (a "!" on every engine move

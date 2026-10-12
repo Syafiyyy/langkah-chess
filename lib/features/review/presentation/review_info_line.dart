@@ -93,11 +93,11 @@ class _Progress extends StatelessWidget {
             value: total == 0 ? null : done / total,
             minHeight: 3,
             color: AppColors.accent,
-            backgroundColor: AppColors.line,
+            backgroundColor: AppColors.border,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Text('Analysing $done/$total', style: AppType.caption),
+        Text('Analysing $done/$total', style: AppType.secondary),
       ],
     );
   }

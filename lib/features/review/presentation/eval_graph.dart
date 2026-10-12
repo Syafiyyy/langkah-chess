@@ -55,7 +55,7 @@ class EvalGraph extends StatelessWidget {
               drawVerticalLine: false,
               horizontalInterval: 50,
               getDrawingHorizontalLine: (_) =>
-                  const FlLine(color: AppColors.line, strokeWidth: 1),
+                  const FlLine(color: AppColors.border, strokeWidth: 1),
             ),
             extraLinesData: ExtraLinesData(
               verticalLines: [

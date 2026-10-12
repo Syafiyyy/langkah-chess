@@ -103,7 +103,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                           shapes: {
                             if (best is NormalMove)
                               Arrow(
-                                color: AppColors.best.withValues(alpha: 0.85),
+                                color: AppColors.labelBest.withValues(
+                                  alpha: 0.85,
+                                ),
                                 orig: best.from,
                                 dest: best.to,
                               ),

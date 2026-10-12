@@ -52,7 +52,7 @@ class GameOverSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(_title, style: AppType.display),
+            Text(_title, style: AppType.headline),
             const SizedBox(height: AppSpacing.xs),
             Text(_details, style: AppType.body),
             const SizedBox(height: AppSpacing.xl),

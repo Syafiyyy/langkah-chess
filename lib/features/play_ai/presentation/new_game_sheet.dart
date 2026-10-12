@@ -64,7 +64,7 @@ class _NewGameSheetState extends State<NewGameSheet> {
                 text: _setup.level.label,
                 children: [
                   if (_setup.level.ratingHint case final hint?)
-                    TextSpan(text: '  $hint', style: AppType.caption),
+                    TextSpan(text: '  $hint', style: AppType.secondary),
                 ],
               ),
               style: AppType.label,

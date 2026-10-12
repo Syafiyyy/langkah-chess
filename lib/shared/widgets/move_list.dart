@@ -58,7 +58,9 @@ class _MoveListState extends State<MoveList> {
     if (widget.sans.isEmpty) {
       return const SizedBox(
         height: 40,
-        child: Center(child: Text('Moves appear here', style: AppType.caption)),
+        child: Center(
+          child: Text('Moves appear here', style: AppType.secondary),
+        ),
       );
     }
     return SizedBox(
@@ -80,7 +82,7 @@ class _MoveListState extends State<MoveList> {
                     left: AppSpacing.sm,
                     right: AppSpacing.xs,
                   ),
-                  child: Text('${i ~/ 2 + 1}.', style: AppType.caption),
+                  child: Text('${i ~/ 2 + 1}.', style: AppType.secondary),
                 ),
               InkWell(
                 borderRadius: const BorderRadius.all(AppRadius.sm),

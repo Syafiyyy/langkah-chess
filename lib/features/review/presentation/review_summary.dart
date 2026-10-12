@@ -59,7 +59,7 @@ class _Side extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name, style: AppType.caption, overflow: TextOverflow.ellipsis),
+        Text(name, style: AppType.secondary, overflow: TextOverflow.ellipsis),
         Text(
           accuracy == null ? '–' : '${accuracy.toStringAsFixed(1)}%',
           style: AppType.title,
@@ -72,7 +72,7 @@ class _Side extends StatelessWidget {
               count(summary.blunders, MoveLabel.blunder),
             ],
           ),
-          style: AppType.caption,
+          style: AppType.secondary,
         ),
       ],
     );

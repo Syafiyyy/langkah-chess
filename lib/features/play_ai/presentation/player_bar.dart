@@ -41,7 +41,7 @@ class PlayerBar extends StatelessWidget {
             width: 12,
             height: 12,
             decoration: BoxDecoration(
-              color: side == Side.white ? AppColors.text : AppColors.background,
+              color: side == Side.white ? AppColors.text : AppColors.ground,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.textMuted),
             ),
@@ -85,7 +85,7 @@ class _Thinking extends StatelessWidget {
           ),
         ),
         SizedBox(width: AppSpacing.xs + 2),
-        Text('Thinking…', style: AppType.caption),
+        Text('Thinking…', style: AppType.secondary),
       ],
     );
   }
