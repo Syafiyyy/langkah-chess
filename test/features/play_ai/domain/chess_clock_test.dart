@@ -72,7 +72,9 @@ void main() {
   });
 
   test('handOver switches sides without adding increment', () {
-    final clock = threePlusTwo.start(Side.black, _s(0)).handOver(Side.white, _s(3));
+    final clock = threePlusTwo
+        .start(Side.black, _s(0))
+        .handOver(Side.white, _s(3));
     expect(clock.running, Side.white);
     expect(clock.remaining(Side.black, _s(10)), _s(177));
     expect(clock.remaining(Side.white, _s(10)), _s(173));

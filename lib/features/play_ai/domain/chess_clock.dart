@@ -53,7 +53,8 @@ class ChessClock {
 
   Duration _banked(Side side) => side == Side.white ? white : black;
 
-  Duration _elapsed(Duration now) => since == null ? Duration.zero : now - since!;
+  Duration _elapsed(Duration now) =>
+      since == null ? Duration.zero : now - since!;
 
   /// Time left for [side] at [now], never negative.
   Duration remaining(Side side, Duration now) {

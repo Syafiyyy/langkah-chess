@@ -47,7 +47,10 @@ class GameController {
 
     _state = _state.copyWith(
       positions: [..._state.positions, next],
-      moves: [..._state.moves, MoveRecord(uci: uci, san: san)],
+      moves: [
+        ..._state.moves,
+        MoveRecord(uci: uci, san: san),
+      ],
       clock: nextClock,
     );
     final result = resultAfterMove(next, repetitions: _state.repetitions);

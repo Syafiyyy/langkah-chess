@@ -75,7 +75,9 @@ void main() {
 
     test('capture-promotion keeps the chosen piece', () {
       final c = controller(
-        initial: Chess.fromSetup(Setup.parseFen('1r5k/P7/8/8/8/8/8/7K w - - 0 1')),
+        initial: Chess.fromSetup(
+          Setup.parseFen('1r5k/P7/8/8/8/8/8/7K w - - 0 1'),
+        ),
       );
       expect(c.play(Move.parse('a7b8n')!), isTrue);
       expect(c.state.moves.single.uci, 'a7b8n');
@@ -178,7 +180,9 @@ void main() {
     test('flag against a lone king is a draw', () {
       final c = controller(
         player: Side.black,
-        initial: Chess.fromSetup(Setup.parseFen('7k/8/8/8/8/8/q7/7K w - - 0 1')),
+        initial: Chess.fromSetup(
+          Setup.parseFen('7k/8/8/8/8/8/q7/7K w - - 0 1'),
+        ),
       );
       playAll(c, ['h1g1']); // white's first move starts black's clock
       time.advance(_s(181));

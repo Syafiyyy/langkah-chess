@@ -13,5 +13,8 @@ String standardUci(Position position, Move move) {
       target?.color == piece?.color;
   if (!isCastleOntoRook) return move.uci;
   final file = move.to.file > move.from.file ? File.g : File.c;
-  return NormalMove(from: move.from, to: Square.fromCoords(file, move.from.rank)).uci;
+  return NormalMove(
+    from: move.from,
+    to: Square.fromCoords(file, move.from.rank),
+  ).uci;
 }

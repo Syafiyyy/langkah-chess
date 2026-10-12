@@ -55,8 +55,10 @@ void main() {
     });
 
     test('an ongoing position has no result', () {
-      expect(resultAfterMove(_play(Chess.initial, 'e2e4'), repetitions: 1),
-          isNull);
+      expect(
+        resultAfterMove(_play(Chess.initial, 'e2e4'), repetitions: 1),
+        isNull,
+      );
     });
   });
 
@@ -114,7 +116,10 @@ void main() {
       expect(positionKey(legalEp), isNot(positionKey(noEp)));
 
       const quiet = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq';
-      expect(positionKey(_pos('$quiet e3 0 1')), positionKey(_pos('$quiet - 0 1')));
+      expect(
+        positionKey(_pos('$quiet e3 0 1')),
+        positionKey(_pos('$quiet - 0 1')),
+      );
     });
   });
 }
