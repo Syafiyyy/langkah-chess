@@ -12,8 +12,9 @@ import 'human_style.dart';
 /// `UCI_LimitStrength` and `Skill Level`, so switching levels never leaves an
 /// old option active.
 ///
-/// Ratings are rough labels, calibrated only relative to each other (see
-/// docs/STATE.md), not measured against humans.
+/// Only levels 5–7 show a rating (their UCI_Elo setting, Stockfish's own
+/// scale). Levels 1–4 are calibrated only relative to each other (bot vs bot,
+/// see docs/STATE.md), so they get a name, not a number.
 class BotLevel {
   const BotLevel._(
     this.number,
@@ -30,7 +31,7 @@ class BotLevel {
   /// Human description, e.g. "Newcomer".
   final String name;
 
-  /// Approximate rating hint; null for full strength.
+  /// The UCI_Elo rating for levels 5–7; null otherwise.
   final int? approxRating;
 
   /// UCI options to set before the bot searches.
@@ -46,16 +47,21 @@ class BotLevel {
   /// "Level n · Name".
   String get label => 'Level $number · $name';
 
-  /// "~1400", or "Max" for full strength.
-  String get ratingHint => approxRating == null ? 'Max' : '~$approxRating';
+  /// "~1400" for the Elo levels, "Max" for full strength, null for the
+  /// named human-style levels.
+  String? get ratingHint => style != null
+      ? null
+      : approxRating == null
+      ? 'Max'
+      : '~$approxRating';
 
   static BotLevel of(int number) => all[number - 1];
 
   static const List<BotLevel> all = [
-    BotLevel._(1, 'Newcomer', 300, _full, _humanTime, style: _newcomer),
-    BotLevel._(2, 'Beginner', 550, _full, _humanTime, style: _beginner),
-    BotLevel._(3, 'Casual', 800, _full, _humanTime, style: _casual),
-    BotLevel._(4, 'Improving', 1100, _full, _humanTime, style: _improving),
+    BotLevel._(1, 'Newcomer', null, _full, _humanTime, style: _newcomer),
+    BotLevel._(2, 'Beginner', null, _full, _humanTime, style: _beginner),
+    BotLevel._(3, 'Casual', null, _full, _humanTime, style: _casual),
+    BotLevel._(4, 'Improving', null, _full, _humanTime, style: _improving),
     BotLevel._(5, 'Club', 1400, _elo1400, Duration(milliseconds: 600)),
     BotLevel._(6, 'Strong club', 1800, _elo1800, Duration(milliseconds: 800)),
     BotLevel._(7, 'Expert', 2200, _elo2200, Duration(milliseconds: 1000)),
@@ -64,32 +70,34 @@ class BotLevel {
 
   static const _humanTime = Duration(milliseconds: 300);
 
+  // Tuned by calibration (bot vs bot, see docs/STATE.md).
   static const _newcomer = HumanStyle(
-    temperature: 30,
-    blunderChance: 0.30,
-    bigBlunders: true,
-    randomMoveChance: 0.25,
-    missMateInOneChance: 0.65,
+    temperature: 15,
+    blunderChance: 0.17,
+    bigBlunderShare: 0.6,
+    randomMoveChance: 0.06,
+    missMateInOneChance: 0.5,
     searchDepth: 6,
   );
   static const _beginner = HumanStyle(
-    temperature: 14,
-    blunderChance: 0.15,
-    bigBlunders: true,
-    randomMoveChance: 0.05,
-    missMateInOneChance: 0.35,
+    temperature: 12,
+    blunderChance: 0.14,
+    bigBlunderShare: 0.45,
+    randomMoveChance: 0.02,
+    missMateInOneChance: 0.25,
     searchDepth: 8,
   );
   static const _casual = HumanStyle(
-    temperature: 6,
-    blunderChance: 0.06,
+    temperature: 10,
+    blunderChance: 0.12,
+    bigBlunderShare: 0.22,
     missMateInOneChance: 0.04,
     searchDepth: 10,
   );
   static const _improving = HumanStyle(
-    temperature: 3,
-    blunderChance: 0.015,
-    missMateInOneChance: 0.01,
+    temperature: 8,
+    blunderChance: 0.10,
+    missMateInOneChance: 0.015,
     searchDepth: 12,
   );
 

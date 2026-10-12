@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:langkah/core/chess/win_percent.dart';
 import 'package:langkah/features/play_ai/domain/bot_level.dart';
 import 'package:langkah/features/play_ai/domain/human_move_picker.dart';
+import 'package:langkah/features/play_ai/domain/human_style.dart';
 
 /// Start position with made-up evals: a few good moves, some bad ones and
 /// two that lose a lot (win% drop >= 30 from the best).
@@ -106,17 +107,55 @@ void main() {
     final rates = [
       for (final n in [1, 2, 3, 4]) goodRate(n),
     ];
-    for (var i = 1; i < rates.length; i++) {
+    for (var i = 1; i < 3; i++) {
       expect(rates[i], greaterThan(rates[i - 1]), reason: 'rates $rates');
     }
+    // Levels 3 and 4 pick ordinary moves alike; what separates them is the
+    // big-blunder share (tested below).
+    expect(rates[3], greaterThan(rates[2] - 0.02), reason: 'rates $rates');
     expect(rates.first, lessThan(0.5), reason: 'rates $rates');
-    expect(rates.last, greaterThan(0.75), reason: 'rates $rates');
+    expect(rates.last, greaterThan(0.5), reason: 'rates $rates');
   });
 
-  test('weak levels make big blunders, level 4 almost never', () {
-    expect(_bigBlunderRate(_picker(1)), greaterThan(0.08));
-    expect(_bigBlunderRate(_picker(2)), greaterThan(0.03));
-    expect(_bigBlunderRate(_picker(4)), lessThan(0.02));
+  test('big blunders get rarer level by level; level 4 almost never', () {
+    final rates = [
+      for (final n in [1, 2, 3, 4]) _bigBlunderRate(_picker(n)),
+    ];
+    for (var i = 1; i < rates.length; i++) {
+      expect(rates[i], lessThan(rates[i - 1]), reason: 'rates $rates');
+    }
+    expect(rates.first, greaterThan(0.05), reason: 'rates $rates');
+    expect(rates.last, lessThan(0.02), reason: 'rates $rates');
+  });
+
+  test('with a full big-blunder share, mistakes can lose a lot', () {
+    const always = HumanStyle(
+      temperature: 0.001,
+      blunderChance: 1,
+      bigBlunderShare: 1,
+      missMateInOneChance: 0,
+      searchDepth: 1,
+    );
+    final p = HumanMovePicker(always, Random(4));
+    final big = [for (var i = 0; i < 500; i++) p.pick(Chess.initial, _quiet)]
+        .where((x) => x.bigBlunder)
+        .length;
+    // Every other move at most (never two in a row), mostly big when allowed.
+    expect(big, greaterThan(150));
+    expect(big, lessThanOrEqualTo(250));
+  });
+
+  test('a mistake is big only as often as the style allows', () {
+    const never = HumanStyle(
+      temperature: 0.001, // softmax always takes the best
+      blunderChance: 1,
+      missMateInOneChance: 0,
+      searchDepth: 1,
+    );
+    final p = HumanMovePicker(never, Random(4));
+    for (var i = 0; i < 500; i++) {
+      expect(p.pick(Chess.initial, _quiet).bigBlunder, isFalse);
+    }
   });
 
   test('never two big blunders in a row', () {

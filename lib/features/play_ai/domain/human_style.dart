@@ -9,7 +9,7 @@ class HumanStyle {
     required this.missMateInOneChance,
     required this.searchDepth,
     this.randomMoveChance = 0,
-    this.bigBlunders = false,
+    this.bigBlunderShare = 0,
     this.candidates = 10,
     this.searchTime = const Duration(milliseconds: 300),
   });
@@ -20,8 +20,10 @@ class HumanStyle {
   /// Chance to pick a clearly worse candidate on purpose (drop >= 10 win%).
   final double blunderChance;
 
-  /// Whether such a blunder may lose a lot (drop >= 30 win%).
-  final bool bigBlunders;
+  /// Chance that such a mistake may lose a lot (drop >= 30 win%). The main
+  /// strength lever between the weak levels: calibration showed that
+  /// allowing big blunders or not decides games far more than temperature.
+  final double bigBlunderShare;
 
   /// Chance to play any legal move, ignoring the engine (newcomer only).
   final double randomMoveChance;

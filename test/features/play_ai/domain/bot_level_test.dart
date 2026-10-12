@@ -24,10 +24,19 @@ void main() {
     ]);
   });
 
-  test('approximate ratings strictly increase; level 8 has none', () {
-    final ratings = [for (final l in BotLevel.all.take(7)) l.approxRating!];
-    expect(ratings, [300, 550, 800, 1100, 1400, 1800, 2200]);
-    expect(BotLevel.of(8).approxRating, isNull);
+  test('only the UCI_Elo levels carry a rating number', () {
+    // Bot-vs-bot calibration only shows relative strength, so the
+    // human-style levels are named, not rated (see docs/STATE.md).
+    expect(BotLevel.all.map((l) => l.approxRating), [
+      null,
+      null,
+      null,
+      null,
+      1400,
+      1800,
+      2200,
+      null,
+    ]);
   });
 
   test('human-style levels search at full strength and pick themselves', () {
@@ -66,7 +75,8 @@ void main() {
 
   test('label and rating hint', () {
     expect(BotLevel.of(1).label, 'Level 1 · Newcomer');
-    expect(BotLevel.of(1).ratingHint, '~300');
+    expect(BotLevel.of(1).ratingHint, isNull);
+    expect(BotLevel.of(5).ratingHint, '~1400');
     expect(BotLevel.of(8).ratingHint, 'Max');
   });
 

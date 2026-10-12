@@ -90,11 +90,10 @@ class HumanMovePicker {
 
     // 3. Deliberate mistake.
     if (_random.nextDouble() < style.blunderChance) {
+      final mayBeBig = _random.nextDouble() < style.bigBlunderShare;
       final worse = pool
           .where(
-            (s) =>
-                s.drop >= _blunderDrop &&
-                (style.bigBlunders || s.drop < _bigDrop),
+            (s) => s.drop >= _blunderDrop && (mayBeBig || s.drop < _bigDrop),
           )
           .toList();
       if (worse.isNotEmpty) {

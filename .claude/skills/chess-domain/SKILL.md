@@ -19,6 +19,14 @@ description: Rules and conventions for Langkah's chess logic, engine and online 
 - Dispose the engine when the app is detached; in debug, dispose before hot reload.
 - Never send an unvalidated FEN to the engine (illegal positions can crash it). Validate with dartchess first.
 
+## Bot behaviour (offline play)
+- Levels and their engine settings live in one table: `features/play_ai/domain/bot_level.dart`. Levels 5–7 use `UCI_LimitStrength` + `UCI_Elo` (Stockfish 19 range 1320..3190); level 8 is full strength.
+- Levels 1–4 never play Stockfish's bestmove directly (Skill Level / UCI_Elo don't blunder like beginners). `BotMover` asks for MultiPV candidates (`EngineService.candidates`), and `HumanMovePicker` (pure Dart, seeded `Random`) chooses: mate in one unless missed (levels 3–4 almost never miss) → newcomer-only random legal move → deliberate mistake (drop >= 10 win%) → softmax over win% drop with the level's temperature.
+- Guardrails: only legal moves; never two big blunders (drop >= 30 win%) in a row; one picker per game.
+- MultiPV: `candidates()` sets it; `bestMove()` resets it to 1 first. Analysis (game review) must use MultiPV 1 unless it asks for candidates on purpose.
+- Thinking delay: at "Natural" bot speed the move appears after `naturalThinkTime` (0.6–2.5 s for levels 1–4, by position complexity; quicker for forced moves and recaptures; levels 5–8 only pad to 0.6–1.2 s). In timed games search + pause stay within `safeThinkBudget` (1/30 of the bot's clock + half the increment), so the pause can never flag the bot. "Fast" skips the pause. Takeback/resign/flag/leaving drops a pending move (generation check).
+- Calibration is required after changing any level: run `integration_test/bot_calibration_test.dart` (level N vs N+1, target: the higher level scores ~65–80%) and record the table in `docs/STATE.md`. Don't relabel ratings without evidence.
+
 ## Game results (must be unit-tested)
 - Checkmate, stalemate, threefold repetition, 50-move rule, insufficient material, resignation, draw agreement, timeout.
 - Timeout: the side that ran out LOSES, unless the OTHER side has insufficient mating material → draw. Custom function, own tests.

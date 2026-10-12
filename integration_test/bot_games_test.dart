@@ -95,16 +95,19 @@ void main() {
         level: BotLevel.of(1),
         color: ColorChoice.black,
         timeControl: TimeControl.unlimited,
+        botSpeed: BotSpeed.fast,
       ),
       GameSetup(
         level: BotLevel.of(8),
         color: ColorChoice.white,
         timeControl: TimeControl.unlimited,
+        botSpeed: BotSpeed.fast,
       ),
       GameSetup(
         level: BotLevel.of(5),
         color: ColorChoice.white,
         timeControl: const TimeControl.minutes(3, 2),
+        botSpeed: BotSpeed.fast,
       ),
     ];
     final rss = <int>[ProcessInfo.currentRss];
