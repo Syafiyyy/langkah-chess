@@ -79,12 +79,12 @@ class _ReplayState extends State<_Replay> {
           IconButton(
             tooltip: 'Copy PGN',
             onPressed: _copy,
-            icon: const Icon(Icons.copy),
+            icon: const Icon(Icons.copy_rounded),
           ),
           IconButton(
             tooltip: 'Share PGN',
             onPressed: _share,
-            icon: const Icon(Icons.share),
+            icon: const Icon(Icons.share_rounded),
           ),
         ],
       ),
@@ -120,27 +120,27 @@ class _ReplayState extends State<_Replay> {
                 IconButton(
                   tooltip: 'Flip board',
                   onPressed: () => setState(() => _flipped = !_flipped),
-                  icon: const Icon(Icons.swap_vert),
+                  icon: const Icon(Icons.swap_vert_rounded),
                 ),
                 IconButton(
                   tooltip: 'Start',
                   onPressed: _ply > 0 ? () => _go(0) : null,
-                  icon: const Icon(Icons.first_page),
+                  icon: const Icon(Icons.first_page_rounded),
                 ),
                 IconButton(
                   tooltip: 'Previous move',
                   onPressed: _ply > 0 ? () => _go(_ply - 1) : null,
-                  icon: const Icon(Icons.chevron_left),
+                  icon: const Icon(Icons.chevron_left_rounded),
                 ),
                 IconButton(
                   tooltip: 'Next move',
                   onPressed: _ply < last ? () => _go(_ply + 1) : null,
-                  icon: const Icon(Icons.chevron_right),
+                  icon: const Icon(Icons.chevron_right_rounded),
                 ),
                 IconButton(
                   tooltip: 'End',
                   onPressed: _ply < last ? () => _go(last) : null,
-                  icon: const Icon(Icons.last_page),
+                  icon: const Icon(Icons.last_page_rounded),
                 ),
               ],
             ),

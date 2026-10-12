@@ -63,7 +63,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             IconButton(
               tooltip: 'Analyse again',
               onPressed: notifier.reanalyse,
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh_rounded),
             ),
         ],
       ),
@@ -79,8 +79,12 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, c) {
+                  // 8 dp side gutters so the eval bar is off the screen edge.
                   final size = BoardFrame.boardSizeFor(
-                    (c.maxWidth - EvalBar.width - AppSpacing.xs)
+                    (c.maxWidth -
+                            2 * AppSpacing.sm -
+                            EvalBar.width -
+                            AppSpacing.xs)
                         .clamp(0, c.maxHeight)
                         .toDouble(),
                   );
@@ -166,31 +170,31 @@ class _Controls extends StatelessWidget {
         IconButton(
           tooltip: 'Flip board',
           onPressed: onFlip,
-          icon: const Icon(Icons.swap_vert),
+          icon: const Icon(Icons.swap_vert_rounded),
         ),
         IconButton(
           tooltip: 'Your previous mistake',
           onPressed: state.playerErrorBefore(state.ply) == null
               ? null
               : notifier.previousError,
-          icon: const Icon(Icons.fast_rewind),
+          icon: const Icon(Icons.fast_rewind_rounded),
         ),
         IconButton(
           tooltip: 'Previous move',
           onPressed: atStart ? null : notifier.previous,
-          icon: const Icon(Icons.chevron_left),
+          icon: const Icon(Icons.chevron_left_rounded),
         ),
         IconButton(
           tooltip: 'Next move',
           onPressed: atEnd ? null : notifier.next,
-          icon: const Icon(Icons.chevron_right),
+          icon: const Icon(Icons.chevron_right_rounded),
         ),
         IconButton(
           tooltip: 'Your next mistake',
           onPressed: state.playerErrorAfter(state.ply) == null
               ? null
               : notifier.nextError,
-          icon: const Icon(Icons.fast_forward),
+          icon: const Icon(Icons.fast_forward_rounded),
         ),
       ],
     );
