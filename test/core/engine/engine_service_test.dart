@@ -231,6 +231,56 @@ void main() {
     });
   });
 
+  group('analyse', () {
+    test('searches each position in order and streams the results', () async {
+      final engine = FakeUciEngine(onCommand: _replyToGo);
+      final service = EngineService(() async => engine);
+
+      final results = await service.analyse([
+        _startFen,
+        _afterE4,
+      ], moveTime: const Duration(milliseconds: 250)).toList();
+
+      expect(results.map((r) => r.index), [0, 1]);
+      expect(results.first.result.bestMove, 'd2d4');
+      expect(results.first.result.eval?.cp, 28);
+      expect(engine.commands, [
+        'position fen $_startFen',
+        'go movetime 250',
+        'position fen $_afterE4',
+        'go movetime 250',
+      ]);
+    });
+
+    test('cancelling stops before the next position', () async {
+      final engine = FakeUciEngine(onCommand: _replyToGo);
+      final service = EngineService(() async => engine);
+
+      final first = await service.analyse([
+        _startFen,
+        _afterE4,
+        _startFen,
+      ], depth: 12).first;
+
+      await Future<void>.delayed(Duration.zero);
+      expect(first.index, 0);
+      expect(engine.commands.where((c) => c.startsWith('go')), [
+        'go depth 12 movetime 500',
+      ]);
+    });
+
+    test('uses MultiPV 1 even after a candidate search', () async {
+      final engine = FakeUciEngine(onCommand: _replyToGo);
+      final service = EngineService(() async => engine);
+      await service.candidates(_startFen, count: 4);
+      engine.commands.clear();
+
+      await service.analyse([_startFen]).toList();
+
+      expect(engine.commands.first, 'setoption name MultiPV value 1');
+    });
+  });
+
   test('maps bestmove (none) to a null move', () async {
     final engine = FakeUciEngine(
       onCommand: (engine, command) {

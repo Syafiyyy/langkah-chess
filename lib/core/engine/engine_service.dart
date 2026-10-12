@@ -7,6 +7,17 @@ import 'uci_parser.dart';
 
 export 'uci_parser.dart' show EngineEval;
 
+/// One analysed position of [EngineService.analyse].
+class AnalysedPosition {
+  const AnalysedPosition(this.index, this.result);
+
+  /// Index into the list of FENs.
+  final int index;
+
+  /// Score (side-to-move view) and best move of that position.
+  final EngineResult result;
+}
+
 /// Result of one search.
 class EngineResult {
   const EngineResult({
@@ -119,6 +130,25 @@ class EngineService {
       return search;
     });
     return search.completer.future;
+  }
+
+  /// Analyses [fens] one after another (MultiPV 1) and streams each result
+  /// as soon as it is found. Cancelling the subscription stops after the
+  /// current position; call [stop] to also cut that search short.
+  Stream<AnalysedPosition> analyse(
+    List<String> fens, {
+    Duration moveTime = const Duration(milliseconds: 500),
+    int? depth,
+  }) async* {
+    for (var i = 0; i < fens.length; i++) {
+      final result = await _search(
+        fens[i],
+        multiPv: 1,
+        moveTime: moveTime,
+        depth: depth,
+      );
+      yield AnalysedPosition(i, result);
+    }
   }
 
   /// Stops the running search, if any. Its caller still gets a result (the
