@@ -81,6 +81,7 @@ void main() {
     if (Platform.environment['UPDATE_FIXTURES'] == '1') {
       file.writeAsStringSync(json);
     }
-    expect(file.readAsStringSync(), json);
+    // Git may check the file out with CRLF on Windows.
+    expect(file.readAsStringSync().replaceAll('\r\n', '\n'), json);
   });
 }
