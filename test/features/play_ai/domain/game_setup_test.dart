@@ -12,11 +12,18 @@ void main() {
       level: BotLevel.of(6),
       color: ColorChoice.random,
       timeControl: const TimeControl.minutes(15, 10),
+      botSpeed: BotSpeed.fast,
     );
     final back = GameSetup.decode(setup.encode())!;
+    expect(back.botSpeed, BotSpeed.fast);
     expect(back.level.number, 6);
     expect(back.color, ColorChoice.random);
     expect(back.timeControl, const TimeControl.minutes(15, 10));
+  });
+
+  test('bot speed defaults to natural, also for setups saved before it', () {
+    expect(GameSetup.defaults.botSpeed, BotSpeed.natural);
+    expect(GameSetup.decode('3|white|5+0')!.botSpeed, BotSpeed.natural);
   });
 
   test('decode returns null for garbage', () {

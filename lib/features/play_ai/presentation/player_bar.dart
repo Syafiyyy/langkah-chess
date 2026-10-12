@@ -14,7 +14,7 @@ class PlayerBar extends StatelessWidget {
     required this.name,
     required this.side,
     required this.clock,
-    this.status,
+    this.thinking = false,
   });
 
   /// Fixed height, so the game screen can size the board around two bars.
@@ -26,8 +26,8 @@ class PlayerBar extends StatelessWidget {
   /// Null for untimed games.
   final ChessClock? clock;
 
-  /// Small text under the name, e.g. "Thinking…".
-  final String? status;
+  /// Shows a quiet "Thinking…" with a small spinner under the name.
+  final bool thinking;
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +57,36 @@ class PlayerBar extends StatelessWidget {
                   style: AppType.label,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (status != null) Text(status!, style: AppType.caption),
+                if (thinking) const _Thinking(),
               ],
             ),
           ),
           if (clock != null) ClockText(clock: clock, side: side),
         ],
       ),
+    );
+  }
+}
+
+class _Thinking extends StatelessWidget {
+  const _Thinking();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 10,
+          height: 10,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.5,
+            color: AppColors.textMuted,
+          ),
+        ),
+        SizedBox(width: AppSpacing.xs + 2),
+        Text('Thinking…', style: AppType.caption),
+      ],
     );
   }
 }

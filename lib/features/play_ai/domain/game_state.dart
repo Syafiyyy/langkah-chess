@@ -3,6 +3,7 @@ import 'package:dartchess/dartchess.dart';
 import 'bot_level.dart';
 import 'chess_clock.dart';
 import 'game_result.dart';
+import 'game_setup.dart';
 import 'time_control.dart';
 
 /// One played move in both notations.
@@ -25,6 +26,7 @@ class GameState {
     required this.moves,
     required this.clock,
     required this.startedAt,
+    this.botSpeed = BotSpeed.natural,
     this.result,
     this.endedAt,
   });
@@ -36,6 +38,7 @@ class GameState {
     required TimeControl timeControl,
     required Side playerSide,
     required DateTime startedAt,
+    BotSpeed botSpeed = BotSpeed.natural,
     Position initial = Chess.initial,
   }) => GameState(
     id: id,
@@ -46,12 +49,14 @@ class GameState {
     moves: const [],
     clock: timeControl.isTimed ? ChessClock.initial(timeControl) : null,
     startedAt: startedAt,
+    botSpeed: botSpeed,
   );
 
   final String id;
   final BotLevel level;
   final TimeControl timeControl;
   final Side playerSide;
+  final BotSpeed botSpeed;
 
   /// Every position from the start; `positions.length == moves.length + 1`.
   final List<Position> positions;
@@ -95,6 +100,7 @@ class GameState {
     moves: moves ?? this.moves,
     clock: clock ?? this.clock,
     startedAt: startedAt,
+    botSpeed: botSpeed,
     result: result ?? this.result,
     endedAt: endedAt ?? this.endedAt,
   );

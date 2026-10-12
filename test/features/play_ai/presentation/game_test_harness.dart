@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
@@ -53,12 +55,16 @@ class GameTestHarness {
   final time = FakeTimeSource();
   final kv = MemoryKvStore();
   final history = MemoryHistory();
+  final pauses = <Duration>[];
 
   late final List<Override> overrides = [
     engineServiceProvider.overrideWithValue(EngineService(() async => engine)),
     timeSourceProvider.overrideWithValue(time),
     playAiStoreProvider.overrideWithValue(PlayAiStore(kv)),
     historyRepositoryProvider.overrideWithValue(history),
+    randomProvider.overrideWithValue(Random(1)),
+    // Thinking pauses are recorded, not waited for.
+    pauseProvider.overrideWithValue((d) async => pauses.add(d)),
   ];
 
   Widget wrap(Widget child) => ProviderScope(

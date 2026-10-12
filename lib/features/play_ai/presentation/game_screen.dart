@@ -104,12 +104,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     PlayerBar bar(Side side) {
       final isBot = side == game.botSide;
       return PlayerBar(
-        name: isBot
-            ? 'Bot · level ${level.number} · ~${level.approxRating}'
-            : 'You',
+        name: isBot ? 'Bot · ${level.label}' : 'You',
         side: side,
         clock: game.clock,
-        status: isBot && view.botThinking ? 'Thinking…' : null,
+        thinking: isBot && view.botThinking,
       );
     }
 

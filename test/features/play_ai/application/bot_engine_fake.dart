@@ -38,13 +38,20 @@ FakeUciEngine botEngine({
         final hold = holdUntilStop || (holdFirstOnly && goes == 1);
         if (!hold) {
           searching = false;
-          engine.emit('bestmove ${reply()}');
+          _answer(engine, reply());
         }
       }
       if (command == 'stop' && searching) {
         searching = false;
-        engine.emit('bestmove ${reply()}');
+        _answer(engine, reply());
       }
     },
   );
+}
+
+/// One scored line (so MultiPV candidate searches see it) and the bestmove.
+void _answer(FakeUciEngine engine, String uci) {
+  engine
+    ..emit('info depth 1 multipv 1 score cp 0 pv $uci')
+    ..emit('bestmove $uci');
 }

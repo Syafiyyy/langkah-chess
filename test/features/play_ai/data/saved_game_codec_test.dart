@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:langkah/features/play_ai/data/saved_game_codec.dart';
 import 'package:langkah/features/play_ai/domain/bot_level.dart';
 import 'package:langkah/features/play_ai/domain/game_controller.dart';
+import 'package:langkah/features/play_ai/domain/game_setup.dart';
 import 'package:langkah/features/play_ai/domain/game_state.dart';
 import 'package:langkah/features/play_ai/domain/time_control.dart';
 
@@ -19,6 +20,7 @@ void main() {
           timeControl: tc,
           playerSide: Side.black,
           startedAt: DateTime.utc(2026, 10, 12, 8),
+          botSpeed: BotSpeed.fast,
         ),
         time: time,
       );
@@ -40,6 +42,7 @@ void main() {
     expect(back.level.number, 7);
     expect(back.timeControl, const TimeControl.minutes(5, 3));
     expect(back.playerSide, Side.black);
+    expect(back.botSpeed, BotSpeed.fast);
     expect(back.startedAt, DateTime.utc(2026, 10, 12, 8));
     expect(back.moves.map((m) => m.san), ['e4', 'c5', 'Nf3', 'd6']);
     expect(back.position.fen, c.state.position.fen);

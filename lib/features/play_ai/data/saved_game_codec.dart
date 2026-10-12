@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart';
 
 import '../domain/bot_level.dart';
 import '../domain/chess_clock.dart';
+import '../domain/game_setup.dart';
 import '../domain/game_state.dart';
 import '../domain/time_control.dart';
 
@@ -19,6 +20,7 @@ String encodeSavedGame(GameState state, Duration now) {
     'level': state.level.number,
     'tc': state.timeControl.encode(),
     'player': state.playerSide.name,
+    'speed': state.botSpeed.name,
     'startedAt': state.startedAt.millisecondsSinceEpoch,
     'fen': state.initialPosition.fen,
     'moves': [for (final m in state.moves) m.uci],
@@ -54,6 +56,9 @@ GameState? decodeSavedGame(String json, Duration now) {
       level: BotLevel.of(map['level']! as int),
       timeControl: timeControl,
       playerSide: Side.values.byName(map['player']! as String),
+      botSpeed: BotSpeed.values.byName(
+        map['speed'] as String? ?? BotSpeed.natural.name,
+      ),
       positions: positions,
       moves: moves,
       clock: clockMap == null

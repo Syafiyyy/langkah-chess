@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,6 +11,15 @@ import '../domain/time_source.dart';
 /// The app database. Opened in `main()` and provided by an override.
 final appDatabaseProvider = Provider<Database>(
   (ref) => throw UnimplementedError('Override appDatabaseProvider in main()'),
+);
+
+/// Randomness for bot moves, thinking pauses and colour choice (seeded in
+/// tests).
+final randomProvider = Provider<Random>((ref) => Random());
+
+/// Waits for the bot's thinking pause (instant or controllable in tests).
+final pauseProvider = Provider<Future<void> Function(Duration)>(
+  (ref) => Future<void>.delayed,
 );
 
 /// Monotonic time for game clocks.

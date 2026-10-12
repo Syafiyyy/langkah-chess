@@ -11,41 +11,48 @@ void main() {
     expect(BotLevel.of(3).number, 3);
   });
 
-  test('approximate ratings strictly increase', () {
-    final ratings = BotLevel.all.map((l) => l.approxRating).toList();
-    for (var i = 1; i < ratings.length; i++) {
-      expect(ratings[i], greaterThan(ratings[i - 1]));
-    }
+  test('levels have human names', () {
+    expect(BotLevel.all.map((l) => l.name), [
+      'Newcomer',
+      'Beginner',
+      'Casual',
+      'Improving',
+      'Club',
+      'Strong club',
+      'Expert',
+      'Full strength',
+    ]);
   });
 
-  test('levels below UCI_Elo minimum use Skill Level and a depth cap', () {
-    for (final level in BotLevel.all.where((l) => l.approxRating < _minElo)) {
+  test('approximate ratings strictly increase; level 8 has none', () {
+    final ratings = [for (final l in BotLevel.all.take(7)) l.approxRating!];
+    expect(ratings, [300, 550, 800, 1100, 1400, 1800, 2200]);
+    expect(BotLevel.of(8).approxRating, isNull);
+  });
+
+  test('human-style levels search at full strength and pick themselves', () {
+    for (final level in BotLevel.all.where((l) => l.style != null)) {
       expect(level.engineOptions['UCI_LimitStrength'], 'false');
+      expect(level.engineOptions['Skill Level'], '20');
       expect(level.engineOptions.containsKey('UCI_Elo'), isFalse);
-      final skill = int.parse(level.engineOptions['Skill Level']!);
-      expect(skill, inInclusiveRange(0, 20));
-      expect(level.depth, isNotNull);
     }
   });
 
   test('Elo levels set UCI_LimitStrength with an in-range UCI_Elo', () {
-    final eloLevels = BotLevel.all.where(
-      (l) => l.engineOptions['UCI_LimitStrength'] == 'true',
-    );
-    expect(eloLevels, isNotEmpty);
-    for (final level in eloLevels) {
+    for (final n in [5, 6, 7]) {
+      final level = BotLevel.of(n);
+      expect(level.engineOptions['UCI_LimitStrength'], 'true');
       final elo = int.parse(level.engineOptions['UCI_Elo']!);
       expect(elo, inInclusiveRange(_minElo, _maxElo));
       expect(elo, level.approxRating);
-      expect(level.depth, isNull);
     }
   });
 
   test('the top level plays at full strength', () {
     final top = BotLevel.all.last;
+    expect(top.style, isNull);
     expect(top.engineOptions['UCI_LimitStrength'], 'false');
     expect(top.engineOptions['Skill Level'], '20');
-    expect(top.depth, isNull);
   });
 
   test('every level sets the same option names, so switching resets them', () {
@@ -57,8 +64,24 @@ void main() {
     }
   });
 
-  test('label names level and rating', () {
-    expect(BotLevel.of(4).label, 'Level 4 · ~1400');
+  test('label and rating hint', () {
+    expect(BotLevel.of(1).label, 'Level 1 · Newcomer');
+    expect(BotLevel.of(1).ratingHint, '~300');
+    expect(BotLevel.of(8).ratingHint, 'Max');
+  });
+
+  test('safe think budget: 1/30 of the clock plus half the increment', () {
+    expect(
+      safeThinkBudget(
+        remaining: const Duration(seconds: 60),
+        increment: const Duration(seconds: 2),
+      ),
+      const Duration(seconds: 3),
+    );
+    expect(
+      safeThinkBudget(remaining: Duration.zero, increment: Duration.zero),
+      const Duration(milliseconds: 50),
+    );
   });
 
   group('botThinkTime', () {

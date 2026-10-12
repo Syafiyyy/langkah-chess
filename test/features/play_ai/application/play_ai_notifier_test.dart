@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,21 +19,38 @@ import '../../../core/engine/fake_uci_engine.dart';
 import '../domain/fake_time_source.dart';
 import 'bot_engine_fake.dart';
 
+/// Level 5 by default: it plays the engine's bestmove, so scripted replies
+/// are played exactly. Fast by default: no thinking pause.
 GameSetup _setup({
   ColorChoice color = ColorChoice.white,
-  int level = 1,
+  int level = 5,
   TimeControl tc = const TimeControl.minutes(3, 2),
-}) => GameSetup(level: BotLevel.of(level), color: color, timeControl: tc);
+  BotSpeed speed = BotSpeed.fast,
+}) => GameSetup(
+  level: BotLevel.of(level),
+  color: color,
+  timeControl: tc,
+  botSpeed: speed,
+);
 
 void main() {
   late Database db;
   late FakeTimeSource time;
+
+  /// Thinking pauses the notifier asked for; each completes when the test
+  /// says so (or immediately when [autoPause] is set).
+  late List<Duration> pauses;
+  late List<Completer<void>> pending;
+  late bool autoPause;
 
   setUpAll(sqfliteFfiInit);
 
   setUp(() async {
     db = await openAppDatabase(databaseFactoryFfi, inMemoryDatabasePath);
     time = FakeTimeSource();
+    pauses = [];
+    pending = [];
+    autoPause = true;
   });
 
   tearDown(() => db.close());
@@ -42,6 +62,14 @@ void main() {
       ),
       timeSourceProvider.overrideWithValue(time),
       appDatabaseProvider.overrideWithValue(db),
+      randomProvider.overrideWithValue(Random(1)),
+      pauseProvider.overrideWithValue((d) {
+        pauses.add(d);
+        if (autoPause) return Future.value();
+        final c = Completer<void>();
+        pending.add(c);
+        return c.future;
+      }),
     ],
   );
 
@@ -80,10 +108,77 @@ void main() {
 
     expect(c.read(playAiProvider)!.game.moves.single.uci, 'd2d4');
     final firstGo = engine.commands.indexWhere((x) => x.startsWith('go'));
-    final skill = engine.commands.indexOf('setoption name Skill Level value 0');
-    expect(skill, isNonNegative);
-    expect(skill, lessThan(firstGo));
-    expect(engine.commands[firstGo], 'go depth 1 movetime 100');
+    final elo = engine.commands.indexOf('setoption name UCI_Elo value 1400');
+    expect(elo, isNonNegative);
+    expect(elo, lessThan(firstGo));
+    expect(engine.commands[firstGo], 'go movetime 600');
+  });
+
+  test('human-style levels pick from a MultiPV candidate search', () async {
+    final engine = botEngine();
+    final c = container(engine);
+
+    await c
+        .read(playAiProvider.notifier)
+        .start(_setup(level: 1, color: ColorChoice.black));
+    await settle();
+
+    final game = c.read(playAiProvider)!.game;
+    expect(game.moves, hasLength(1));
+    expect(
+      game.initialPosition.isLegal(Move.parse(game.moves.single.uci)!),
+      isTrue,
+    );
+    final multiPv = engine.commands.indexOf('setoption name MultiPV value 10');
+    final go = engine.commands.indexOf('go depth 6 movetime 300');
+    expect(multiPv, isNonNegative);
+    expect(go, greaterThan(multiPv));
+  });
+
+  test('natural speed: the move appears after a thinking pause', () async {
+    autoPause = false;
+    final c = container(botEngine(script: ['e7e5']));
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup(speed: BotSpeed.natural));
+    notifier.move(Move.parse('e2e4')!);
+    await settle();
+
+    expect(pauses.single, greaterThan(Duration.zero));
+    expect(c.read(playAiProvider)!.game.moves, hasLength(1));
+    expect(c.read(playAiProvider)!.botThinking, isTrue);
+
+    pending.single.complete();
+    await settle();
+    expect(c.read(playAiProvider)!.game.moves.last.uci, 'e7e5');
+    expect(c.read(playAiProvider)!.botThinking, isFalse);
+  });
+
+  test('takeback during the thinking pause drops the move at once', () async {
+    autoPause = false;
+    final c = container(botEngine(script: ['e7e5']));
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup(speed: BotSpeed.natural));
+    notifier.move(Move.parse('e2e4')!);
+    await settle();
+    expect(pending, hasLength(1));
+
+    await notifier.takeback();
+    expect(c.read(playAiProvider)!.botThinking, isFalse);
+    pending.single.complete();
+    await settle();
+
+    expect(c.read(playAiProvider)!.game.moves, isEmpty);
+  });
+
+  test('fast speed never pauses', () async {
+    final c = container(botEngine(script: ['e7e5']));
+    final notifier = c.read(playAiProvider.notifier);
+    await notifier.start(_setup());
+    notifier.move(Move.parse('e2e4')!);
+    await settle();
+
+    expect(pauses, isEmpty);
+    expect(c.read(playAiProvider)!.game.moves, hasLength(2));
   });
 
   test('takeback cancels the search and drops its late move', () async {
@@ -212,6 +307,7 @@ void main() {
     final setup = await c.read(playAiStoreProvider).lastSetup();
     expect(setup.level.number, 6);
     expect(setup.color, ColorChoice.random);
+    expect(setup.botSpeed, BotSpeed.fast);
   });
 
   test('browsing a past position never changes the game', () async {

@@ -7,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/engine/engine_provider.dart';
 import '../../history/domain/finished_game.dart';
-import '../domain/bot_level.dart';
 import '../domain/game_controller.dart';
 import '../domain/game_setup.dart';
 import '../domain/game_state.dart';
+import 'bot_mover.dart';
 import 'play_ai_providers.dart';
 import 'play_ai_view.dart';
 
@@ -28,6 +28,7 @@ final playAiProvider = NotifierProvider<PlayAiNotifier, PlayAiView?>(
 /// generation and stops the engine, so a late reply is ignored.
 class PlayAiNotifier extends Notifier<PlayAiView?> {
   GameController? _controller;
+  BotMover? _bot;
   int _generation = 0;
   Timer? _flagTimer;
 
@@ -41,12 +42,14 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
 
   /// Starts a new game with [setup] and remembers the setup.
   Future<void> start(GameSetup setup) async {
+    final random = ref.read(randomProvider);
     final state = GameState.start(
-      id: '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(1 << 32)}',
+      id: '${DateTime.now().microsecondsSinceEpoch}-${random.nextInt(1 << 32)}',
       level: setup.level,
       timeControl: setup.timeControl,
-      playerSide: setup.resolveSide(Random()),
+      playerSide: setup.resolveSide(random),
       startedAt: DateTime.now(),
+      botSpeed: setup.botSpeed,
     );
     unawaited(
       ref
@@ -156,6 +159,12 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
       time: ref.read(timeSourceProvider),
       onFinished: _onFinished,
     );
+    _bot = BotMover(
+      engine: ref.read(engineServiceProvider),
+      level: game.level,
+      random: ref.read(randomProvider),
+      pause: ref.read(pauseProvider),
+    );
     state = PlayAiView(game: game);
     _scheduleFlag();
     _autosave();
@@ -182,27 +191,15 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
   Future<void> _askBot(GameController controller) async {
     final generation = ++_generation;
     final game = controller.state;
-    final level = game.level;
     _publish(botThinking: true, engineFailed: false);
-    final clock = game.clock;
-    final thinkTime = botThinkTime(
-      level,
-      remaining: clock?.remaining(game.botSide, _now),
-      increment: game.timeControl.increment,
-    );
+    bool current() => _isCurrent(generation, controller);
     try {
-      final engine = ref.read(engineServiceProvider);
-      // Set the level before every search: the engine restarts with default
-      // options after it was disposed (app detach, hot reload).
-      await engine.setOptions(level.engineOptions);
-      if (!_isCurrent(generation, controller)) return;
-      final result = await engine.bestMove(
-        game.position.fen,
-        moveTime: thinkTime,
-        depth: level.depth,
+      final uci = await _bot!.play(
+        game,
+        remaining: game.clock?.remaining(game.botSide, _now),
+        stillWanted: current,
       );
-      if (!_isCurrent(generation, controller)) return;
-      final uci = result.bestMove;
+      if (!current()) return;
       final move = uci == null ? null : Move.parse(uci);
       if (move == null || !controller.play(move)) {
         // The flag fell first, or the engine had no move: nothing to play.
@@ -212,8 +209,8 @@ class PlayAiNotifier extends Notifier<PlayAiView?> {
       _publish(botThinking: false);
       _autosave();
     } on Object catch (e) {
-      debugPrint('[play_ai] bot search failed: $e');
-      if (!_isCurrent(generation, controller)) return;
+      debugPrint('[play_ai] bot move failed: $e');
+      if (!current()) return;
       _publish(botThinking: false, engineFailed: true);
     }
   }

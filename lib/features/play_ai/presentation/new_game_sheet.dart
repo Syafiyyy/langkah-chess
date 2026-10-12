@@ -59,7 +59,18 @@ class _NewGameSheetState extends State<NewGameSheet> {
           children: [
             const Text('Play vs Bot', style: AppType.title),
             const SizedBox(height: AppSpacing.lg),
-            Text(_setup.level.label, style: AppType.label),
+            Text.rich(
+              TextSpan(
+                text: _setup.level.label,
+                children: [
+                  TextSpan(
+                    text: '  ${_setup.level.ratingHint}',
+                    style: AppType.caption,
+                  ),
+                ],
+              ),
+              style: AppType.label,
+            ),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: AppSpacing.sm,
@@ -111,6 +122,27 @@ class _NewGameSheetState extends State<NewGameSheet> {
                   onSelected: (_) => _pickCustom(),
                 ),
               ],
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            const Text('Bot speed', style: AppType.label),
+            const SizedBox(height: AppSpacing.sm),
+            SegmentedButton<BotSpeed>(
+              showSelectedIcon: false,
+              segments: const [
+                ButtonSegment(
+                  value: BotSpeed.natural,
+                  label: Text('Natural'),
+                  tooltip: 'Pauses to think like a person',
+                ),
+                ButtonSegment(
+                  value: BotSpeed.fast,
+                  label: Text('Fast'),
+                  tooltip: 'Moves as soon as it has decided',
+                ),
+              ],
+              selected: {_setup.botSpeed},
+              onSelectionChanged: (s) =>
+                  setState(() => _setup = _setup.copyWith(botSpeed: s.single)),
             ),
             const SizedBox(height: AppSpacing.xxl),
             FilledButton(
