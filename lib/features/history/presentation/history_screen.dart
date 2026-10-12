@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../shared/widgets/section_card.dart';
 import '../application/history_providers.dart';
 import '../domain/finished_game.dart';
 
@@ -48,11 +50,28 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
               AsyncData(:final value) when value.isEmpty => _Empty(
                 filter: _filter,
               ),
-              AsyncData(:final value) => ListView.separated(
-                itemCount: value.length,
-                separatorBuilder: (_, _) =>
-                    const Divider(height: 1, color: AppColors.border),
-                itemBuilder: (context, i) => _GameTile(game: value[i]),
+              AsyncData(:final value) => ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.xl,
+                ),
+                children: [
+                  // L1 panel with hairline dividers between games.
+                  SectionCard(
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < value.length; i++) ...[
+                          if (i > 0)
+                            const Divider(height: 1, color: AppColors.border),
+                          _GameTile(game: value[i]),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
               AsyncError() => const Center(
                 child: Text(
@@ -77,16 +96,27 @@ class _GameTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (letter, color) = switch (game.playerResult) {
-      PlayerResult.win => ('W', AppColors.accent),
+      PlayerResult.win => ('W', AppColors.success),
       PlayerResult.loss => ('L', AppColors.danger),
       PlayerResult.draw => ('D', AppColors.textMuted),
     };
     final date = MaterialLocalizations.of(context)
         .formatShortDate(game.endedAt.toLocal());
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppColors.surfaceRaised,
-        child: Text(letter, style: AppType.label.copyWith(color: color)),
+      leading: Container(
+        width: 40,
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceRaised,
+          borderRadius: const BorderRadius.all(AppRadius.md),
+          border: Border.all(color: color),
+        ),
+        child: Text(letter, style: AppType.move.copyWith(color: color)),
+      ),
+      trailing: const Icon(
+        Icons.chevron_right_rounded,
+        color: AppColors.textMuted,
       ),
       title: Text(
         'Level ${game.botLevel} · ${game.timeControl.label} · '

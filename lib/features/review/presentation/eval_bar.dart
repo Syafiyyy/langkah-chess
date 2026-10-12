@@ -29,7 +29,7 @@ class EvalBar extends StatelessWidget {
         width: width,
         height: height,
         child: ColoredBox(
-          color: const Color(0xFF3A3F3C),
+          color: AppColors.evalBlack,
           child: TweenAnimationBuilder<double>(
             tween: Tween(end: (whiteWin ?? 50) / 100),
             duration: const Duration(milliseconds: 250),
@@ -41,7 +41,7 @@ class EvalBar extends StatelessWidget {
               child: FractionallySizedBox(
                 heightFactor: share,
                 widthFactor: 1,
-                child: const ColoredBox(color: AppColors.text),
+                child: const ColoredBox(color: AppColors.evalWhite),
               ),
             ),
           ),

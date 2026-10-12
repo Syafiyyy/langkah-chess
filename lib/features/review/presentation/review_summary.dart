@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../shared/widgets/section_card.dart';
 import '../domain/move_review.dart';
 import 'review_style.dart';
 
@@ -24,20 +25,28 @@ class ReviewSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.sm,
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.sm,
+        AppSpacing.lg,
+        AppSpacing.sm,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _Side(name: whiteName, summary: white),
-          ),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(
-            child: _Side(name: blackName, summary: black),
-          ),
-        ],
+      child: SectionCard(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _Side(name: whiteName, summary: white),
+            ),
+            const SizedBox(width: AppSpacing.lg),
+            Expanded(
+              child: _Side(name: blackName, summary: black),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -62,7 +71,7 @@ class _Side extends StatelessWidget {
         Text(name, style: AppType.secondary, overflow: TextOverflow.ellipsis),
         Text(
           accuracy == null ? '–' : '${accuracy.toStringAsFixed(1)}%',
-          style: AppType.title,
+          style: AppType.stat,
         ),
         Text.rich(
           TextSpan(

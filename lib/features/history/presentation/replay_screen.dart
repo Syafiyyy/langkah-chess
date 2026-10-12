@@ -1,4 +1,3 @@
-import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,9 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../shared/widgets/board_frame.dart';
 import '../../../shared/widgets/move_list.dart';
+import '../../../shared/widgets/themed_board.dart';
 import '../application/history_providers.dart';
 import '../domain/finished_game.dart';
 import '../domain/replay_line.dart';
@@ -101,15 +102,13 @@ class _ReplayState extends State<_Replay> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) => Center(
-                  child: StaticChessboard(
-                    size: constraints.biggest.shortestSide,
+                  child: ThemedBoard(
+                    size: BoardFrame.boardSizeFor(
+                      constraints.biggest.shortestSide,
+                    ),
                     orientation: orientation,
                     fen: _line.fens[_ply],
                     lastMove: _line.lastMoves[_ply],
-                    settings: const StaticChessboardSettings(
-                      colorScheme: ChessboardColorScheme.green,
-                      enableCoordinates: true,
-                    ),
                   ),
                 ),
               ),

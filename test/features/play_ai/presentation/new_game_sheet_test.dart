@@ -30,10 +30,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Level 2 · Beginner'), findsOneWidget);
-    await tester.tap(find.text('1'));
+    await tester.tap(find.text('Newcomer'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Level 1 · Newcomer'), findsOneWidget);
+    expect(find.textContaining('Hangs pieces often'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Fast'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Fast'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Start game'));

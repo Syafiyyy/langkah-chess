@@ -3,8 +3,8 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/board/board_prefs.dart';
 import '../../../shared/widgets/board_frame.dart';
-import '../../settings/application/board_prefs.dart';
 
 /// Interactive chessground board driven by a dartchess position, in the
 /// player's board theme and piece set, inside the theme's frame.

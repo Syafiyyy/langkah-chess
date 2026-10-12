@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
 import '../domain/game_state.dart';
@@ -29,6 +30,20 @@ class GameOverSheet extends StatelessWidget {
     return winner == game.playerSide ? 'You won' : 'You lost';
   }
 
+  bool? get _won {
+    final winner = game.result!.outcome.winner;
+    return winner == null ? null : winner == game.playerSide;
+  }
+
+  IconData get _icon => switch (_won) {
+    true => Icons.emoji_events_rounded,
+    false => Icons.flag_rounded,
+    null => Icons.handshake_rounded,
+  };
+
+  Color get _iconColor =>
+      _won ?? false ? AppColors.success : AppColors.textMuted;
+
   String get _details {
     final moves = (game.moves.length + 1) ~/ 2;
     final duration = game.endedAt!.difference(game.startedAt);
@@ -52,9 +67,15 @@ class GameOverSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(_title, style: AppType.headline),
-            const SizedBox(height: AppSpacing.xs),
-            Text(_details, style: AppType.body),
+            Row(
+              children: [
+                Icon(_icon, color: _iconColor, size: 32),
+                const SizedBox(width: AppSpacing.md),
+                Text(_title, style: AppType.headline),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(_details, style: AppType.secondary),
             const SizedBox(height: AppSpacing.xl),
             FilledButton(
               onPressed: () => Navigator.pop(context, GameOverAction.review),

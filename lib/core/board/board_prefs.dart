@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/board/board_theme.dart';
-import '../../../core/board/piece_choice.dart';
-import '../../../core/storage/storage_providers.dart';
+import '../storage/storage_providers.dart';
+import 'board_theme.dart';
+import 'piece_choice.dart';
 
-export '../../../core/storage/storage_providers.dart' show kvStoreProvider;
+export '../storage/storage_providers.dart' show kvStoreProvider;
 
 /// The player's board look: theme + piece set.
 class BoardPrefs {

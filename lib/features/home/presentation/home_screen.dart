@@ -2,23 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/app_info.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../shared/widgets/confirm_dialog.dart';
+import '../../../shared/widgets/section_card.dart';
+import '../../../shared/widgets/wordmark.dart';
 import '../../play_ai/application/play_ai_notifier.dart';
 import '../../play_ai/application/play_ai_providers.dart';
 import '../../play_ai/presentation/new_game_sheet.dart';
 
-/// Start screen: play the bot, open history, or resume a saved game.
+/// Start screen: play the bot, resume a saved game, history, settings.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   Future<void> _play(BuildContext context, WidgetRef ref) async {
     final unfinished = await ref.read(savedGameProvider.future);
     if (unfinished) {
-      if (!context.mounted || !await _confirmAbandon(context)) return;
+      if (!context.mounted) return;
+      final abandon = await showConfirmDialog(
+        context,
+        title: 'Abandon current game?',
+        message:
+            'Your unfinished game will be deleted. It is not saved to '
+            'history and does not count as a loss.',
+        confirmLabel: 'Abandon game',
+        cancelLabel: 'Keep game',
+        destructive: true,
+      );
+      if (!abandon) return;
       await ref.read(playAiProvider.notifier).abandon();
     }
     if (!context.mounted) return;
@@ -26,30 +39,6 @@ class HomeScreen extends ConsumerWidget {
     if (setup == null || !context.mounted) return;
     await ref.read(playAiProvider.notifier).start(setup);
     if (context.mounted) await context.push('/play');
-  }
-
-  Future<bool> _confirmAbandon(BuildContext context) async {
-    final abandon = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Abandon current game?'),
-        content: const Text(
-          'Your unfinished game will be deleted. It is not saved to history '
-          'and does not count as a loss.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep game'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Abandon game'),
-          ),
-        ],
-      ),
-    );
-    return abandon ?? false;
   }
 
   Future<void> _resume(BuildContext context, WidgetRef ref) async {
@@ -61,72 +50,170 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasSaved = ref.watch(savedGameProvider).value ?? false;
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: AppSpacing.xxl),
-              const Text(kAppName, style: AppType.headline),
-              const SizedBox(height: AppSpacing.xs),
-              const Text(
-                'Chess against Stockfish, on your phone.',
-                style: AppType.secondary,
-              ),
-              const Spacer(),
-              if (hasSaved) ...[
-                _ResumeBanner(onResume: () => _resume(context, ref)),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-              FilledButton(
-                onPressed: () => _play(context, ref),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                ),
-                child: const Text('Play vs Bot'),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              OutlinedButton(
-                onPressed: () => context.push('/history'),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                ),
-                child: const Text('History'),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-            ],
+      appBar: AppBar(
+        title: const Wordmark(),
+        actions: [
+          IconButton(
+            tooltip: 'Settings',
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.tune_rounded),
           ),
+          const SizedBox(width: AppSpacing.xs),
+        ],
+      ),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.lg,
+            AppSpacing.lg,
+            AppSpacing.xl,
+          ),
+          children: [
+            const Text('Ready for a game?', style: AppType.title),
+            const SizedBox(height: AppSpacing.xs),
+            const Text(
+              'Play Stockfish offline, then review every move.',
+              style: AppType.secondary,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            if (hasSaved) ...[
+              _ResumeCard(onResume: () => _resume(context, ref)),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            _PlayCard(onTap: () => _play(context, ref)),
+            const SizedBox(height: AppSpacing.xl),
+            _LinkRow(
+              icon: Icons.history_rounded,
+              title: 'History',
+              subtitle: 'Finished games, replays and reviews',
+              onTap: () => context.push('/history'),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _LinkRow(
+              icon: Icons.tune_rounded,
+              title: 'Settings',
+              subtitle: 'Board theme, pieces, bot speed',
+              onTap: () => context.push('/settings'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _ResumeBanner extends StatelessWidget {
-  const _ResumeBanner({required this.onResume});
+/// The primary action: a card with a gold icon tile.
+class _PlayCard extends StatelessWidget {
+  const _PlayCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      onTap: onTap,
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: Row(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              borderRadius: BorderRadius.all(AppRadius.lg),
+            ),
+            child: const Icon(
+              Icons.smart_toy_rounded,
+              color: AppColors.onAccent,
+              size: 28,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.lg),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Play vs Bot', style: AppType.heading),
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  'Eight levels, from Newcomer to full strength.',
+                  style: AppType.secondary,
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResumeCard extends StatelessWidget {
+  const _ResumeCard({required this.onResume});
 
   final VoidCallback onResume;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SectionCard(
+      color: AppColors.surfaceRaised,
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
+        AppSpacing.md,
         AppSpacing.sm,
-        AppSpacing.sm,
-        AppSpacing.sm,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceRaised,
-        borderRadius: BorderRadius.all(AppRadius.md),
+        AppSpacing.md,
       ),
       child: Row(
         children: [
+          const Icon(Icons.pause_circle_rounded, color: AppColors.accent),
+          const SizedBox(width: AppSpacing.md),
           const Expanded(
             child: Text('You have an unfinished game.', style: AppType.body),
           ),
           TextButton(onPressed: onResume, child: const Text('Resume game')),
+        ],
+      ),
+    );
+  }
+}
+
+class _LinkRow extends StatelessWidget {
+  const _LinkRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.textMuted),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppType.label),
+                Text(subtitle, style: AppType.secondary),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
         ],
       ),
     );

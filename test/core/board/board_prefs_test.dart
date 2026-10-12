@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:langkah/core/board/board_prefs.dart';
 import 'package:langkah/core/board/board_theme.dart';
 import 'package:langkah/core/board/piece_choice.dart';
 import 'package:langkah/core/storage/kv_store.dart';
-import 'package:langkah/features/settings/application/board_prefs.dart';
 
-import '../play_ai/presentation/game_test_harness.dart';
+import '../../features/play_ai/presentation/game_test_harness.dart';
 
 void main() {
   ProviderContainer container(KvStore kv) => ProviderContainer.test(

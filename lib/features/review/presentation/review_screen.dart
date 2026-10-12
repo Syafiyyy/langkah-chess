@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
+import '../../../core/board/board_theme.dart';
+import '../../../shared/widgets/board_frame.dart';
 import '../../../shared/widgets/move_list.dart';
+import '../../../shared/widgets/themed_board.dart';
 import '../application/review_notifier.dart';
 import '../application/review_state.dart';
 import 'eval_bar.dart';
@@ -76,30 +79,29 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             Expanded(
               child: LayoutBuilder(
                 builder: (context, c) {
-                  final size = (c.maxWidth - EvalBar.width - AppSpacing.xs)
-                      .clamp(0, c.maxHeight)
-                      .toDouble();
+                  final size = BoardFrame.boardSizeFor(
+                    (c.maxWidth - EvalBar.width - AppSpacing.xs)
+                        .clamp(0, c.maxHeight)
+                        .toDouble(),
+                  );
+                  final framed = size + 2 * BoardTheme.frameWidth;
                   return Center(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         EvalBar(
                           whiteWin: eval?.whiteWin,
-                          height: size,
+                          height: framed,
                           orientation: orientation,
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        StaticChessboard(
+                        ThemedBoard(
                           size: size,
                           orientation: orientation,
                           fen: line.positions[ply].fen,
                           lastMove: ply == 0
                               ? null
                               : Move.parse(line.moves[ply - 1].uci),
-                          settings: const StaticChessboardSettings(
-                            colorScheme: ChessboardColorScheme.green,
-                            enableCoordinates: true,
-                          ),
                           shapes: {
                             if (best is NormalMove)
                               Arrow(

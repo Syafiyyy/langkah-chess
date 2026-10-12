@@ -82,12 +82,12 @@ class EvalGraph extends StatelessWidget {
                 barWidth: 1.5,
                 belowBarData: BarAreaData(
                   show: true,
-                  color: AppColors.text.withValues(alpha: 0.85),
+                  color: AppColors.evalWhite.withValues(alpha: 0.85),
                   applyCutOffY: true,
                 ),
                 aboveBarData: BarAreaData(
                   show: true,
-                  color: const Color(0xFF3A3F3C),
+                  color: AppColors.evalBlack,
                   applyCutOffY: true,
                 ),
                 dotData: FlDotData(
