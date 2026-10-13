@@ -1,18 +1,8 @@
 // Edge Function make_move (ADR-0004): POST { game_id, ply, uci, client_move_id }
 // with the user's JWT. Validates the move with chess.js and applies it through
 // apply_move (service role). Returns { game, applied } or { error }.
-import { createClient } from "@supabase/supabase-js";
+import { admin, json, userIdFrom } from "../_shared/admin.ts";
 import { type GameRow, makeMove, type MoveDb, MoveDbError } from "./move.ts";
-
-function secretKey(): string {
-  const keys = Deno.env.get("SUPABASE_SECRET_KEYS");
-  if (keys) return JSON.parse(keys)["default"];
-  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-}
-
-const admin = createClient(Deno.env.get("SUPABASE_URL")!, secretKey(), {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
 
 const db: MoveDb = {
   async findMove(clientMoveId) {
@@ -43,18 +33,10 @@ const db: MoveDb = {
   },
 };
 
-function json(status: number, body: unknown): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json(405, { error: "METHOD_NOT_ALLOWED" });
-  const token = req.headers.get("Authorization")?.replace(/^Bearer /, "");
-  const { data: auth } = token ? await admin.auth.getUser(token) : { data: null };
-  if (!auth?.user) return json(401, { error: "UNAUTHORIZED" });
+  const userId = await userIdFrom(req);
+  if (!userId) return json(401, { error: "UNAUTHORIZED" });
 
   let body: unknown;
   try {
@@ -63,7 +45,7 @@ Deno.serve(async (req) => {
     return json(400, { error: "BAD_REQUEST" });
   }
   try {
-    const res = await makeMove(db, auth.user.id, body);
+    const res = await makeMove(db, userId, body);
     return json(res.status, res.body);
   } catch (e) {
     console.error("make_move failed", e);

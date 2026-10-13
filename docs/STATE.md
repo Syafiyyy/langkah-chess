@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2a — Online backend: IN PROGRESS, checkpoint 2 done (2026-10-13).** See "F2a resume here" below.
+**F2a — Online backend: IN PROGRESS, sections 1–4 written; 3–4 waiting for the remote apply (2026-10-13).** See "F2a resume here" below.
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
@@ -16,11 +16,27 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 |---|---|
 | 1. Schema + RLS | **Done.** Local pgTAP green; applied to remote. |
 | 2. apply_move + finish_game + make_move EF | **Done.** pgTAP green; migration applied to remote; `make_move` deployed (v1, verify_jwt on). |
-| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | **Written + tested locally, NOT applied remotely** (the remote `apply_migration` was declined at the permission prompt on 2026-10-13; waiting for Adaam). `20261013000300_rpcs.sql`, `tests/03_rpcs.test.sql` (52 tests). |
-| 4. pg_cron sweep + delete_account | Not started |
+| 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | **Done locally, NOT applied remotely.** `20261013000300_rpcs.sql`, `tests/03_rpcs.test.sql` (53 tests). |
+| 3b. Advisor fixes | **Done locally, NOT applied remotely.** `20261013000400_advisor_fixes.sql`, `tests/04_advisor_fixes.test.sql`. |
+| 4. pg_cron sweep + delete_account | **Done locally, NOT applied/deployed remotely.** `20261013000500_sweep_and_deletion.sql`, `tests/05_sweep_and_deletion.test.sql` (23 tests), EF `delete_account`. Local cron job verified to fire every minute. |
 | 5. Tests (concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started. The tricky-positions fixture (Dart + Deno) is already done in section 2. |
 
-**Next steps:** once Adaam approves, apply `20261013000300_rpcs` with the MCP (same SQL as the file, LF), check its md5 against the file, rename its version to `20261013000300`, update the table above, commit + push. Then section 4 (sweep + delete_account).
+**Blocker: remote applies.** The Supabase MCP's `apply_migration` returned `declined` twice for `20261013000300_rpcs` (once before and once after Adaam approved it), with no prompt shown. Likely cause: the MCP asks for confirmation on statements it treats as destructive (this file has `delete from` inside function bodies; section 2, which had none, went through), and this session cannot show that confirmation. 0004 (`drop constraint`) and 0005 (`delete from`) would hit the same. Not worked around with `execute_sql`.
+
+**Next steps:**
+1. Remote, in this order: apply `20261013000300_rpcs`, `20261013000400_advisor_fixes`, `20261013000500_sweep_and_deletion`. Either Adaam runs `npx supabase login`, `npx supabase link --project-ref ivznhyyaswhnpdrnnbno`, `npx supabase db push` (records the right versions itself), or apply them with the MCP in an interactive session where the confirmation can show (then check md5 vs the file and rename each version to the file's timestamp).
+2. Deploy `make_move` (v2: now uses `_shared/admin.ts`; same behaviour) and `delete_account` (verify_jwt on). With the MCP: files `index.ts`, `move.ts` / `account.ts`, `../_shared/*.ts` it imports, `deno.json` without `@std/assert`, LF endings. Or `npx supabase functions deploy make_move delete_account`.
+3. Rerun the advisors; check `cron.job` has `skak-sweep` and `cron.job_run_details` shows successes.
+4. Section 5.
+
+**Section 4 notes (decisions):**
+- `sweep_games()` (runs as postgres from pg_cron `skak-sweep`, `* * * * *`; no role can call it): settles games past the first-move deadline (abort, `firstMoveTimeout`) or with a flagged clock (timeout; draw when the winner has no mating material), with `FOR UPDATE SKIP LOCKED` so it never waits on a move in progress. Drops queue entries whose `seen_at` is older than 2 minutes.
+- Queue heartbeat: `matchmaking_queue.seen_at` (added in the 0003 migration, which was not yet applied anywhere remote). Every `join_queue` call refreshes it; `created_at` keeps the place in line. F2b: the app re-calls `join_queue` while waiting (e.g. every 30 s).
+- Account deletion policy (no ADR covered it; Adaam to confirm): `prepare_account_deletion(uid)` (service_role only) removes the queue entry, aborts waiting invites and games with fewer than 2 plies, resigns running games (rated, so the opponent keeps the win; a flag already due wins over the resignation). Then `delete_account` deletes the auth user: profile and own rating history go by cascade; games and moves stay for opponents with the player set to null. If the first step fails the account is kept (retry-safe).
+- Advisors (2026-10-13, before 0003–0005): fixed `function_search_path_mutable` (first_move_seconds), `unindexed_foreign_keys` (games.draw_offer_by, moves.played_by: both ON DELETE SET NULL, scanned on account deletion), `no_primary_key` (rating_history now PK (game_id, user_id)). Ignored: `unused_index` (empty database).
+- `_shared/admin.ts`: service-role client, `userIdFrom(req)`, `json()`, shared by both functions.
+- Tests: pgTAP 131, Deno 39, Flutter 255 green.
+- Open: waiting invites never expire (could add "abort invites older than 24 h" to the sweep; not asked for).
 
 **Section 3 notes (decisions):**
 - RPCs: `set_profile(p_username, p_avatar)`, `create_invite`, `join_invite(code)`, `join_queue` (returns `setof games`: one row = paired, none = queued), `leave_queue`, `resign`, `offer_draw`, `accept_draw`, `decline_draw`, `abort`, `claim_timeout`. EXECUTE for `authenticated` only; helpers (`require_uid`, `check_time_control`, `random_invite_code`, `start_game`, `lock_my_game`) are internal.
@@ -46,7 +62,7 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 
 **Decisions so far:** termination strings use the Dart `Termination` names (`checkmate`, `timeout`, `resignation`, ... plus `agreement`, `firstMoveTimeout`); games store `white_can_mate`/`black_can_mate` (set by make_move) so timeouts in SQL need no chess code; clocks start after both first moves (30 s first-move deadline each, then abort); one advisory lock serialises matchmaking (planned). Details in the plan.
 
-**Open:** the Supabase advisors check (`get_advisors`) was blocked by the Claude Code permission classifier; function EXECUTE grants were checked with SQL instead (only service_role can run apply_move). Adaam: allow `mcp__supabase__get_advisors` or run Advisors in the dashboard. `review_notifier_test` "checkmate position is scored without the engine" failed once in a full `flutter test` run and passed on rerun (flaky under load; not touched by F2a).
+**Open:** `review_notifier_test` "checkmate position is scored without the engine" failed once in a full `flutter test` run and passed on rerun (flaky under load; not touched by F2a).
 
 ## Done
 - 2026-10-12: Planning. v1 analysed, stack researched, blueprint independently reviewed, ADR-0001..0007 written, roadmap set. Kickoff docs created.
