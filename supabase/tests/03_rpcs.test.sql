@@ -1,7 +1,7 @@
 -- Section 3: RPCs for signed-in users.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(52);
+select plan(53);
 
 -- A, B, C, D: players. Temp table keeps ids between role switches.
 insert into auth.users (id, email) values
@@ -109,7 +109,15 @@ select throws_ok($$select public.join_invite((select code from ids where k = 'in
 -- join_queue / leave_queue -----------------------------------------------------
 select set_config('request.jwt.claims', '{"sub": "11111111-1111-1111-1111-111111111111"}', true);
 select is((select count(*)::int from public.join_queue(180000, 0)), 0, 'A waits in the queue');
+reset role;
+update public.matchmaking_queue
+set created_at = now() - interval '1 min', seen_at = now() - interval '1 min';
+set local role authenticated;
 select is((select count(*)::int from public.join_queue(180000, 0)), 0, 'queueing again is fine');
+reset role;
+select results_eq($$select created_at < now(), seen_at = now() from public.matchmaking_queue$$,
+  $$values (true, true)$$, 'queueing again keeps the place in line and refreshes seen_at');
+set local role authenticated;
 select is((select count(*)::int from public.matchmaking_queue), 1, 'A is queued once');
 select throws_ok($$select public.join_queue(180000, 99999999)$$, 'P0001', 'BAD_TIME_CONTROL',
   'queueing with an invalid time control is rejected');

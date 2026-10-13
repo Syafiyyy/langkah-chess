@@ -209,6 +209,10 @@ $$;
 
 -- Matchmaking -----------------------------------------------------------------------
 
+-- Last join_queue call: a client re-calls it while waiting; the sweep drops
+-- entries not seen for 2 minutes. created_at keeps the place in line.
+alter table public.matchmaking_queue add column seen_at timestamptz not null default now();
+
 -- Pairs the caller with the longest-waiting user with the same time control,
 -- or queues the caller. Returns the game (one row) or nothing when queued.
 -- A caller already in an active matchmaking game gets that game back, which
@@ -251,6 +255,7 @@ begin
     set time_base_ms = excluded.time_base_ms,
         increment_ms = excluded.increment_ms,
         rating = excluded.rating,
+        seen_at = now(),
         created_at = case
           when public.matchmaking_queue.time_base_ms = excluded.time_base_ms
            and public.matchmaking_queue.increment_ms = excluded.increment_ms
