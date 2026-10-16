@@ -45,6 +45,7 @@ export interface MoveResponse {
 
 const STATUS: Record<string, number> = {
   BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
   NOT_A_PLAYER: 403,
   NOT_FOUND: 404,
   STALE: 409,
@@ -61,7 +62,16 @@ function fail(error: string): MoveResponse {
   return { status: STATUS[error] ?? 500, body: { error } };
 }
 
-export async function makeMove(db: MoveDb, userId: string, req: unknown): Promise<MoveResponse> {
+/**
+ * [user] is the caller's id (or a pending lookup of it, null when the token is
+ * invalid). The user lookup and the game, move-id and history reads run at the
+ * same time; nothing is returned before the user check passes.
+ */
+export async function makeMove(
+  db: MoveDb,
+  user: string | null | Promise<string | null>,
+  req: unknown,
+): Promise<MoveResponse> {
   const { game_id, ply, uci, client_move_id } = (req ?? {}) as Record<string, unknown>;
   if (
     typeof game_id !== "string" || !UUID.test(game_id) ||
@@ -69,16 +79,21 @@ export async function makeMove(db: MoveDb, userId: string, req: unknown): Promis
     !Number.isInteger(ply) || (ply as number) < 1 ||
     typeof uci !== "string" || !UCI.test(uci)
   ) {
-    return fail("BAD_REQUEST");
+    return fail(await user ? "BAD_REQUEST" : "UNAUTHORIZED");
   }
   const plyNo = ply as number;
 
-  const game = await db.loadGame(game_id);
+  const [userId, game, existing, history] = await Promise.all([
+    user,
+    db.loadGame(game_id),
+    db.findMove(client_move_id),
+    db.loadHistory(game_id),
+  ]);
+  if (!userId) return fail("UNAUTHORIZED");
   if (!game) return fail("NOT_FOUND");
   if (userId !== game.white_id && userId !== game.black_id) return fail("NOT_A_PLAYER");
 
   // Retry of an attempt that already went through: report the game as it is.
-  const existing = await db.findMove(client_move_id);
   if (existing) {
     if (existing.game_id !== game_id) return fail("DUPLICATE_MOVE_ID");
     return { status: 200, body: { game, applied: true } };
@@ -89,7 +104,7 @@ export async function makeMove(db: MoveDb, userId: string, req: unknown): Promis
   const mover = game.ply % 2 === 0 ? game.white_id : game.black_id;
   if (userId !== mover) return fail("NOT_YOUR_TURN");
 
-  const checked = checkMove(await db.loadHistory(game_id), game.fen, uci);
+  const checked = checkMove(history, game.fen, uci);
   if (!checked) return fail("ILLEGAL");
 
   try {

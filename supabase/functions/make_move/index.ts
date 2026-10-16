@@ -41,17 +41,17 @@ function reply(status: number, body: Record<string, unknown>): Response {
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return reply(405, { error: "METHOD_NOT_ALLOWED" });
-  const userId = await userIdFrom(req);
-  if (!userId) return reply(401, { error: "UNAUTHORIZED" });
-
-  let body: unknown;
+  if (!req.headers.get("Authorization")) return reply(401, { error: "UNAUTHORIZED" });
+  // Started now, awaited inside makeMove together with the game reads.
+  const user = userIdFrom(req);
   try {
-    body = await req.json();
-  } catch {
-    return reply(400, { error: "BAD_REQUEST" });
-  }
-  try {
-    const res = await makeMove(db, userId, body);
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      body = null; // makeMove answers UNAUTHORIZED or BAD_REQUEST
+    }
+    const res = await makeMove(db, user, body);
     return reply(res.status, res.body);
   } catch (e) {
     console.error("make_move failed", e);

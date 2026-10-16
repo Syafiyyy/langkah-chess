@@ -163,3 +163,33 @@ Deno.test("timeout inside apply_move: game returned, move not applied", async ()
   assertEquals(res.body.applied, false);
   assertEquals(res.body.game?.termination, "timeout");
 });
+
+Deno.test("the user check and all lookups run at the same time", async () => {
+  const started: string[] = [];
+  let release!: () => void;
+  const gate = new Promise<void>((r) => (release = r));
+  const db = new FakeDb(game());
+  const wrap = <T>(name: string, value: () => Promise<T>) => async () => {
+    started.push(name);
+    await gate;
+    return value();
+  };
+  db.loadGame = wrap("game", () => Promise.resolve(db.row));
+  db.findMove = wrap("move", () => Promise.resolve(null));
+  db.loadHistory = wrap("history", () => Promise.resolve([]));
+  const user = wrap("user", () => Promise.resolve<string | null>(WHITE))();
+
+  const res = makeMove(db, user, body());
+  await Promise.resolve();
+  // Nothing has finished yet, but every request is already on its way.
+  assertEquals(started.sort(), ["game", "history", "move", "user"]);
+  release();
+  assertEquals((await res).status, 200);
+});
+
+Deno.test("no user: 401, nothing applied, even with a bad body", async () => {
+  const db = new FakeDb(game());
+  assertEquals((await makeMove(db, Promise.resolve(null), body())).status, 401);
+  assertEquals((await makeMove(db, null, { nonsense: true })).status, 401);
+  assertEquals(db.applied, []);
+});
