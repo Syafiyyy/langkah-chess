@@ -72,7 +72,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         SectionCard(
           child: Row(
             children: [
-              Expanded(child: _Stat(value: '${p.rating}', label: 'Rating')),
+              Expanded(
+                child: _Stat(value: '${p.rating}', label: 'Rating'),
+              ),
               Expanded(
                 child: _Stat(value: '${p.gamesPlayed}', label: 'Rated games'),
               ),

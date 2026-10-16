@@ -37,7 +37,10 @@ class FakeOnlineApi implements OnlineApi {
 
   void _fail(String kind) {
     final list = failures[kind];
-    if (list != null && list.isNotEmpty) throw list.removeAt(0);
+    if (list == null || list.isEmpty) return;
+    // Copy: tests may pass fixed-length lists.
+    failures[kind] = list.sublist(1);
+    throw list.first;
   }
 
   /// A game between me and opp; [mySide] decides colours.

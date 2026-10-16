@@ -18,11 +18,8 @@ String? routeForLink(Uri uri) {
 
 /// Opens invite links (including the one that started the app) in [router].
 StreamSubscription<Uri> listenForDeepLinks(GoRouter router) {
-  return AppLinks().uriLinkStream.listen(
-    (uri) {
-      final route = routeForLink(uri);
-      if (route != null) router.push(route);
-    },
-    onError: (Object e) => debugPrint('Deep link failed: $e'),
-  );
+  return AppLinks().uriLinkStream.listen((uri) {
+    final route = routeForLink(uri);
+    if (route != null) router.push(route);
+  }, onError: (Object e) => debugPrint('Deep link failed: $e'));
 }

@@ -16,9 +16,8 @@ final GoRoute onlineRoute = GoRoute(
   routes: [
     GoRoute(
       path: 'invite',
-      builder: (context, state) => OnlineGate(
-        child: InviteScreen(timeControl: _tc(state)),
-      ),
+      builder: (context, state) =>
+          OnlineGate(child: InviteScreen(timeControl: _tc(state))),
     ),
     GoRoute(
       path: 'join',
@@ -28,9 +27,8 @@ final GoRoute onlineRoute = GoRoute(
     ),
     GoRoute(
       path: 'search',
-      builder: (context, state) => OnlineGate(
-        child: SearchingScreen(timeControl: _tc(state)),
-      ),
+      builder: (context, state) =>
+          OnlineGate(child: SearchingScreen(timeControl: _tc(state))),
     ),
     GoRoute(
       path: 'game/:id',

@@ -122,7 +122,10 @@ class _RecentTile extends StatelessWidget {
     return ListTile(
       key: ValueKey('recent-${game.id}'),
       leading: ResultBadge(game.playerResult),
-      title: Text(BotLevel.of(game.botLevel).label, style: AppType.label),
+      title: Text(
+        game.isOnline ? game.opponentLabel : BotLevel.of(game.botLevel).label,
+        style: AppType.label,
+      ),
       subtitle: Text(
         [
           if (accuracy != null) '${_percent(accuracy)} accuracy',

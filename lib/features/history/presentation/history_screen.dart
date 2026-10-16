@@ -6,6 +6,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_type.dart';
 import '../../../shared/widgets/section_card.dart';
+import '../../online/application/online_history_sync.dart';
 import '../../play_ai/presentation/start_game_flow.dart';
 import '../application/history_providers.dart';
 import '../domain/finished_game.dart';
@@ -24,6 +25,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Online games finished elsewhere are copied in (no-op offline).
+    ref.watch(onlineHistorySyncProvider);
     final games = ref.watch(historyListProvider(_filter));
     return Scaffold(
       appBar: AppBar(title: const Text('History')),
@@ -106,7 +109,7 @@ class _GameTile extends StatelessWidget {
         color: AppColors.textMuted,
       ),
       title: Text(
-        'Level ${game.botLevel} · ${game.timeControl.label} · '
+        '${game.opponentLabel} · ${game.timeControl.label} · '
         'as ${game.playerSide.name}',
         style: AppType.label,
       ),

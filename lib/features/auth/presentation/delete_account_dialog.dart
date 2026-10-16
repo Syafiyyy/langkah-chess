@@ -6,7 +6,10 @@ import '../../../app/theme/app_type.dart';
 
 /// Named confirmation: the player types their username to enable
 /// "Delete account". Returns true when confirmed.
-Future<bool> showDeleteAccountDialog(BuildContext context, String username) async {
+Future<bool> showDeleteAccountDialog(
+  BuildContext context,
+  String username,
+) async {
   final result = await showDialog<bool>(
     context: context,
     builder: (context) => _DeleteAccountDialog(username: username),

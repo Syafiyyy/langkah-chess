@@ -55,7 +55,9 @@ class SupabaseAuthRepository implements AuthRepository {
         emailRedirectTo: SupabaseConfig.authCallback,
       ),
     );
-    return res.session == null ? SignUpResult.confirmEmail : SignUpResult.signedIn;
+    return res.session == null
+        ? SignUpResult.confirmEmail
+        : SignUpResult.signedIn;
   }
 
   @override

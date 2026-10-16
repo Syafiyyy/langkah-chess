@@ -6,13 +6,15 @@ import 'package:sqflite/sqflite.dart';
 /// - `games`: finished offline games (see SqfliteHistoryRepository).
 /// - `kv`: small key-value settings (last game setup, autosaved game).
 /// - `analysis` (v2): cached game-review engine results.
+/// - v3: `games.opponent` and `games.rating_change` (online games).
 Future<Database> openAppDatabase(DatabaseFactory factory, String path) {
   return factory.openDatabase(
     path,
     options: OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) await _createAnalysisTable(db);
+        if (oldVersion < 3) await _addOnlineColumns(db);
       },
       onCreate: (db, version) async {
         await db.execute('''
@@ -28,7 +30,9 @@ Future<Database> openAppDatabase(DatabaseFactory factory, String path) {
             pgn TEXT NOT NULL,
             final_fen TEXT NOT NULL,
             plies INTEGER NOT NULL,
-            duration_ms INTEGER NOT NULL
+            duration_ms INTEGER NOT NULL,
+            opponent TEXT,
+            rating_change INTEGER
           )
         ''');
         await db.execute(
@@ -41,6 +45,11 @@ Future<Database> openAppDatabase(DatabaseFactory factory, String path) {
       },
     ),
   );
+}
+
+Future<void> _addOnlineColumns(Database db) async {
+  await db.execute('ALTER TABLE games ADD COLUMN opponent TEXT');
+  await db.execute('ALTER TABLE games ADD COLUMN rating_change INTEGER');
 }
 
 Future<void> _createAnalysisTable(Database db) => db.execute('''

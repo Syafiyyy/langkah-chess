@@ -18,7 +18,8 @@ class OnlineGate extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(authRepositoryProvider) == null) {
       return const _Message(
-        text: "Online play isn't set up in this build. Bot games work as usual.",
+        text:
+            "Online play isn't set up in this build. Bot games work as usual.",
       );
     }
     final uid = ref.watch(userIdProvider);

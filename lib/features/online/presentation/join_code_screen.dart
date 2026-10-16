@@ -59,7 +59,10 @@ class _JoinCodeScreenState extends ConsumerState<JoinCodeScreen> {
     final initial = widget.initialCode;
     if (initial != null) {
       _code.controller.text = InviteCodeFormatter()
-          .formatEditUpdate(TextEditingValue.empty, TextEditingValue(text: initial))
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            TextEditingValue(text: initial),
+          )
           .text;
       WidgetsBinding.instance.addPostFrameCallback((_) => _join());
     }

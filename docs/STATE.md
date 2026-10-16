@@ -3,8 +3,8 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2b — Online in the app: in progress (2026-10-16).** Checkpoints 1 (auth + profile) and 2 (online entry screens) done. See "F2b resume here".
-F2a backend done; `20261016000100_expire_invites` still waits for Adaam's `npx supabase db push` (the push was blocked by this session's permission mode).
+**F2b — Online in the app: in progress (2026-10-16).** Checkpoints 1–3 done (auth + profile, entry screens, online game screen); Gate 2 next. See "F2b resume here".
+Two migrations wait for Adaam's `npx supabase db push` on skak (the push was blocked by this session's permission mode): `20261016000100_expire_invites` (F2a) and `20261016000200_rematch` (F2b, needed for rematch).
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 
@@ -15,8 +15,8 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 |---|---|
 | 1. Auth + profile | **Done.** Verified on the emulator against skak (wrong-password message, sign in, taken-name check, username saved, online home with rating). |
 | 2. Online entry screens | **Done.** Verified on two emulators against skak: invite created (3+2), joined from B through the `skak://join/CODE` link, both opened the same game; quick match 1+0 paired both within ~6 s (Realtime hint, not the 30 s heartbeat). |
-| 3. Online game screen | Next (route `/online/game/:id` shows a placeholder until then) |
-| 4. Gate 2 test | |
+| 3. Online game screen | **Done.** Played on two emulators against skak (see Gate 2). Rematch untested on a device until `20261016000200_rematch` is pushed. |
+| 4. Gate 2 test | Next |
 
 **Checkpoint 1 notes:**
 - Packages: supabase_flutter 2.18.3, google_sign_in 7.2.0, app_links 7.2.2, uuid 4.6.0, http 1.6 (direct, for the Date-header client).
@@ -42,6 +42,19 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 - Online home: profile card, "Resume game" when a game is active, Invite / Join / Quick match.
 - `ThinkingDots` takes a label and may wrap (overflowed at 360 dp with long labels).
 - Tests: Flutter 300 green (+ deep links, entry screens with `FakeOnlineApi`).
+
+**Checkpoint 3 notes:**
+- `OnlineGameNotifier` (`onlineGameProvider(gameId)`, AsyncNotifier family, no auto-retry): first load = game + all moves + players; Realtime `watchGame` (hint only), a 20 s poll while active, `appResumed()` and (re)subscription all run one serialised resync (`fetchSnapshot`: game row + moves after the last known ply; full refetch if they don't chain). A snapshot with a lower ply than the current one is dropped (lost a race with a make_move response).
+- Moves (`online_move_sending.dart`): legal check with dartchess, `standardUci`, optimistic `PendingMove` with one UUID; network errors retry with the same id after 0.5/1/2/4 s, then a resync, then every 5 s while the screen is open (so a move made during a 20 s outage is still delivered; the prompt said "max ~5 tries", but giving up would lose the move). Rejections (STALE/NOT_YOUR_TURN/GAME_OVER/ILLEGAL) roll back with a short non-blaming notice and a resync. `applied:false` = flagged, the game is over.
+- Clocks: `remainingTime` from the server row + `ServerClock`; the player's own clock freezes at the moment of an optimistic move. `TimeoutClaimer` calls `claim_timeout` once per ply 300 ms after the opponent's computed flag (also the first-move deadline). The minute sweep is the fallback.
+- Screen: reuses GameBoard, PlayerBar, MoveList, moves sheet, TileButton. Controls Flip / Moves / Draw (offer, or accept when offered; off before both moved) / Abort (before both moved) or Resign (confirm dialogs name the action). Status line: browsing, notices (Dismiss), draw offer (Decline / Accept draw), first-move countdown, rematch offer, result. "Reconnecting…" replaces the app bar title (a banner above the board moved the board: found on the emulator).
+- Result sheet: `GameOverSheet` generalised (`GameOverInfo` + actions map; offline unchanged). Online: You won/lost/Draw/Game aborted, reason, moves, "Rating +15" (rebuilds live: the rating change arrives after the sheet opens), Review game / Offer or Accept rematch / Back to online.
+- Rematch: migration `20261016000200_rematch.sql` (`games.rematch_code`, `rematch_by` + index; RPC `offer_rematch(p_game)`: offer = invite with the same time control, code stored on the finished game; the opponent's offer = `join_invite`; a dead earlier offer is replaced). pgTAP `07_rematch.test.sql` (12). The offerer waits on the invite screen (create_invite returns that invite). Not on skak yet.
+- History: DB v3 (`games.opponent`, `games.rating_change`; online games have `bot_level` 0); labels "vs name". A finished game is saved once (`recordFinishedGame`), and History runs `syncOnlineHistory` (last 50 finished server games not cached yet; offline = no-op). Review shows the opponent's name instead of "Bot".
+- Fixed on the emulator: postgrest-dart `.order()` is descending by default, so the full move list came back reversed (board fell back to the start). Now `ascending: true`. The fake API returned sorted lists, so tests could not see it.
+- Notifier split to stay near 300 lines: `online_move_sending.dart` (part), `online_sync.dart`, `timeout_claimer.dart`, `online_game_over.dart`.
+- `make_move` round trip is logged (`debugPrint('make_move ply n: x ms')`).
+- Tests: Flutter 332 green, pgTAP 147 green (local; the local DB had leftover rows from an earlier run and needed `npx supabase db reset --local`).
 
 ## F2a resume here (read this first)
 Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).

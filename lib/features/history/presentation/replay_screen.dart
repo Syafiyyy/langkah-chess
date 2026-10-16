@@ -70,7 +70,7 @@ class _ReplayState extends State<_Replay> {
     final last = _line.sans.length;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Level ${game.botLevel} · ${game.timeControl.label}'),
+        title: Text('${game.opponentLabel} · ${game.timeControl.label}'),
         actions: [
           TextButton(
             onPressed: () => context.push('/review/${game.id}'),

@@ -20,7 +20,10 @@ void main() {
       usernameError('no-dash'),
       'Use only letters, numbers and underscores',
     );
-    expect(usernameError('ümlaut'), 'Use only letters, numbers and underscores');
+    expect(
+      usernameError('ümlaut'),
+      'Use only letters, numbers and underscores',
+    );
   });
 
   test('u_ is reserved for temporary names', () {

@@ -76,7 +76,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     final orientation = _flipped ? game.playerSide.opposite : game.playerSide;
     final eval = ply < state.evals.length ? state.evals[ply] : null;
     final best = eval?.bestMove == null ? null : Move.parse(eval!.bestMove!);
-    String name(Side side) => side == game.playerSide ? 'You' : 'Bot';
+    String name(Side side) =>
+        side == game.playerSide ? 'You' : game.opponent ?? 'Bot';
 
     return Scaffold(
       appBar: AppBar(

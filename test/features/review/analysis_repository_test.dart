@@ -80,7 +80,7 @@ void main() {
     final db = await openAppDatabase(databaseFactoryFfi, path);
     addTearDown(db.close);
 
-    expect(await db.getVersion(), 2);
+    expect(await db.getVersion(), 3);
     expect(await db.query('games'), hasLength(1));
     final repo = SqfliteAnalysisRepository(db);
     await repo.save('old-game', _key, const [PositionEval(cp: 3)]);

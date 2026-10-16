@@ -59,7 +59,8 @@ class SupabaseOnlineApi implements OnlineApi {
           .select('ply, uci, san, fen_after')
           .eq('game_id', gameId)
           .gt('ply', afterPly)
-          .order('ply'),
+          // postgrest-dart orders descending unless told otherwise.
+          .order('ply', ascending: true),
     );
     return rows.map(ServerMove.fromRow).toList();
   }
@@ -256,6 +257,8 @@ class SupabaseOnlineApi implements OnlineApi {
       return await request().timeout(_timeout);
     } on PostgrestException catch (e) {
       if (e.code == 'P0001') throw OnlineRejected(e.message);
+      // The function isn't deployed (e.g. a migration not pushed yet).
+      if (e.code == 'PGRST202') throw const OnlineRejected('NOT_DEPLOYED');
       throw OnlineUnavailable(e);
     } on OnlineFailure {
       rethrow;

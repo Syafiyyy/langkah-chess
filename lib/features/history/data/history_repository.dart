@@ -7,7 +7,7 @@ import '../domain/finished_game.dart';
 
 export '../domain/finished_game.dart' show HistoryFilter;
 
-/// Local store of finished games.
+/// Local store of finished games (bot and online).
 abstract interface class HistoryRepository {
   /// Saves [game]. Saving the same id again is a no-op.
   Future<void> save(FinishedGame game);
@@ -72,6 +72,8 @@ class SqfliteHistoryRepository implements HistoryRepository {
     'final_fen': g.finalFen,
     'plies': g.plies,
     'duration_ms': g.duration.inMilliseconds,
+    'opponent': g.opponent,
+    'rating_change': g.ratingChange,
   };
 
   static FinishedGame _fromRow(Map<String, Object?> r) => FinishedGame(
@@ -91,5 +93,7 @@ class SqfliteHistoryRepository implements HistoryRepository {
     finalFen: r['final_fen']! as String,
     plies: r['plies']! as int,
     duration: Duration(milliseconds: r['duration_ms']! as int),
+    opponent: r['opponent'] as String?,
+    ratingChange: r['rating_change'] as int?,
   );
 }

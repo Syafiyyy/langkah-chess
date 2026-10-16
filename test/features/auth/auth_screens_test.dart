@@ -22,9 +22,7 @@ Future<void> _pump(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final router = GoRouter(
-    routes: [
-      GoRoute(path: '/', builder: (_, _) => page),
-    ],
+    routes: [GoRoute(path: '/', builder: (_, _) => page)],
   );
   await tester.pumpWidget(
     ProviderScope(
@@ -88,9 +86,7 @@ void main() {
       expect(find.text('Check the email address'), findsNothing);
     });
 
-    testWidgets('shows the server message on a failed sign in', (
-      tester,
-    ) async {
+    testWidgets('shows the server message on a failed sign in', (tester) async {
       final auth = FakeAuthRepository()
         ..nextError = const AuthFailure("That email and password don't match.");
       await _pump(tester, authOverrides(auth, FakeProfileRepository()));
@@ -158,7 +154,10 @@ void main() {
       await pumpUsername(tester);
       await tester.enterText(find.byType(TextField), 'u_me');
       await _blur(tester);
-      expect(find.text('Names starting with "u_" are reserved'), findsOneWidget);
+      expect(
+        find.text('Names starting with "u_" are reserved'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('a taken name is reported on blur', (tester) async {

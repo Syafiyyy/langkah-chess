@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skak/core/storage/app_database.dart';
@@ -13,6 +15,8 @@ FinishedGame _game(
   Side player = Side.white,
   Outcome outcome = Outcome.whiteWins,
   Termination termination = Termination.checkmate,
+  String? opponent,
+  int? ratingChange,
 }) => FinishedGame(
   id: id,
   endedAt: endedAt,
@@ -24,6 +28,8 @@ FinishedGame _game(
   finalFen: Chess.initial.fen,
   plies: 41,
   duration: const Duration(minutes: 7, seconds: 3),
+  opponent: opponent,
+  ratingChange: ratingChange,
 );
 
 void main() {
@@ -54,7 +60,74 @@ void main() {
     expect(back.plies, 41);
     expect(back.moveCount, 21);
     expect(back.duration, game.duration);
+    expect(back.opponent, isNull);
+    expect(back.ratingChange, isNull);
+    expect(back.isOnline, isFalse);
+    expect(back.opponentLabel, 'Level 3');
   });
+
+  test('online games keep the opponent and rating change', () async {
+    await repo.save(
+      _game(
+        'o',
+        endedAt: DateTime.utc(2026, 10, 16),
+        outcome: Outcome.draw,
+        termination: Termination.agreement,
+        opponent: 'gate_b',
+        ratingChange: -3,
+      ),
+    );
+    final back = (await repo.byId('o'))!;
+    expect(back.opponent, 'gate_b');
+    expect(back.ratingChange, -3);
+    expect(back.isOnline, isTrue);
+    expect(back.opponentLabel, 'vs gate_b');
+    expect(back.result.reason, 'Draw by agreement');
+  });
+
+  test(
+    'a version 2 database gets the online columns and keeps its games',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('skak_db');
+      addTearDown(() => dir.delete(recursive: true));
+      final path = '${dir.path}/v2.db';
+      final v2 = await databaseFactoryFfi.openDatabase(
+        path,
+        options: OpenDatabaseOptions(
+          version: 2,
+          onCreate: (db, _) => db.execute('''
+          CREATE TABLE games (
+            id TEXT PRIMARY KEY, ended_at INTEGER NOT NULL,
+            player_side TEXT NOT NULL, bot_level INTEGER NOT NULL,
+            time_control TEXT NOT NULL, outcome TEXT NOT NULL,
+            player_result TEXT NOT NULL, termination TEXT NOT NULL,
+            pgn TEXT NOT NULL, final_fen TEXT NOT NULL,
+            plies INTEGER NOT NULL, duration_ms INTEGER NOT NULL)'''),
+        ),
+      );
+      await v2.insert('games', {
+        'id': 'old',
+        'ended_at': 0,
+        'player_side': 'white',
+        'bot_level': 2,
+        'time_control': '-',
+        'outcome': '1-0',
+        'player_result': 'win',
+        'termination': 'checkmate',
+        'pgn': '',
+        'final_fen': Chess.initial.fen,
+        'plies': 1,
+        'duration_ms': 0,
+      });
+      await v2.close();
+
+      final db3 = await openAppDatabase(databaseFactoryFfi, path);
+      addTearDown(db3.close);
+      expect(await db3.getVersion(), 3);
+      final old = (await SqfliteHistoryRepository(db3).byId('old'))!;
+      expect(old.opponent, isNull);
+    },
+  );
 
   test('lists newest first', () async {
     await repo.save(_game('old', endedAt: DateTime.utc(2026, 9, 30)));
