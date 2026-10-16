@@ -72,6 +72,7 @@ All need a signed-in user. Errors come back as Postgres errors with the code as 
 | `decline_draw` | `p_game` | game | same |
 | `abort` | `p_game` | game (`aborted`); also cancels your own waiting invite | `CANNOT_ABORT` (both have moved), same |
 | `claim_timeout` | `p_game` | game (finished if the side to move has flagged, else unchanged) | same |
+| `offer_rematch` | `p_game` (a finished game) | the new game: a waiting invite with the same time control (its code is stored on the old game as `rematch_code` / `rematch_by`, so the opponent sees it), or, when the opponent had offered, their invite joined (active) | `NOT_FINISHED`, `NO_OPPONENT`, `NOT_A_PLAYER`, `NOT_FOUND` |
 
 All RPCs also raise `NOT_SIGNED_IN` without a user. A move clears any draw offer.
 
@@ -100,6 +101,19 @@ Aborts games past their first-move deadline, ends flagged games, aborts invites 
 
 ## Config for the app
 URL + publishable key only, via `--dart-define-from-file=env/dev.json` (gitignored; `env/example.json` committed). The secret key never goes into the app or the repo.
+
+`env/dev.json` keys: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (the publishable key), `GOOGLE_WEB_CLIENT_ID` (empty = no Google button). Run with `flutter run --dart-define-from-file=env/dev.json`.
+
+### Google sign-in (native, google_sign_in 7 → `signInWithIdToken`)
+1. Google Cloud console → APIs & Services → OAuth consent screen: External, app name Skak, your email; add yourself as a test user while in testing.
+2. Credentials → Create OAuth client ID → **Web application** (name "Skak Supabase"). No redirect URI needed for the native flow. Copy its client ID (and secret).
+3. Credentials → Create OAuth client ID → **Android**: package `com.syafiyyy.skak`, SHA-1 of the debug key (`keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android`; on Adaam's machine `F8:EF:63:55:28:0B:A8:02:10:CD:37:0E:68:A5:DD:B8:94:F4:DD:9F`). Release builds are signed with the same debug key until F4; when a release keystore exists, add a second Android client with its SHA-1 (and one for Play App Signing if published there). CI-built APKs use a different debug key, so Google sign-in only works in builds from a machine whose SHA-1 is registered.
+4. Supabase dashboard (skak) → Authentication → Sign In / Providers → Google: enable, paste the **web** client ID and secret. Add the web client ID to "Authorized Client IDs" if shown.
+5. Put the web client ID in `env/dev.json` as `GOOGLE_WEB_CLIENT_ID`.
+
+### Supabase Auth settings (skak)
+- Email provider on. "Confirm email" may be on or off: with it on, sign-up shows "check your email" and the link opens the app via `skak://login-callback` (add it under Authentication → URL Configuration → Redirect URLs).
+
 
 ## Testing
 | What | Command | Where |

@@ -357,8 +357,13 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
-- Adaam: hand check of the F1.8b polish (5 items in the hand-off message); record the Gate 1.5 demo clip with the new look.
-- Then F2 — Online (Supabase).
+1. Adaam: `npx supabase db push` (applies `20261016000100_expire_invites` and `20261016000200_rematch` to skak), then rerun the advisors.
+2. Adaam: Google sign-in setup (Google Cloud OAuth clients + Supabase Google provider; steps in the F2b hand-off message), then put the web client id in `env/dev.json` as `GOOGLE_WEB_CLIENT_ID`.
+3. Adaam: check the Supabase Auth settings: email provider on; "Confirm email" on or off (the app handles both); add `skak://login-callback` to Redirect URLs.
+4. Adaam: hand check of F2b (list in the hand-off message), incl. rematch once the push is done.
+5. Decide: speed up `make_move` (parallel calls inside the function, ~1.27 s → ~0.5 s expected). Backend change + deploy.
+6. Then F3 — Polish (sounds/haptics, online empty/error states, Sentry, Maestro).
+- Still open from before: F1.8b hand check and the Gate 1.5 demo clip.
 
 ## Environment
 - Flutter 3.47.7 stable (D:\dev\flutter), Dart 3.13.5, JDK 21 (Android Studio jbr), Android SDK 36, licenses accepted (2026-10-12)
