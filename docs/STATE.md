@@ -3,8 +3,8 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2b — Online in the app: in progress (2026-10-16).** All four checkpoints done; **Gate 2 passed on two emulators** except rematch (needs the migration push) and Google sign-in (needs Adaam's OAuth setup). Next: Adaam's setup + hand check (below), then F3. See "F2b resume here".
-Two migrations wait for Adaam's `npx supabase db push` on skak (the push was blocked by this session's permission mode): `20261016000100_expire_invites` (F2a) and `20261016000200_rematch` (F2b, needed for rematch).
+**F2b — Online in the app: done (2026-10-17).** All four checkpoints done; **Gate 2 passed on two emulators**, rematch included. Google sign-in is configured and works up to Google's own account screen; the last step needs a real Google account on a device (Adaam's hand check). `make_move` was sped up (v4: about half the time). Next: Adaam's hand check, then F3. See "F2b resume here".
+Migrations `20261016000100_expire_invites` and `20261016000200_rematch` are on skak (Adaam, `npx supabase db push`, 2026-10-17).
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 
@@ -63,18 +63,24 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 - [x] One app in the background 60 s while the opponent moved; on resume the move was there and both screens showed the same clocks to the second (3:10 / 4:04).
 - [x] Fast double-tap / repeated move: 5 taps → one make_move call, one row for ply 7.
 - [x] Clock ran out (1+0 quick match, both apps open): timeout shown on both, claimed by the opponent's app 57.1 s after the last move (not the minute sweep); `rating_history` 2 rows (1231→1244, 1169→1156). A second timeout (game LBMBL7) ended by the sweep while no app was open: rated once.
-- [x] First-move deadline: missed twice during scripting; both devices showed "Game aborted · No first move in time · not rated".
-- [ ] Rematch on devices: blocked until `20261016000200_rematch` is pushed to skak (pgTAP covers the RPC).
-- [ ] Google sign-in: needs the OAuth clients (see hand-off list).
+- [x] First-move deadline: missed twice during scripting; both devices showed "Game aborted · No first move in time · not rated".
+- Fixed 2026-10-17 (found on the emulator): Sign out / Delete account left the player on a sign-in screen at /profile (OnlineGate swapped the page out before its `context.go('/')`); the router is now taken first. Widget test added.
+- [x] Rematch (2026-10-17, after the push): B resigned, A tapped "Offer rematch" and waited on the invite screen; B's result sheet switched live to "Accept rematch"; tapping it put both in a new active 5+0 game between the same players (old BEFL45 → `rematch_code` NGNSTB, offered by gate_a; colours drawn again).
+- [~] Google sign-in (2026-10-17): button shown with `GOOGLE_WEB_CLIENT_ID` set; tapping opens Google's Credential Manager flow; with no Google account on the emulator it opens "Sign in - Google Accounts" (add an account), and backing out returns to the sign-in screen with no error (cancel path). Not completed: needs a real Google account on the device. Skip nonce checks is OFF in Supabase (google_sign_in 7 on Android sends no nonce); if Adaam's test fails with a nonce error, turn it on.
 
-## Measurements (F2b, make_move latency, emulators in Kuala Lumpur → skak ap-southeast-1)
-| What | Median | Min | Max | n |
-|---|---|---|---|---|
-| Client round trip (app log, includes the Edge Function hop) | ~1.55 s | 1.29 s | 1.94 s | 8 |
-| Edge Function execution (`function_edge_logs.execution_time_ms`) | 1.27 s | 0.98 s | 1.74 s | 15 |
-- No clear cold-start penalty in this run (the first move of a session took 1.69–1.94 s, later ones 1.29–1.58 s); the function was already warm from earlier games.
-- Most of the time is inside the function: 5 sequential HTTP calls to Supabase (auth getUser, load game, find move id, load history, apply_move RPC), ~200 ms each. Proposal (not done; backend change + deploy): run the first four in parallel, or verify the JWT locally (the gateway already checks it), which should bring it to ~0.4–0.6 s. Asking Adaam before changing the deployed function.
-- Optimistic moves hide this for the mover; the opponent sees the move ~1.5 s + Realtime delivery after it was played.
+## Measurements (F2b, make_move latency from Kuala Lumpur → skak ap-southeast-1)
+`supabase/scripts/latency.ts` (Deno, publishable key + test users' passwords) plays a 20-ply Ruy Lopez through make_move and times every call; the app logs `make_move ply n: x ms`.
+| What | v3 (5 sequential calls) | v4 (parallel reads, 2026-10-17) |
+|---|---|---|
+| Edge Function execution (`function_edge_logs`), median / min / max | 1185 / 657 / 1744 ms (n 20) | 656 / 499 / 2541 ms (n 33; max = cold start) |
+| Script round trip, warm, median / min / max | – | 721 / 566 / 1053 ms (20 calls) |
+| Script, first call after 18 min idle | – | 1047 ms, then median 820 ms (max 1026) |
+| Script, first call right after the deploy (cold worker) | – | 3910 ms; the next two (new connections) 2.6 s, then 0.6–1.3 s |
+| App on the emulators, per move | 1292–1941 ms, median ~1.55 s (n 8) | 843–1131 ms (n 4) |
+- v4 (`make_move` deployed 2026-10-17, verify_jwt still on): `auth.getUser`, the game row, the move-id lookup and the move history run at once (`Promise.all`), then `apply_move`: 2 sequential hops instead of 5. Nothing is returned before the user check; UNAUTHORIZED still comes before BAD_REQUEST. Deno tests 41.
+- Cold start is a fresh worker (after a deploy, or presumably after a long idle); 18 minutes of idle did not cause one.
+- Further option (not done): read the user id from the JWT the gateway already verified instead of `auth.getUser` (saves a call only when that call is the slowest of the parallel ones).
+- For the README (F4): "a move takes ~0.7–1 s server round trip from Malaysia (median ~0.8 s), ~4 s on a cold worker; the mover sees it instantly (optimistic), the opponent after the round trip + Realtime."
 
 ## F2a resume here (read this first)
 Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).
@@ -357,12 +363,9 @@ Gate 1 is checked on the emulator (no Android phone available; see ROADMAP). Sta
 - Context7 and Dart MCP tools did not load in the F0 session (they were added mid-session); APIs were checked from the pub.dev API and package sources instead. A fresh Claude Code session should have them.
 
 ## Next
-1. Adaam: `npx supabase db push` (applies `20261016000100_expire_invites` and `20261016000200_rematch` to skak), then rerun the advisors.
-2. Adaam: Google sign-in setup (Google Cloud OAuth clients + Supabase Google provider; steps in the F2b hand-off message), then put the web client id in `env/dev.json` as `GOOGLE_WEB_CLIENT_ID`.
-3. Adaam: check the Supabase Auth settings: email provider on; "Confirm email" on or off (the app handles both); add `skak://login-callback` to Redirect URLs.
-4. Adaam: hand check of F2b (list in the hand-off message), incl. rematch once the push is done.
-5. Decide: speed up `make_move` (parallel calls inside the function, ~1.27 s → ~0.5 s expected). Backend change + deploy.
-6. Then F3 — Polish (sounds/haptics, online empty/error states, Sentry, Maestro).
+1. Adaam: Google sign-in on a device with a Google account (emulator: Settings → add account, or a phone with a debug build from this machine). If it fails with a nonce error, turn on "Skip nonce checks".
+2. Adaam: hand check of F2b (list in the hand-off message). Rerun the advisors after the 2026-10-17 push.
+3. Then F3 — Polish (sounds/haptics, online empty/error states, Sentry, Maestro).
 - Still open from before: F1.8b hand check and the Gate 1.5 demo clip.
 
 ## Environment
