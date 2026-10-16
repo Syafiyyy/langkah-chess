@@ -5,7 +5,7 @@ import '../features/auth/presentation/profile_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/history/presentation/replay_screen.dart';
 import '../features/home/presentation/home_screen.dart';
-import '../features/online/presentation/online_home_screen.dart';
+import '../features/online/presentation/online_routes.dart';
 import '../features/play_ai/presentation/game_screen.dart';
 import '../features/review/presentation/review_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
@@ -15,11 +15,7 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
     GoRoute(path: '/play', builder: (context, state) => const GameScreen()),
-    GoRoute(
-      path: '/online',
-      builder: (context, state) =>
-          const OnlineGate(child: OnlineHomeScreen()),
-    ),
+    onlineRoute,
     GoRoute(
       path: '/profile',
       builder: (context, state) => const OnlineGate(child: ProfileScreen()),

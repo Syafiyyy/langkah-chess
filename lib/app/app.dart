@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/engine/engine_provider.dart';
 import 'app_info.dart';
+import 'deep_links.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
 
-/// Root widget. Owns the engine lifecycle hooks (detach and hot reload).
+/// Root widget. Owns the engine lifecycle hooks (detach and hot reload) and
+/// the invite deep-link listener.
 class SkakApp extends ConsumerStatefulWidget {
   const SkakApp({super.key});
 
@@ -17,11 +21,13 @@ class SkakApp extends ConsumerStatefulWidget {
 
 class _SkakAppState extends ConsumerState<SkakApp> {
   late final AppLifecycleListener _lifecycle;
+  late final StreamSubscription<Uri> _links;
 
   @override
   void initState() {
     super.initState();
     _lifecycle = AppLifecycleListener(onDetach: _disposeEngine);
+    _links = listenForDeepLinks(appRouter);
   }
 
   @override
@@ -38,6 +44,7 @@ class _SkakAppState extends ConsumerState<SkakApp> {
   @override
   void dispose() {
     _lifecycle.dispose();
+    unawaited(_links.cancel());
     super.dispose();
   }
 

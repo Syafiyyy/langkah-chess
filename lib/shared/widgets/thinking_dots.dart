@@ -4,20 +4,26 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../app/theme/app_motion.dart';
 import '../../app/theme/app_type.dart';
 
-/// "Thinking" with three softly pulsing dots (opacity only). With reduced
-/// motion it is static text; the word carries the meaning either way.
+/// "Thinking" (or [label]) with three softly pulsing dots (opacity only).
+/// With reduced motion it is static text; the words carry the meaning either
+/// way.
 class ThinkingDots extends StatelessWidget {
-  const ThinkingDots({super.key, this.style = AppType.meta});
+  const ThinkingDots({
+    super.key,
+    this.style = AppType.meta,
+    this.label = 'Thinking',
+  });
 
   final TextStyle style;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    if (AppMotion.reduced(context)) return Text('Thinking…', style: style);
+    if (AppMotion.reduced(context)) return Text('$label…', style: style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Thinking', style: style),
+        Flexible(child: Text(label, style: style)),
         for (var i = 0; i < 3; i++)
           Text('.', style: style)
               .animate(

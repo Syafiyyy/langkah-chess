@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2b — Online in the app: in progress (2026-10-16).** Checkpoint 1 (auth + profile) done. See "F2b resume here".
+**F2b — Online in the app: in progress (2026-10-16).** Checkpoints 1 (auth + profile) and 2 (online entry screens) done. See "F2b resume here".
 F2a backend done; `20261016000100_expire_invites` still waits for Adaam's `npx supabase db push` (the push was blocked by this session's permission mode).
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
@@ -14,8 +14,8 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 | Checkpoint | Status |
 |---|---|
 | 1. Auth + profile | **Done.** Verified on the emulator against skak (wrong-password message, sign in, taken-name check, username saved, online home with rating). |
-| 2. Online entry screens | Next |
-| 3. Online game screen | |
+| 2. Online entry screens | **Done.** Verified on two emulators against skak: invite created (3+2), joined from B through the `skak://join/CODE` link, both opened the same game; quick match 1+0 paired both within ~6 s (Realtime hint, not the 30 s heartbeat). |
+| 3. Online game screen | Next (route `/online/game/:id` shows a placeholder until then) |
 | 4. Gate 2 test | |
 
 **Checkpoint 1 notes:**
@@ -30,6 +30,18 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 - `Termination.agreement` added (online draws by agreement).
 - Test users for Gate 2 on skak: `gate_a@example.com` (username gate_a), `gate_b@example.com`; passwords in gitignored `env/test_users.json` (made with the Admin API, like the F2a smoke users).
 - Tests: Flutter 285 green (+ server clock, username rules, auth screens incl. 360x640, online clock/result domain).
+- `Supabase.initialize` stays awaited in `main()`: it only reads local storage (session recovery is not awaited; checked in the 2.18.3 source). Warm start 2 s to init on the emulator; a freshly booted emulator's first debug start took 24 s (JIT), not network.
+
+**Checkpoint 2 notes:**
+- `OnlineApi` (`features/online/data/online_api.dart`) is the only door to the server; `SupabaseOnlineApi` implements it with a 10 s timeout per request. Failures: `OnlineRejected(code)` (4xx / RPC error code, SQLSTATE P0001) or `OnlineUnavailable` (network, timeout, 5xx). make_move responses (and error bodies) feed `server_now` into `ServerClock`.
+- Routes: `/online` with nested `invite?tc=`, `join?code=`, `search?tc=`, `game/:id`, all behind `OnlineGate`. `tc` is built with `Uri` (a raw `+` decodes as a space).
+- Time controls online: presets 1+0, 3+2, 5+0, 10+0, 15+10, 30+0 (the bot's custom dialog allows up to 180 min; the server caps at 60).
+- Invite screen: `create_invite` (returns the same waiting invite again), big code, Share (share_plus), `skak://join/CODE`, waiting, Cancel (= `abort`). Watches the game (Realtime + 15 s poll + on resume); active → game; aborted shows "This invite expired" (termination `expired`) or "cancelled", with "Create new invite".
+- Join: 6 chars, upper-cased, only A–Z/0–9; errors NOT_FOUND / OWN_GAME / NOT_AVAILABLE in plain words. `skak://join/CODE` (app_links, `lib/app/deep_links.dart`) opens it and joins right away (after sign-in if needed).
+- Quick match: `join_queue` at once, every 30 s (heartbeat) and on every Realtime change to a game where the player is White or Black (`watchMyGames`); elapsed time; "Stop searching" / leaving = `leave_queue` (not after pairing).
+- Online home: profile card, "Resume game" when a game is active, Invite / Join / Quick match.
+- `ThinkingDots` takes a label and may wrap (overflowed at 360 dp with long labels).
+- Tests: Flutter 300 green (+ deep links, entry screens with `FakeOnlineApi`).
 
 ## F2a resume here (read this first)
 Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).
