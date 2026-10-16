@@ -34,3 +34,29 @@ jobs:
       - run: flutter analyze
       - run: flutter test
       - run: flutter build apk --split-per-abi --debug
+
+  # Supabase backend: Edge Function tests (Deno) and database tests (pgTAP,
+  # concurrent matchmaking) on a local Postgres with all migrations applied.
+  # Deno and the Supabase CLI come pinned from package.json.
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DENO_FLAGS: --config supabase/functions/deno.json
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx deno fmt $DENO_FLAGS --check supabase
+      - run: npx deno lint $DENO_FLAGS supabase
+      - run: npx deno test $DENO_FLAGS --allow-read supabase/functions
+
+      - run: npx supabase db start
+      - run: npx supabase test db
+      - run: npx deno test $DENO_FLAGS --allow-net --allow-env supabase/integration
