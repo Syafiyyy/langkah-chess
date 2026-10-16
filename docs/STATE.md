@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2a — Online backend: IN PROGRESS, sections 1–4 done and live on skak (2026-10-13). Next: section 5.** See "F2a resume here" below.
+**F2a — Online backend: sections 1–5 done (2026-10-16).** Waiting on: Adaam's `npx supabase db push` of `20261016000100_expire_invites`, then Gate 2 items / F2b (app side). See "F2a resume here". See "F2a resume here" below.
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
 F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
@@ -18,10 +18,21 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 | 2. apply_move + finish_game + make_move EF | **Done.** pgTAP green; migration applied to remote; `make_move` deployed (v1, verify_jwt on). |
 | 3. RPCs (invite/queue/resign/draw/abort/timeout, set_profile) | **Done.** Applied to remote. `20261013000300_rpcs.sql`, `tests/03_rpcs.test.sql` (53 tests). |
 | 3b. Advisor fixes | **Done.** Applied to remote. `20261013000400_advisor_fixes.sql`, `tests/04_advisor_fixes.test.sql`. |
-| 4. pg_cron sweep + delete_account | **Done.** Applied to remote; `skak-sweep` runs every minute on skak (runs succeed); `delete_account` v1 and `make_move` v2 deployed (verify_jwt on). |
-| 5. Tests (concurrent matchmaking), smoke script, CI Deno job, docs/ONLINE.md | Not started (next). The tricky-positions fixture (Dart + Deno) is already done in section 2. |
+| 4. pg_cron sweep + delete_account | **Done.** Applied to remote; `skak-sweep` runs every minute on skak (runs succeed); `delete_account` v1 deployed (verify_jwt on). |
+| 4b. Invite expiry (sweep aborts invites waiting > 24 h, termination `expired`) | **Done locally, NOT applied remotely**: `20261016000100_expire_invites.sql`, `tests/06_invite_expiry.test.sql`. Adaam runs `npx supabase db push`. |
+| 5. Concurrent matchmaking, smoke game, CI backend job, docs/ONLINE.md | **Done** (2026-10-16). |
 
-**Next steps (section 5):** concurrent matchmaking test (many parallel `join_queue` sessions, nobody paired twice), smoke script that plays a short game between two test users on skak via `make_move` and prints the final state, CI job for `deno test`/`lint`/`fmt --check` (config `supabase/functions/deno.json`), `docs/ONLINE.md`.
+**Next steps:** (1) Adaam: `npx supabase db push` (applies 4b), then rerun the advisors and check `select pg_get_functiondef('public.sweep_games()'::regprocedure)` mentions `expired`. (2) F2b: the app side, starting from `docs/ONLINE.md`.
+
+**Section 5 notes:**
+- `.gitattributes` forces LF for `.sql` and `.ts` (the working copies were CRLF on Windows, so CR characters got into function bodies pushed from this machine; the 0003–0005 functions on skak still contain them: harmless, they go away when a function is next replaced).
+- Concurrent matchmaking: `supabase/integration/matchmaking_concurrency_test.ts` (Deno + `postgres` 3.4.9 against the local DB): 80 users over two time controls call `join_queue` at once on their own connections, twice. Asserts nobody is in two games, no self or cross-time-control pairing, everyone paired, the second call returns the player's game, queue empty. Fails 3/3 with the advisory lock removed. Cleans up its users and games.
+- Smoke game: `supabase/scripts/smoke.ts`. Users `smoke_white@example.com` / `smoke_black@example.com` (usernames `smoke_white`, `smoke_black`) on skak, created through the Admin API; each run sets a fresh random password (nothing stored). Plays Fool's mate via invite + `make_move` with retry / wrong-turn / illegal / stale checks and an RLS check; aborts and re-invites until smoke_white gets White. Passed on skak twice (games a7cdd17e…, 82fcdf33…; ratings now smoke_black 1231, smoke_white 1169). Keys for a run: `npx supabase projects api-keys --project-ref ivznhyyaswhnpdrnnbno --reveal -o json` (without `--reveal` secret keys are masked) piped into env vars, never printed.
+- `make_move` v3 (deployed to skak with the CLI): every response has `server_now` (ISO time) for the client's clock offset (ADR-0005 needed a server time in responses; nothing provided one). For RPC calls F2b can use the HTTP `Date` header.
+- CI: new `backend` job (`npm ci` for the pinned Deno + Supabase CLI; `deno fmt --check`, `deno lint`, `deno test` for functions; `supabase db start`; `supabase test db`; concurrency test).
+- `docs/ONLINE.md`: the contract for F2b (sequence, make_move + error codes, RPC table, Realtime/resync, clocks, results, rating, sweep, deletion, testing).
+- Tests: pgTAP 135, Deno 39 (+1 integration), Flutter 255.
+- Open: ADR-0004 asks to measure the Edge Function hop latency (cold start + warm) and report it in the README; not done yet (the smoke script is the natural place to time it).
 
 **Remote applies:** the Supabase MCP's `apply_migration` returned `declined` for 0003 (twice, with no prompt shown; likely its confirmation for "destructive" SQL such as `delete from`, which this session cannot display). Adaam applied 0003–0005 with `npx supabase db push` and deployed both functions with the CLI on 2026-10-13. Verified afterwards: versions 0003/0004/0005 recorded; a fingerprint of every public function, index, constraint, column, grant and the cron job is identical to the local stack (the six section 2 functions differ only by CR characters: they went in through the MCP with LF, while the local stack loads the CRLF Windows checkout); both functions boot (`UNAUTHORIZED` for a non-user token); deployed `make_move` source = repo. Use `db push` for future migrations (it records versions itself; no renaming needed).
 
@@ -34,7 +45,6 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 - Advisors (2026-10-13, before 0003–0005): fixed `function_search_path_mutable` (first_move_seconds), `unindexed_foreign_keys` (games.draw_offer_by, moves.played_by: both ON DELETE SET NULL, scanned on account deletion), `no_primary_key` (rating_history now PK (game_id, user_id)). Ignored: `unused_index` (empty database).
 - `_shared/admin.ts`: service-role client, `userIdFrom(req)`, `json()`, shared by both functions.
 - Tests: pgTAP 131, Deno 39, Flutter 255 green.
-- Open: waiting invites never expire (could add "abort invites older than 24 h" to the sweep; not asked for).
 
 **Section 3 notes (decisions):**
 - RPCs: `set_profile(p_username, p_avatar)`, `create_invite`, `join_invite(code)`, `join_queue` (returns `setof games`: one row = paired, none = queued), `leave_queue`, `resign`, `offer_draw`, `accept_draw`, `decline_draw`, `abort`, `claim_timeout`. EXECUTE for `authenticated` only; helpers (`require_uid`, `check_time_control`, `random_invite_code`, `start_game`, `lock_my_game`) are internal.
@@ -58,6 +68,7 @@ Supabase project: **skak, ref `ivznhyyaswhnpdrnnbno`** (the Supabase MCP in `.mc
 - `20261013000100_schema` (2026-10-13)
 - `20261013000200_apply_move` (2026-10-13; md5 of the stored statement matches the file, LF line endings)
 - `20261013000300_rpcs`, `20261013000400_advisor_fixes`, `20261013000500_sweep_and_deletion` (2026-10-13, by Adaam with `npx supabase db push`; objects verified identical to the local stack)
+- Pending: `20261016000100_expire_invites` (Adaam: `npx supabase db push`)
 
 **Decisions so far:** termination strings use the Dart `Termination` names (`checkmate`, `timeout`, `resignation`, ... plus `agreement`, `firstMoveTimeout`); games store `white_can_mate`/`black_can_mate` (set by make_move) so timeouts in SQL need no chess code; clocks start after both first moves (30 s first-move deadline each, then abort); one advisory lock serialises matchmaking (planned). Details in the plan.
 
