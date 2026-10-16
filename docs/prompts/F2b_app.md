@@ -5,6 +5,12 @@ Goal: play online from the app against a real person, robust to bad mobile netwo
 ## 0. Before coding
 - Confirm Dart MCP, Context7, Supabase MCP are loaded. Read `CLAUDE.md`, `docs/STATE.md`, `docs/ONLINE.md`, ADR-0004/0005, chess-domain + skak-design skills. `writing-plans` first; TDD for the online game controller and resync logic.
 
+## Notes from F2a (read docs/ONLINE.md — it is the contract; it wins over this prompt if they differ)
+- Quick match: while searching, re-call `join_queue` about every 30 s (it refreshes the `seen_at` heartbeat; the sweep drops entries not seen for 2 min) and also as the way to learn you've been paired.
+- Clocks: use `server_now` from every `make_move` response (and from fetches) to compute the server-time offset.
+- Waiting invites expire after 24 h (termination `expired`): show that state clearly if the creator comes back.
+- Measure `make_move` round-trip latency (cold and warm, median/max) during the Gate 2 test and record it in STATE for the README (ADR-0004).
+
 ## 1. Auth + profile
 - `supabase_flutter`; URL + anon key from `--dart-define-from-file`.
 - Sign in with email + password and with Google (native Google Sign-In → `signInWithIdToken`). Tell me exactly what I must set up in Google Cloud (Android OAuth client with debug AND release SHA-1, web client ID for Supabase) and in the Supabase Auth settings; wait for me where needed.
