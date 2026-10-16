@@ -8,7 +8,10 @@ enum Termination {
   threefoldRepetition,
   seventyFiveMoveRule,
   resignation,
-  timeout;
+  timeout,
+
+  /// Online only: both players agreed to a draw.
+  agreement;
 
   /// Short human label, e.g. "Checkmate".
   String get label => switch (this) {
@@ -19,6 +22,7 @@ enum Termination {
     seventyFiveMoveRule => '75-move rule',
     resignation => 'Resignation',
     timeout => 'Timeout',
+    agreement => 'Draw by agreement',
   };
 }
 

@@ -1,4 +1,5 @@
 {
   "SUPABASE_URL": "https://<project-ref>.supabase.co",
-  "SUPABASE_ANON_KEY": "<publishable or anon key>"
+  "SUPABASE_ANON_KEY": "<publishable or anon key>",
+  "GOOGLE_WEB_CLIENT_ID": "<web OAuth client id>.apps.googleusercontent.com (empty = no Google button)"
 }

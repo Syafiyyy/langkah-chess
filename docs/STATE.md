@@ -3,10 +3,33 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2a — Online backend: sections 1–5 done (2026-10-16).** Waiting on: Adaam's `npx supabase db push` of `20261016000100_expire_invites`, then Gate 2 items / F2b (app side). See "F2a resume here". See "F2a resume here" below.
+**F2b — Online in the app: in progress (2026-10-16).** Checkpoint 1 (auth + profile) done. See "F2b resume here".
+F2a backend done; `20261016000100_expire_invites` still waits for Adaam's `npx supabase db push` (the push was blocked by this session's permission mode).
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
-F1.8 — Design system + offline redesign: done (2026-10-13), plus F1.8b polish pass from Adaam's screenshot review. F1.5 Game Review done; Gate 1.5 (demo clip) pending Adaam's hand check. Gate 1 passed on emulator; real-phone timing pending (F4, Firebase Test Lab). Next: Adaam's hand check of the redesign, then F2 — Online.
+
+## F2b resume here (read this first)
+Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-app.md`. Contract: `docs/ONLINE.md`.
+
+| Checkpoint | Status |
+|---|---|
+| 1. Auth + profile | **Done.** Verified on the emulator against skak (wrong-password message, sign in, taken-name check, username saved, online home with rating). |
+| 2. Online entry screens | Next |
+| 3. Online game screen | |
+| 4. Gate 2 test | |
+
+**Checkpoint 1 notes:**
+- Packages: supabase_flutter 2.18.3, google_sign_in 7.2.0, app_links 7.2.2, uuid 4.6.0, http 1.6 (direct, for the Date-header client).
+- Config: `--dart-define-from-file=env/dev.json` (`SUPABASE_URL`, `SUPABASE_ANON_KEY` = publishable key, `GOOGLE_WEB_CLIENT_ID`). Without URL/key, or if `Supabase.initialize` throws, the app runs offline only and "Play online" says so. `env/dev.json` exists locally (gitignored) with skak's URL + publishable key; the Google id stays empty until Adaam creates the OAuth clients.
+- `ServerClock` (`core/supabase/server_clock.dart`): offset from make_move `server_now` (exact) or the HTTP `Date` header of any Supabase response (+500 ms, ignored for 60 s after an exact sample), fed by `DateHeaderClient` passed to `Supabase.initialize`.
+- `/online` and `/profile` sit behind `OnlineGate`: not configured → message; signed out → sign in; `username_set` false → username screen; else the page. No go_router redirects.
+- Sign in: email + password, "Create account" toggle (email confirmation link goes to `skak://login-callback`), Google only when `GOOGLE_WEB_CLIENT_ID` is set (google_sign_in 7 / Credential Manager, then `signInWithIdToken`). Auth error codes mapped to plain messages.
+- Username: rules on blur (`[a-z0-9_]{3,20}`, not `u_`), then an availability read; the server's `USERNAME_TAKEN` still wins on save. `BlurField` (shared) unfocuses on a tap outside: Android kept the focus, so blur checks never ran (found on the emulator).
+- Profile: username, rating, rated games, sign out, delete account (type the username to enable "Delete account"; calls `delete_account`, then signs out).
+- Android: INTERNET permission in the main manifest (release builds had none), `skak://` VIEW intent filter, `flutter_deeplinking_enabled=false` (app_links reads links).
+- `Termination.agreement` added (online draws by agreement).
+- Test users for Gate 2 on skak: `gate_a@example.com` (username gate_a), `gate_b@example.com`; passwords in gitignored `env/test_users.json` (made with the Admin API, like the F2a smoke users).
+- Tests: Flutter 285 green (+ server clock, username rules, auth screens incl. 360x640, online clock/result domain).
 
 ## F2a resume here (read this first)
 Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).

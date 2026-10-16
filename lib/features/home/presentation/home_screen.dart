@@ -13,7 +13,8 @@ import '../../play_ai/application/play_ai_providers.dart';
 import '../../play_ai/presentation/start_game_flow.dart';
 import 'recent_games.dart';
 
-/// Start screen: play the bot, resume a saved game, recent games, settings.
+/// Start screen: play the bot or online, resume a saved game, recent games,
+/// settings.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -47,7 +48,19 @@ class HomeScreen extends ConsumerWidget {
               _ResumeCard(onResume: () => _resume(context, ref)),
               const SizedBox(height: AppSpacing.md),
             ],
-            _PlayCard(onTap: () => startGameFlow(context, ref)),
+            _PlayCard(
+              icon: Icons.smart_toy_rounded,
+              title: 'Play vs Bot',
+              subtitle: 'Eight levels, from Newcomer to full strength.',
+              onTap: () => startGameFlow(context, ref),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _PlayCard(
+              icon: Icons.public_rounded,
+              title: 'Play online',
+              subtitle: 'Invite a friend with a code, or get matched.',
+              onTap: () => context.push('/online'),
+            ),
             const SizedBox(height: AppSpacing.xl),
             const RecentGames(),
             const SizedBox(height: AppSpacing.xl),
@@ -64,10 +77,18 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// The primary action: a card with a gold icon tile.
+/// A way to play: a card with a gold icon tile.
 class _PlayCard extends StatelessWidget {
-  const _PlayCard({required this.onTap});
+  const _PlayCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
 
+  final IconData icon;
+  final String title;
+  final String subtitle;
   final VoidCallback onTap;
 
   @override
@@ -84,23 +105,16 @@ class _PlayCard extends StatelessWidget {
               color: AppColors.accent,
               borderRadius: BorderRadius.all(AppRadius.lg),
             ),
-            child: const Icon(
-              Icons.smart_toy_rounded,
-              color: AppColors.onAccent,
-              size: 28,
-            ),
+            child: Icon(icon, color: AppColors.onAccent, size: 28),
           ),
           const SizedBox(width: AppSpacing.lg),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Play vs Bot', style: AppType.heading),
-                SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Eight levels, from Newcomer to full strength.',
-                  style: AppType.secondary,
-                ),
+                Text(title, style: AppType.heading),
+                const SizedBox(height: AppSpacing.xs),
+                Text(subtitle, style: AppType.secondary),
               ],
             ),
           ),
