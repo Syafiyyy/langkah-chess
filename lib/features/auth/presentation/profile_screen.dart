@@ -22,20 +22,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   bool _busy = false;
   String? _error;
 
+  // Signing out swaps this page for the sign-in screen (OnlineGate), which
+  // unmounts it: take the router first, then go home.
   Future<void> _signOut() async {
+    final router = GoRouter.of(context);
     await ref.read(authRepositoryProvider)!.signOut();
-    if (mounted) context.go('/');
+    router.go('/');
   }
 
   Future<void> _delete(Profile profile) async {
     if (!await showDeleteAccountDialog(context, profile.username)) return;
+    if (!mounted) return;
+    final router = GoRouter.of(context);
     setState(() {
       _busy = true;
       _error = null;
     });
     try {
       await ref.read(authRepositoryProvider)!.deleteAccount();
-      if (mounted) context.go('/');
+      router.go('/');
     } on AuthFailure catch (e) {
       if (mounted) setState(() => _error = e.message);
     } finally {

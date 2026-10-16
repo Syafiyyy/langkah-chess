@@ -187,6 +187,42 @@ void main() {
   });
 
   group('profile', () {
+    testWidgets('sign out goes home (the gate swaps the page out first)', (
+      tester,
+    ) async {
+      final auth = FakeAuthRepository(userId: 'user-1');
+      tester.view.physicalSize = const Size(360, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final router = GoRouter(
+        initialLocation: '/profile',
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => const Text('HOME')),
+          GoRoute(
+            path: '/profile',
+            builder: (_, _) => const OnlineGate(child: ProfileScreen()),
+          ),
+        ],
+      );
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: authOverrides(
+            auth,
+            FakeProfileRepository(username: 'adaam', usernameSet: true),
+          ),
+          child: MaterialApp.router(
+            theme: buildAppTheme(),
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Sign out'));
+      await tester.pumpAndSettle();
+      expect(auth.calls, ['signOut']);
+      expect(find.text('HOME'), findsOneWidget);
+    });
+
     testWidgets('shows rating and games; delete needs the typed name', (
       tester,
     ) async {
