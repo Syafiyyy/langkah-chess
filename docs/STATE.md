@@ -3,7 +3,7 @@
 _Single source of project state. Claude Code updates this at the end of every task._
 
 ## Current phase
-**F2b — Online in the app: in progress (2026-10-16).** Checkpoints 1–3 done (auth + profile, entry screens, online game screen); Gate 2 next. See "F2b resume here".
+**F2b — Online in the app: in progress (2026-10-16).** All four checkpoints done; **Gate 2 passed on two emulators** except rematch (needs the migration push) and Google sign-in (needs Adaam's OAuth setup). Next: Adaam's setup + hand check (below), then F3. See "F2b resume here".
 Two migrations wait for Adaam's `npx supabase db push` on skak (the push was blocked by this session's permission mode): `20261016000100_expire_invites` (F2a) and `20261016000200_rematch` (F2b, needed for rematch).
 
 App renamed **Skak** (formerly Langkah) on 2026-10-13, before F2.
@@ -16,7 +16,7 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 | 1. Auth + profile | **Done.** Verified on the emulator against skak (wrong-password message, sign in, taken-name check, username saved, online home with rating). |
 | 2. Online entry screens | **Done.** Verified on two emulators against skak: invite created (3+2), joined from B through the `skak://join/CODE` link, both opened the same game; quick match 1+0 paired both within ~6 s (Realtime hint, not the 30 s heartbeat). |
 | 3. Online game screen | **Done.** Played on two emulators against skak (see Gate 2). Rematch untested on a device until `20261016000200_rematch` is pushed. |
-| 4. Gate 2 test | Next |
+| 4. Gate 2 test | **Done** (see Gate 2 checklist). |
 
 **Checkpoint 1 notes:**
 - Packages: supabase_flutter 2.18.3, google_sign_in 7.2.0, app_links 7.2.2, uuid 4.6.0, http 1.6 (direct, for the Date-header client).
@@ -55,6 +55,26 @@ Prompt `docs/prompts/F2b_app.md`, plan `docs/superpowers/plans/2026-10-16-f2b-ap
 - Notifier split to stay near 300 lines: `online_move_sending.dart` (part), `online_sync.dart`, `timeout_claimer.dart`, `online_game_over.dart`.
 - `make_move` round trip is logged (`debugPrint('make_move ply n: x ms')`).
 - Tests: Flutter 332 green, pgTAP 147 green (local; the local DB had leftover rows from an earlier run and needed `npx supabase db reset --local`).
+
+## Gate 2 checklist (2026-10-16, two emulators: Pixel 9 API 35 = gate_a, Pixel 8a API 35 = gate_b, debug builds, real skak project)
+- [x] Full invite game: invite → `skak://join/CODE` on the other device → both on the same game → played → B resigned through the UI: "You won · Rating +15" / "You lost · Rating −15" on both, Review opens it (game 7MSSRA).
+- [x] Quick-match game: both queued 1+0 and were paired in ~6 s (Realtime hint).
+- [x] Network off on one device for 20 s (airplane mode), a move made during the outage, network back: the move reached the server and the other device once (moves table: plies 1–5, 5 distinct client_move_ids); "Reconnecting…" while offline, cleared when the channel was back.
+- [x] One app in the background 60 s while the opponent moved; on resume the move was there and both screens showed the same clocks to the second (3:10 / 4:04).
+- [x] Fast double-tap / repeated move: 5 taps → one make_move call, one row for ply 7.
+- [x] Clock ran out (1+0 quick match, both apps open): timeout shown on both, claimed by the opponent's app 57.1 s after the last move (not the minute sweep); `rating_history` 2 rows (1231→1244, 1169→1156). A second timeout (game LBMBL7) ended by the sweep while no app was open: rated once.
+- [x] First-move deadline: missed twice during scripting; both devices showed "Game aborted · No first move in time · not rated".
+- [ ] Rematch on devices: blocked until `20261016000200_rematch` is pushed to skak (pgTAP covers the RPC).
+- [ ] Google sign-in: needs the OAuth clients (see hand-off list).
+
+## Measurements (F2b, make_move latency, emulators in Kuala Lumpur → skak ap-southeast-1)
+| What | Median | Min | Max | n |
+|---|---|---|---|---|
+| Client round trip (app log, includes the Edge Function hop) | ~1.55 s | 1.29 s | 1.94 s | 8 |
+| Edge Function execution (`function_edge_logs.execution_time_ms`) | 1.27 s | 0.98 s | 1.74 s | 15 |
+- No clear cold-start penalty in this run (the first move of a session took 1.69–1.94 s, later ones 1.29–1.58 s); the function was already warm from earlier games.
+- Most of the time is inside the function: 5 sequential HTTP calls to Supabase (auth getUser, load game, find move id, load history, apply_move RPC), ~200 ms each. Proposal (not done; backend change + deploy): run the first four in parallel, or verify the JWT locally (the gateway already checks it), which should bring it to ~0.4–0.6 s. Asking Adaam before changing the deployed function.
+- Optimistic moves hide this for the mover; the opponent sees the move ~1.5 s + Realtime delivery after it was played.
 
 ## F2a resume here (read this first)
 Prompt `docs/prompts/F2a_backend.md`, plan `docs/superpowers/plans/2026-10-13-f2a-backend.md` (sections + design decisions).
